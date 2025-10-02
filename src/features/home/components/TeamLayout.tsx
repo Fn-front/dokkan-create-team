@@ -141,13 +141,15 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
             <div className={styles.statRow}>
               <span className={styles.statLabel}>55%</span>
               <span className={styles.statValues}>
-                {slot.character.stats.potential_55.ATK} / {slot.character.stats.potential_55.DEF}
+                {slot.character.stats.potential_55.ATK} /{' '}
+                {slot.character.stats.potential_55.DEF}
               </span>
             </div>
             <div className={styles.statRow}>
               <span className={styles.statLabel}>100%</span>
               <span className={styles.statValues}>
-                {slot.character.stats.potential_100.ATK} / {slot.character.stats.potential_100.DEF}
+                {slot.character.stats.potential_100.ATK} /{' '}
+                {slot.character.stats.potential_100.DEF}
               </span>
             </div>
           </div>
@@ -203,14 +205,14 @@ const TeamLayout = memo<TeamLayoutProps>(
 
       return {
         text: selectedSkill.original_effect,
-        conditions: selectedSkill.conditions || null
+        conditions: selectedSkill.conditions || null,
       }
     }
 
     // フレンドスキルを取得する関数
     const getFriendSkill = () => {
       const friendSlot = teamSlots.find((slot) => slot.position === 6)
-      
+
       if (!friendSlot?.character?.skills) {
         return { text: 'フレンドを設置してください', conditions: null }
       }
@@ -233,7 +235,7 @@ const TeamLayout = memo<TeamLayoutProps>(
 
       return {
         text: selectedSkill.original_effect,
-        conditions: selectedSkill.conditions || null
+        conditions: selectedSkill.conditions || null,
       }
     }
     const [draggedFromPosition, setDraggedFromPosition] = useState<
@@ -567,10 +569,43 @@ const TeamLayout = memo<TeamLayoutProps>(
           <span className={styles.hpLabel}>HP</span>
           <div className={styles.hpValue}>
             {(() => {
+              const leaderSkill = getLeaderSkill()
+              const friendSkill = getFriendSkill()
+
               const totalHP = teamSlots
-                .filter(slot => slot.character?.stats)
+                .filter((slot) => slot.character?.stats)
                 .reduce((sum, slot) => {
-                  return sum + (slot.character?.stats?.potential_55.HP || 0)
+                  const baseHP = slot.character?.stats?.potential_55.HP || 0
+                  let totalMultiplier = 0
+
+                  // リーダースキルのHP倍率を取得
+                  if (leaderSkill.conditions) {
+                    for (const condition of leaderSkill.conditions) {
+                      if (condition.hp !== undefined) {
+                        totalMultiplier += condition.hp
+                        break
+                      }
+                    }
+                  }
+
+                  // フレンドスキルのHP倍率を取得
+                  if (friendSkill.conditions) {
+                    for (const condition of friendSkill.conditions) {
+                      if (condition.hp !== undefined) {
+                        totalMultiplier += condition.hp
+                        break
+                      }
+                    }
+                  }
+
+                  // 倍率を合計してから-1して適用（リーダー・フレンドがいる場合のみ）
+                  let finalHP = baseHP
+                  if (totalMultiplier > 0) {
+                    const finalMultiplier = totalMultiplier - 1
+                    finalHP = Math.floor(baseHP * finalMultiplier)
+                  }
+
+                  return sum + finalHP
                 }, 0)
               return totalHP > 0 ? totalHP.toLocaleString() : '0'
             })()}
