@@ -9,6 +9,23 @@ export const sampleCharacters: Character[] = [
     rarity: 5,
     type: 'PHY',
     cost: 58,
+    stats: {
+      max_level: {
+        HP: 12013,
+        ATK: 18080,
+        DEF: 9019,
+      },
+      potential_55: {
+        HP: 14013,
+        ATK: 20080,
+        DEF: 11019,
+      },
+      potential_100: {
+        HP: 17013,
+        ATK: 23480,
+        DEF: 13619,
+      },
+    },
     skills: {
       pre_extreme: {
         leader_skill: {
@@ -35,7 +52,13 @@ export const sampleCharacters: Character[] = [
         },
         passive_skill: {
           name: 'パッシブスキル',
-          effect:
+          stat_boosts: {
+            basic: {
+              atk: 80000,
+              def_down: 20000,
+            },
+          },
+          original_effect:
             '必殺技発動時にATK80000UPし自身のDEF20000DOWN必殺技が追加発動',
         },
         active_skill: null,
@@ -65,8 +88,19 @@ export const sampleCharacters: Character[] = [
         },
         passive_skill: {
           name: 'パッシブスキル',
-          effect:
-            '必殺技発動時に自身のATK120000UP、DEF50000DOWN、必殺技が追加発動、攻撃を受けた次のターン以降追加攻撃が全て会心になる',
+          stat_boosts: {
+            basic: {
+              atk: 1.5,
+              def: 1.5,
+              ki: 5,
+            },
+            super_attack: {
+              atk: 1.5,
+              def: 1.5,
+            },
+          },
+          original_effect:
+            '自身のATKとDEF50%UP必殺技発動時に更にATKとDEF50%UP必殺技が追加発動「純粋サイヤ人」または「混血サイヤ人」カテゴリの敵がいるとき自身の気力+5「孫悟空の系譜」カテゴリの敵がいるとき全属性に効果抜群で攻撃し、必ず攻撃が敵に命中する',
         },
         active_skill: {
           name: 'アクティブスキル',
@@ -99,8 +133,26 @@ export const sampleCharacters: Character[] = [
         },
         passive_skill: {
           name: 'パッシブスキル',
-          effect:
-            '気力+3、ATK/DEF180%UP、気玉取得時の気力上昇量+1、必ず必殺技が追加発動、会心率/ダメージ軽減率26%UP、攻撃が必中する',
+          stat_boosts: {
+            basic: {
+              atk: 3.6,
+              def: 2.8,
+              ki: 3,
+            },
+            conditional: {
+              enemy: {
+                atk: 1.26,
+                def: 3.6,
+              },
+            },
+            turn_limited: {
+              first_3: {
+                def: 3.0,
+              },
+            },
+          },
+          original_effect:
+            '基本効果 \n・気力+3、ATK/DEF180%UP\n・気玉取得時の気力上昇量+1\n・必ず必殺技が追加発動\n・会心率/ダメージ軽減率26%UP\n・攻撃が必中する 気力メーター12以上で攻撃時 \n・ATK/DEF200%UP 気力メーター18以上で攻撃時 \n・ATK260%UP 超系の敵がいるとき、または自身の他に攻撃参加中の極系の味方がいるとき \n・気力+3\n・会心率/ダメージ軽減率26%UP\n・2ターンの間、極系の味方全員のATK/DEF26%UP\n・攻撃を受けるときにDEF260%UP 「純粋サイヤ人」または「混血サイヤ人」または「孫悟空の系譜」カテゴリの敵がいるとき \n・バトル中、気力+6、必ず会心が発動 登場から3ターンの間 \n・攻撃参加中の味方全員が「怒り爆発」または「劇場版BOSS」カテゴリのとき攻撃するまでDEF200%UP、ダメージ軽減率26%UP',
         },
         active_skill: null,
       },
