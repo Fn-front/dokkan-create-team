@@ -7,11 +7,45 @@ type SkillCondition = {
   def?: number
 }
 
+type StatBoosts = {
+  basic?: {
+    atk?: number
+    def?: number
+    def_down?: number
+    ki?: number
+  }
+  super_attack?: {
+    atk?: number
+    def?: number
+  }
+  conditional?: {
+    enemy?: {
+      atk?: number
+      def?: number
+    }
+  }
+  turn_limited?: {
+    first_3?: {
+      def?: number
+    }
+  }
+  turn_start?: {
+    atk?: number
+    def?: number
+  }
+  after_hit?: {
+    atk?: number
+    def?: number
+  }
+}
+
 type Skill = {
   name: string
   conditions?: SkillCondition[]
   original_effect?: string
   effect?: string
+  stat_boosts?: StatBoosts
+  multiplier?: number
 }
 
 type SkillSet = {
@@ -28,6 +62,24 @@ export type CharacterSkills = {
   super_extreme?: SkillSet
 }
 
+type CharacterStats = {
+  max_level: {
+    HP: number
+    ATK: number
+    DEF: number
+  }
+  potential_55: {
+    HP: number
+    ATK: number
+    DEF: number
+  }
+  potential_100: {
+    HP: number
+    ATK: number
+    DEF: number
+  }
+}
+
 export type Character = {
   id: string
   name: string
@@ -35,6 +87,7 @@ export type Character = {
   rarity: number
   type: string
   cost: number
+  stats?: CharacterStats
   skills?: CharacterSkills
 }
 

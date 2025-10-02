@@ -6,7 +6,10 @@ import type { Character, TeamSlot } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
 import { ProhibitIcon } from '@/components/icons'
 import KiMeter from '@/components/KiMeter'
-import { getLeaderSkillKiValue } from '@/functions/utils/skillUtils'
+import {
+  getLeaderSkillKiValue,
+  getPassiveSkillKiValue,
+} from '@/functions/utils/skillUtils'
 
 type TeamSlotComponentProps = {
   slot: TeamSlot
@@ -55,77 +58,100 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
     }, [slot.position, onCharacterDrop])
 
     return (
-      <div
-        ref={slotRef}
-        key={slot.position}
-        className={cn(
-          styles.slot,
-          slot.character && styles.occupied,
-          draggedFromPosition === slot.position && isDragging && 'dragging'
-        )}
-        onClick={() => onSlotClick(slot.position)}
-        onMouseDown={(e) => onMouseDown(e, slot)}
-        data-testid="team-slot"
-        data-position={slot.position}
-        style={{
-          pointerEvents: 'auto',
-          ...(() => {
-            // CharacterListからのドラッグ中はcursorを設定しない
-            const bodyHasGrabbingCursor =
-              typeof document !== 'undefined' &&
-              document.body.style.getPropertyValue('cursor') === 'grabbing'
-            if (bodyHasGrabbingCursor) {
-              return {}
-            }
+      <div className={styles.slotWrapper}>
+        <div
+          ref={slotRef}
+          key={slot.position}
+          className={cn(
+            styles.slot,
+            slot.character && styles.occupied,
+            draggedFromPosition === slot.position && isDragging && 'dragging'
+          )}
+          onClick={() => onSlotClick(slot.position)}
+          onMouseDown={(e) => onMouseDown(e, slot)}
+          data-testid="team-slot"
+          data-position={slot.position}
+          style={{
+            pointerEvents: 'auto',
+            ...(() => {
+              // CharacterListからのドラッグ中はcursorを設定しない
+              const bodyHasGrabbingCursor =
+                typeof document !== 'undefined' &&
+                document.body.style.getPropertyValue('cursor') === 'grabbing'
+              if (bodyHasGrabbingCursor) {
+                return {}
+              }
 
-            // TeamLayout内でのドラッグ
-            if (draggedFromPosition === slot.position && isDragging) {
-              return { cursor: 'grabbing' }
-            }
+              // TeamLayout内でのドラッグ
+              if (draggedFromPosition === slot.position && isDragging) {
+                return { cursor: 'grabbing' }
+              }
 
-            // 通常時
-            return { cursor: slot.character ? 'grab' : 'default' }
-          })(),
-        }}
-      >
-        <div className={styles.slotContent}>
-          {slot.character ? (
-            <>
-              <Image
-                className={styles.characterImage}
-                src={slot.character.imagePath || ''}
-                alt={slot.character.name}
-                width={100}
-                height={100}
-              />
-              {slot.character.skills && (
-                <KiMeter
-                  kiValue={(() => {
-                    if (isLeader || isFriend) {
-                      const leaderSlot = teamSlots.find(
-                        (s: TeamSlot) => s.position === 0
-                      )
-                      const friendSlot = teamSlots.find(
-                        (s: TeamSlot) => s.position === 6
-                      )
-                      const leaderKi = leaderSlot?.character?.skills
-                        ? getLeaderSkillKiValue(leaderSlot.character.skills)
-                        : 0
-                      const friendKi = friendSlot?.character?.skills
-                        ? getLeaderSkillKiValue(friendSlot.character.skills)
-                        : 0
-                      return leaderKi + friendKi
-                    } else {
-                      return 0
-                    }
-                  })()}
+              // 通常時
+              return { cursor: slot.character ? 'grab' : 'default' }
+            })(),
+          }}
+        >
+          <div className={styles.slotContent}>
+            {slot.character ? (
+              <>
+                <Image
+                  className={styles.characterImage}
+                  src={slot.character.imagePath || ''}
+                  alt={slot.character.name}
+                  width={100}
+                  height={100}
                 />
-              )}
-            </>
-          ) : null}
-          {isLeader && <span className={styles.leaderBadge}>LEADER</span>}
-          {isFriend && <span className={styles.friendBadge}>FRIEND</span>}
+                {slot.character.skills && (
+                  <KiMeter
+                    kiValue={(() => {
+                      // 自分のパッシブスキルからのki値を取得
+                      const passiveKi = getPassiveSkillKiValue(
+                        slot.character.skills
+                      )
+
+                      if (isLeader || isFriend) {
+                        const leaderSlot = teamSlots.find(
+                          (s: TeamSlot) => s.position === 0
+                        )
+                        const friendSlot = teamSlots.find(
+                          (s: TeamSlot) => s.position === 6
+                        )
+                        const leaderKi = leaderSlot?.character?.skills
+                          ? getLeaderSkillKiValue(leaderSlot.character.skills)
+                          : 0
+                        const friendKi = friendSlot?.character?.skills
+                          ? getLeaderSkillKiValue(friendSlot.character.skills)
+                          : 0
+                        return leaderKi + friendKi + passiveKi
+                      } else {
+                        return passiveKi
+                      }
+                    })()}
+                  />
+                )}
+              </>
+            ) : null}
+            {isLeader && <span className={styles.leaderBadge}>LEADER</span>}
+            {isFriend && <span className={styles.friendBadge}>FRIEND</span>}
+          </div>
         </div>
+        {slot.character?.stats && (
+          <div className={styles.characterStats}>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>55%</span>
+              <span className={styles.statValues}>
+                {slot.character.stats.potential_55.ATK} / {slot.character.stats.potential_55.DEF}
+              </span>
+            </div>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>100%</span>
+              <span className={styles.statValues}>
+                {slot.character.stats.potential_100.ATK} / {slot.character.stats.potential_100.DEF}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -156,46 +182,59 @@ const TeamLayout = memo<TeamLayoutProps>(
       const leaderSlot = teamSlots.find((slot) => slot.position === 0)
 
       if (!leaderSlot?.character?.skills) {
-        return 'リーダーを設置してください'
+        return { text: 'リーダーを設置してください', conditions: null }
       }
 
       const skills = leaderSlot.character.skills
+      let selectedSkill = null
 
       // 優先順位: super_extreme > post_extreme > pre_extreme
       if (skills.super_extreme?.leader_skill?.original_effect) {
-        return skills.super_extreme.leader_skill.original_effect
-      }
-      if (skills.post_extreme?.leader_skill?.original_effect) {
-        return skills.post_extreme.leader_skill.original_effect
-      }
-      if (skills.pre_extreme?.leader_skill?.original_effect) {
-        return skills.pre_extreme.leader_skill.original_effect
+        selectedSkill = skills.super_extreme.leader_skill
+      } else if (skills.post_extreme?.leader_skill?.original_effect) {
+        selectedSkill = skills.post_extreme.leader_skill
+      } else if (skills.pre_extreme?.leader_skill?.original_effect) {
+        selectedSkill = skills.pre_extreme.leader_skill
       }
 
-      return 'スキル情報がありません'
+      if (!selectedSkill) {
+        return { text: 'スキル情報がありません', conditions: null }
+      }
+
+      return {
+        text: selectedSkill.original_effect,
+        conditions: selectedSkill.conditions || null
+      }
     }
 
     // フレンドスキルを取得する関数
     const getFriendSkill = () => {
       const friendSlot = teamSlots.find((slot) => slot.position === 6)
+      
       if (!friendSlot?.character?.skills) {
-        return 'フレンドを設置してください'
+        return { text: 'フレンドを設置してください', conditions: null }
       }
 
       const skills = friendSlot.character.skills
+      let selectedSkill = null
 
       // 優先順位: super_extreme > post_extreme > pre_extreme
       if (skills.super_extreme?.leader_skill?.original_effect) {
-        return skills.super_extreme.leader_skill.original_effect
-      }
-      if (skills.post_extreme?.leader_skill?.original_effect) {
-        return skills.post_extreme.leader_skill.original_effect
-      }
-      if (skills.pre_extreme?.leader_skill?.original_effect) {
-        return skills.pre_extreme.leader_skill.original_effect
+        selectedSkill = skills.super_extreme.leader_skill
+      } else if (skills.post_extreme?.leader_skill?.original_effect) {
+        selectedSkill = skills.post_extreme.leader_skill
+      } else if (skills.pre_extreme?.leader_skill?.original_effect) {
+        selectedSkill = skills.pre_extreme.leader_skill
       }
 
-      return 'スキル情報がありません'
+      if (!selectedSkill) {
+        return { text: 'スキル情報がありません', conditions: null }
+      }
+
+      return {
+        text: selectedSkill.original_effect,
+        conditions: selectedSkill.conditions || null
+      }
     }
     const [draggedFromPosition, setDraggedFromPosition] = useState<
       number | null
@@ -514,13 +553,28 @@ const TeamLayout = memo<TeamLayoutProps>(
         {/* リーダースキル */}
         <div className={styles.leaderSkill}>
           <span className={styles.skillLabel}>リーダースキル</span>
-          <div className={styles.skillText}>{getLeaderSkill()}</div>
+          <div className={styles.skillText}>{getLeaderSkill().text}</div>
         </div>
 
         {/* フレンドスキル */}
         <div className={styles.friendSkill}>
           <span className={styles.skillLabel}>フレンドスキル</span>
-          <div className={styles.skillText}>{getFriendSkill()}</div>
+          <div className={styles.skillText}>{getFriendSkill().text}</div>
+        </div>
+
+        {/* HP合計 */}
+        <div className={styles.hpSection}>
+          <span className={styles.hpLabel}>HP</span>
+          <div className={styles.hpValue}>
+            {(() => {
+              const totalHP = teamSlots
+                .filter(slot => slot.character?.stats)
+                .reduce((sum, slot) => {
+                  return sum + (slot.character?.stats?.potential_55.HP || 0)
+                }, 0)
+              return totalHP > 0 ? totalHP.toLocaleString() : '0'
+            })()}
+          </div>
         </div>
 
         {/* チーム編成枠 */}

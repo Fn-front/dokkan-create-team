@@ -48,6 +48,51 @@
   }
 }
 
+.hpSection {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hpLabel {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-white);
+  background: linear-gradient(
+    45deg,
+    var(--color-green-600),
+    var(--color-green-500)
+  );
+  border-radius: 0.5rem 0 0 0.5rem;
+  margin-right: 0;
+}
+
+.hpValue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  width: max-content;
+  padding: 0.5rem 1rem;
+  font-size: 1.4rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  color: var(--color-gray-800);
+  background: var(--bg-overlay-light);
+  border: 2px solid var(--color-green-500);
+  border-left: none;
+  border-radius: 0 0.5rem 0.5rem 0;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-gray-200);
+    background: var(--bg-overlay-dark);
+  }
+}
+
 .teamSlots {
   display: flex;
   flex-wrap: wrap;
@@ -55,16 +100,15 @@
   justify-content: center;
   width: 100%;
   max-width: 100%;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .slot {
   position: relative;
   display: flex;
-  flex: 1;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
+  min-width: 100px;
   max-width: 100px;
   aspect-ratio: 1;
   cursor: pointer;
@@ -185,6 +229,62 @@
   );
 }
 
+.slotWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.characterStats {
+  width: 100%;
+  max-width: 10rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.4rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  text-align: center;
+
+  @media (prefers-color-scheme: dark) {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: var(--color-gray-600);
+  }
+}
+
+.statRow {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+
+  &:not(:last-child) {
+    margin-bottom: 0.4rem;
+  }
+}
+
+.statLabel {
+  text-align: left;
+  font-weight: bold;
+  color: var(--color-blue-600);
+  font-size: 0.9rem;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-blue-400);
+  }
+}
+
+.statValues {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  font-size: 0.9rem;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-gray-200);
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
@@ -197,10 +297,32 @@
 
   .teamSlots {
     gap: 0.5rem;
+    margin-bottom: 6rem;
   }
 
   .skillText {
     padding: 0.75rem;
     font-size: 1.4rem;
+  }
+
+  .characterStats {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .statLabel,
+  .statValues {
+    font-size: 0.8rem;
+  }
+
+  .hpLabel {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .hpValue {
+    font-size: 1.2rem;
+    padding: 0.4rem 0.8rem;
+    min-width: 150px;
   }
 }
