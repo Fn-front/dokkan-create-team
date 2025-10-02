@@ -1,0 +1,206 @@
+.container {
+  width: 100%;
+  max-width: 2200px;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.leaderSkill {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.friendSkill {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.skillLabel {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-white);
+  background: linear-gradient(
+    45deg,
+    var(--color-orange-600),
+    var(--color-orange-500)
+  );
+  border-radius: 0.5rem;
+}
+
+.skillText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 400;
+  background: var(--bg-overlay-light);
+  border: 2px solid var(--color-gray-300);
+  border-radius: 0.5rem;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--bg-overlay-dark);
+    border-color: #555;
+  }
+}
+
+.teamSlots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 2rem;
+}
+
+.slot {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  max-width: 100px;
+  aspect-ratio: 1;
+  cursor: pointer;
+  background: linear-gradient(
+    135deg,
+    var(--gradient-slot-light-1),
+    var(--gradient-slot-light-2)
+  );
+  border: 3px solid var(--color-gray-400);
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px var(--shadow-light);
+  margin: 2px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 6px 12px var(--shadow-medium);
+    transform: translateY(-2px);
+    border-color: var(--color-blue-400);
+  }
+
+  &:global(.drag-over) {
+    border-color: var(--color-green-500);
+    background: linear-gradient(
+      135deg,
+      rgba(76, 175, 80, 0.3),
+      rgba(139, 195, 74, 0.3)
+    );
+    transform: scale(1.08);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.4);
+  }
+
+  &.occupied {
+    background: var(--color-white);
+    border-color: var(--color-blue-500);
+
+    &:hover {
+      border-color: var(--color-orange-500);
+    }
+
+    &:active {
+      border-color: var(--color-red-500);
+    }
+  }
+
+  &:global(.dragging) {
+    border-color: var(--color-red-600) !important;
+    opacity: 0.7;
+    transform: rotate(2deg);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(
+      135deg,
+      var(--gradient-slot-dark-1),
+      var(--gradient-slot-dark-2)
+    );
+    border-color: var(--color-gray-500);
+
+    &.occupied {
+      background: var(--color-white);
+      border-color: var(--color-blue-500);
+
+      &:hover {
+        border-color: var(--color-orange-500);
+      }
+
+      &:active {
+        border-color: var(--color-red-500);
+      }
+    }
+  }
+}
+
+.slotContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.characterImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.leaderBadge,
+.friendBadge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-white);
+  text-transform: uppercase;
+  background: linear-gradient(
+    45deg,
+    var(--color-red-600),
+    var(--color-red-500)
+  );
+  border-radius: 0.25rem;
+}
+
+.friendBadge {
+  background: linear-gradient(
+    45deg,
+    var(--color-blue-500),
+    var(--color-blue-400)
+  );
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .slot {
+    min-width: 60px;
+    max-width: 100px;
+  }
+
+  .teamSlots {
+    gap: 0.5rem;
+  }
+
+  .skillText {
+    padding: 0.75rem;
+    font-size: 1.4rem;
+  }
+}

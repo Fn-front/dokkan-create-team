@@ -1,0 +1,62 @@
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+html {
+  font-size: 62.5%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-size: 1.6rem;
+  background-color: #ffffff;
+  color: #171717;
+}
+
+:root {
+  /* Primary Colors */
+  --color-orange-600: #ff6b00;
+  --color-orange-500: #ff8f00;
+  --color-orange-300: #ffb74d;
+  --color-red-600: #ff1744;
+  --color-red-500: #ff5722;
+  --color-blue-500: #2196f3;
+  --color-blue-400: #03a9f4;
+  --color-blue-300: #64b5f6;
+
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-gray-900: #171717;
+  --color-gray-700: #333333;
+  --color-gray-600: #666666;
+  --color-gray-500: #555555;
+  --color-gray-400: #cccccc;
+  --color-gray-300: #dddddd;
+  --color-gray-200: #e0e0e0;
+  --color-gray-100: #f0f0f0;
+
+  /* Background Colors */
+  --bg-light: #ffffff;
+  --bg-dark: #0a0a0a;
+  --bg-overlay-light: rgba(0, 0, 0, 0.1);
+  --bg-overlay-dark: rgba(255, 255, 255, 0.1);
+
+  /* Shadow Colors */
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+
+  /* Gradient Colors */
+  --gradient-slot-light-1: #f0f0f0;
+  --gradient-slot-light-2: #e0e0e0;
+  --gradient-slot-dark-1: #3a3a3a;
+  --gradient-slot-dark-2: #2a2a2a;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--bg-dark);
+    color: #ededed;
+  }
+}

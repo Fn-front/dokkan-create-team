@@ -1,0 +1,97 @@
+/**
+ * The new CSS reset - version 1.11.3 (last updated 25.08.2024)
+ * GitHub page: https://github.com/elad2412/the-new-css-reset
+ */
+
+/* Remove all User-Agent-Stylesheet styles except 'display' property */
+*:where(
+  :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)
+) {
+  all: unset;
+  display: revert;
+}
+
+/* Preferred box-sizing value */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Fix mobile Safari font-size on landscape mode */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Reapply pointer cursor for anchor tags */
+a,
+button {
+  cursor: revert;
+}
+
+/* Remove list styles */
+ol,
+ul,
+menu,
+summary {
+  list-style: none;
+}
+
+/* Additional resets for images, tables, inputs, and other elements */
+img {
+  max-inline-size: 100%;
+  max-block-size: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+input,
+textarea {
+  -webkit-user-select: auto;
+}
+
+/* Revert text cursor for textarea */
+textarea {
+  white-space: revert;
+}
+
+/* Fix pointer cursor for disabled select element */
+select:disabled {
+  cursor: not-allowed;
+}
+
+/* Revert the 'white-space' property for textarea elements */
+textarea {
+  white-space: revert;
+}
+
+/* Minimum margin */
+meter {
+  -webkit-appearance: revert;
+  appearance: revert;
+}
+
+/* Preformatted text - restore cursor style */
+:where(pre) {
+  all: revert;
+  box-sizing: border-box;
+}
+
+/* Revert for sub/sup text */
+:where(sub, sup) {
+  vertical-align: revert;
+}
+
+/* Fix for SVG elements to be resizable by css */
+svg {
+  display: block;
+}
+
+/* Remove default margin on typographic elements */
+:where(blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre) {
+  margin: unset;
+}

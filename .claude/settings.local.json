@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(touch:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run format:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(sed:*)",
+      "Bash(PORT=3000 npm run dev)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(PORT=3001 npm run dev)",
+      "Bash(npm run quality:check:*)",
+      "Bash(npm run test:prepare:*)",
+      "Bash(PORT=3001 npx playwright test)",
+      "Bash(PORT=3001 npx playwright test tests/skill-display-test.spec.js)",
+      "Bash(PORT=3001 npx playwright test tests/character-duplicate-test.spec.js)",
+      "Bash(PORT=3001 npx playwright test tests/prohibit-icon-test.spec.js)",
+      "Bash(PORT=3001 npx playwright test tests/character-move-test.spec.js)",
+      "Bash(PORT=3001 npx playwright test tests/character-duplicate-move-test.spec.js)",
+      "Bash(PORT=3002 npm run dev)",
+      "WebFetch(domain:lh4.googleusercontent.com)",
+      "Bash(PORT=3004 npx playwright test --headed tests/skill-display-test.spec.js)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
