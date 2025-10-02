@@ -1,24 +1,192 @@
 [
   {
+    "name": "不滅の最凶戦士\n・伝説の超サイヤ人ブロリー",
+    "rarity": "LR",
+    "attribute": "極力",
+    "cost": "77",
+    "stats": {
+      "max_level": {
+        "HP": "12013",
+        "ATK": "18080",
+        "DEF": "9019"
+      },
+      "potential_55": {
+        "HP": "14013",
+        "ATK": "20080",
+        "DEF": "11019"
+      },
+      "potential_100": {
+        "HP": "17013",
+        "ATK": "23480",
+        "DEF": "13619"
+      }
+    },
+    "skills": {
+      "pre_extreme": {
+        "leader_skill": {
+          "name": "リーダースキル",
+          "conditions": [
+            {
+              "type": "attribute",
+              "target": "力属性",
+              "ki": 3,
+              "hp": 1.9,
+              "atk": 1.9,
+              "def": 1.9
+            }
+          ],
+          "original_effect": "力属性の気力+3、HPとATKとDEF90%UP"
+        },
+        "super_attack": {
+          "name": "必殺技",
+          "effect": "敵全体に極大ダメージを与える"
+        },
+        "ultra_super_attack": {
+          "name": "超必殺技",
+          "effect": "相手に超極大ダメージを与える"
+        },
+        "passive_skill": {
+          "name": "パッシブスキル",
+          "stat_boosts": {
+            "basic": {
+              "atk": 80000,
+              "def_down": 20000
+            }
+          },
+          "original_effect": "必殺技発動時にATK80000UPし自身のDEF20000DOWN必殺技が追加発動"
+        },
+        "active_skill": null
+      },
+      "post_extreme": {
+        "leader_skill": {
+          "name": "リーダースキル",
+          "conditions": [
+            {
+              "type": "attribute",
+              "target": "力属性",
+              "ki": 4,
+              "hp": 2.2,
+              "atk": 2.2,
+              "def": 2.2
+            }
+          ],
+          "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
+        },
+        "super_attack": {
+          "name": "必殺技",
+          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える"
+        },
+        "ultra_super_attack": {
+          "name": "超必殺技",
+          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える"
+        },
+        "passive_skill": {
+          "name": "パッシブスキル",
+          "stat_boosts": {
+            "basic": {
+              "atk": 1.5,
+              "def": 1.5,
+              "ki": 5
+            },
+            "super_attack": {
+              "atk": 1.5,
+              "def": 1.5
+            }
+          },
+          "original_effect": "自身のATKとDEF50%UP必殺技発動時に更にATKとDEF50%UP必殺技が追加発動「純粋サイヤ人」または「混血サイヤ人」カテゴリの敵がいるとき自身の気力+5「孫悟空の系譜」カテゴリの敵がいるとき全属性に効果抜群で攻撃し、必ず攻撃が敵に命中する"
+        },
+        "active_skill": null
+      },
+      "super_extreme": {
+        "leader_skill": {
+          "name": "リーダースキル",
+          "conditions": [
+            {
+              "type": "attribute",
+              "target": "力属性",
+              "ki": 4,
+              "hp": 2.2,
+              "atk": 2.2,
+              "def": 2.2
+            }
+          ],
+          "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
+        },
+        "super_attack": {
+          "name": "必殺技",
+          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える"
+        },
+        "ultra_super_attack": {
+          "name": "超必殺技",
+          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える"
+        },
+        "passive_skill": {
+          "name": "パッシブスキル",
+          "stat_boosts": {
+            "basic": {
+              "atk": 3.6,
+              "def": 2.8,
+              "ki": 3
+            },
+            "conditional": {
+              "enemy": {
+                "atk": 1.26,
+                "def": 3.6
+              }
+            },
+            "turn_limited": {
+              "first_3": {
+                "def": 3.0
+              }
+            }
+          },
+          "original_effect": "基本効果 \n・気力+3、ATK/DEF180%UP\n・気玉取得時の気力上昇量+1\n・必ず必殺技が追加発動\n・会心率/ダメージ軽減率26%UP\n・攻撃が必中する 気力メーター12以上で攻撃時 \n・ATK/DEF200%UP 気力メーター18以上で攻撃時 \n・ATK260%UP 超系の敵がいるとき、または自身の他に攻撃参加中の極系の味方がいるとき \n・気力+3\n・会心率/ダメージ軽減率26%UP\n・2ターンの間、極系の味方全員のATK/DEF26%UP\n・攻撃を受けるときにDEF260%UP 「純粋サイヤ人」または「混血サイヤ人」または「孫悟空の系譜」カテゴリの敵がいるとき \n・バトル中、気力+6、必ず会心が発動 登場から3ターンの間 \n・攻撃参加中の味方全員が「怒り爆発」または「劇場版BOSS」カテゴリのとき攻撃するまでDEF200%UP、ダメージ軽減率26%UP"
+        },
+        "active_skill": null
+      }
+    },
+    "link_skills": [
+      "戦闘民族サイヤ人",
+      "超サイヤ人",
+      "サイヤ人の血",
+      "バーサーカー",
+      "臨戦態勢",
+      "超激戦",
+      "伝説の力"
+    ],
+    "categories": [
+      "復活戦士",
+      "劇場版BOSS",
+      "純粋サイヤ人",
+      "フルパワー",
+      "ターゲット孫悟空",
+      "怒り爆発",
+      "リベンジ",
+      "悪逆非道",
+      "惑星破壊",
+      "伝説の存在",
+      "超サイヤ人を超えた力",
+      "制御不能の力"
+    ],
+    "image_url": "https://lh3.googleusercontent.com/FWEWS00GuAxM9c6597mFbIHfvBZvOrszjodUeVw1AnQAuJ83mX8tUrU1iOX2TfhHbbdp-0UQsbNAJU9YPFDC30j_fcOiv3dkEf-fpTDcBXvI"
+  },
+  {
     "name": "無敵を誇るサイヤ人の頂\n・超サイヤ人4ベジータ",
     "rarity": "LR",
     "attribute": "超力",
     "cost": "77",
     "stats": {
       "max_level": {
-        "label": "最大レベル",
         "HP": "17538",
         "ATK": "16380",
         "DEF": "8381"
       },
       "potential_55": {
-        "label": "潜在解放55%",
         "HP": "19538",
         "ATK": "18380",
         "DEF": "10381"
       },
       "potential_100": {
-        "label": "潜在解放100%",
         "HP": "22538",
         "ATK": "21780",
         "DEF": "12981"
@@ -50,13 +218,11 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "1ターンATKが超大幅上昇し、相手に極大ダメージを与える",
-          "multiplier": 3.95
+          "effect": "1ターンATKが超大幅上昇し、相手に極大ダメージを与える"
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える",
-          "multiplier": 5.9
+          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える"
         },
         "passive_skill": {
           "name": "パッシブスキル",
@@ -100,13 +266,11 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える",
-          "multiplier": 3.95
+          "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える"
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる",
-          "multiplier": 5.9
+          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる"
         },
         "passive_skill": {
           "name": "パッシブスキル",
@@ -168,19 +332,16 @@
     "cost": "77",
     "stats": {
       "max_level": {
-        "label": "最大レベル",
         "HP": "16688",
         "ATK": "14425",
         "DEF": "11250"
       },
       "potential_55": {
-        "label": "潜在解放55%",
         "HP": "18688",
         "ATK": "16425",
         "DEF": "13125"
       },
       "potential_100": {
-        "label": "潜在解放100%",
         "HP": "21688",
         "ATK": "19825",
         "DEF": "15850"
@@ -349,186 +510,5 @@
       "宇宙をわたる戦士"
     ],
     "image_url": "https://lh3.googleusercontent.com/xJbTuZP5il0Q-jjzQe8dAFiY5_acUYqEJ_0qH2MZkAbCohXAbuBJT7XqgPWvB3Bc1rlzf4uIyqcP53CItvu1W8nB4SyHzHezIhGh7qNeJ06a"
-  },
-  {
-    "name": "不滅の最凶戦士\n・伝説の超サイヤ人ブロリー",
-    "rarity": "LR",
-    "attribute": "極力",
-    "cost": "77",
-    "stats": {
-      "max_level": {
-        "label": "最大レベル",
-        "HP": "12013",
-        "ATK": "18080",
-        "DEF": "9019"
-      },
-      "potential_55": {
-        "label": "潜在解放55%",
-        "HP": "14013",
-        "ATK": "20080",
-        "DEF": "11019"
-      },
-      "potential_100": {
-        "label": "潜在解放100%",
-        "HP": "17013",
-        "ATK": "23480",
-        "DEF": "13619"
-      }
-    },
-    "skills": {
-      "pre_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "力属性",
-              "ki": 3,
-              "hp": 1.9,
-              "atk": 1.9,
-              "def": 1.9
-            }
-          ],
-          "original_effect": "力属性の気力+3、HPとATKとDEF90%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "敵全体に極大ダメージを与える",
-          "multiplier": 3.95
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "相手に超極大ダメージを与える",
-          "multiplier": 5.9
-        },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 80000,
-              "def_down": 20000
-            }
-          },
-          "original_effect": "必殺技発動時にATK80000UPし自身のDEF20000DOWN必殺技が追加発動"
-        },
-        "active_skill": null
-      },
-      "post_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "力属性",
-              "ki": 4,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
-            }
-          ],
-          "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
-          "multiplier": 3.95
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
-          "multiplier": 5.9
-        },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 1.5,
-              "def": 1.5
-            },
-            "super_attack": {
-              "atk": 1.5,
-              "def": 1.5
-            }
-          },
-          "original_effect": "自身のATKとDEF50%UP必殺技発動時に更にATKとDEF50%UP必殺技が追加発動「純粋サイヤ人」または「混血サイヤ人」カテゴリの敵がいるとき自身の気力+5「孫悟空の系譜」カテゴリの敵がいるとき全属性に効果抜群で攻撃し、必ず攻撃が敵に命中する"
-        },
-        "active_skill": null
-      },
-      "super_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "力属性",
-              "ki": 4,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
-            }
-          ],
-          "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
-          "multiplier": 3.95
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
-          "multiplier": 5.9
-        },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 2.8,
-              "def": 2.8
-            },
-            "ki_12_plus": {
-              "atk": 3.0,
-              "def": 3.0
-            },
-            "ki_18_plus": {
-              "atk": 3.6
-            },
-            "conditional_enemy": {
-              "atk": 1.26,
-              "def": 3.6
-            },
-            "first_3_turns": {
-              "def": 3.0
-            }
-          },
-          "original_effect": "・気力+3、ATK/DEF180%UP\n・気玉取得時の気力上昇量+1\n・必ず必殺技が追加発動\n・会心率/ダメージ軽減率26%UP\n・攻撃が必中する\n・気力メーター12以上で攻撃時：ATK/DEF200%UP\n・気力メーター18以上で攻撃時：ATK260%UP\n・超系の敵がいるとき、または自身の他に攻撃参加中の極系の味方がいるとき：気力+3、会心率/ダメージ軽減率26%UP、2ターンの間、極系の味方全員のATK/DEF26%UP、攻撃を受けるときにDEF260%UP\n・「純粋サイヤ人」または「混血サイヤ人」または「孫悟空の系譜」カテゴリの敵がいるとき：バトル中、気力+6、必ず会心が発動\n・登場から3ターンの間：攻撃参加中の味方全員が「怒り爆発」または「劇場版BOSS」カテゴリのとき攻撃するまでDEF200%UP、ダメージ軽減率26%UP"
-        },
-        "active_skill": null
-      }
-    },
-    "link_skills": [
-      "戦闘民族サイヤ人",
-      "超サイヤ人",
-      "サイヤ人の血",
-      "バーサーカー",
-      "臨戦態勢",
-      "超激戦",
-      "伝説の力"
-    ],
-    "categories": [
-      "復活戦士",
-      "劇場版BOSS",
-      "純粋サイヤ人",
-      "フルパワー",
-      "ターゲット孫悟空",
-      "怒り爆発",
-      "リベンジ",
-      "悪逆非道",
-      "惑星破壊",
-      "伝説の存在",
-      "超サイヤ人を超えた力",
-      "制御不能の力"
-    ],
-    "image_url": "https://lh3.googleusercontent.com/FWEWS00GuAxM9c6597mFbIHfvBZvOrszjodUeVw1AnQAuJ83mX8tUrU1iOX2TfhHbbdp-0UQsbNAJU9YPFDC30j_fcOiv3dkEf-fpTDcBXvI"
   }
 ]
