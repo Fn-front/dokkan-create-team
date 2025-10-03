@@ -5,17 +5,17 @@
     "attribute": "極力",
     "cost": "77",
     "stats": {
-      "max_level": {
+      "最大レベル": {
         "HP": "12013",
         "ATK": "18080",
         "DEF": "9019"
       },
-      "potential_55": {
+      "潜在解放55%": {
         "HP": "14013",
         "ATK": "20080",
         "DEF": "11019"
       },
-      "potential_100": {
+      "潜在解放100%": {
         "HP": "17013",
         "ATK": "23480",
         "DEF": "13619"
@@ -39,11 +39,13 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "敵全体に極大ダメージを与える"
+          "effect": "敵全体に極大ダメージを与える",
+          "multiplier": 3.95
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "相手に超極大ダメージを与える"
+          "effect": "相手に超極大ダメージを与える",
+          "multiplier": 5.9
         },
         "passive_skill": {
           "name": "パッシブスキル",
@@ -74,11 +76,13 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える"
+          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
+          "multiplier": 3.95
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える"
+          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
+          "multiplier": 5.9
         },
         "passive_skill": {
           "name": "パッシブスキル",
@@ -114,11 +118,13 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える"
+          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
+          "multiplier": 3.95
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える"
+          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
+          "multiplier": 5.9
         },
         "passive_skill": {
           "name": "パッシブスキル",
@@ -127,6 +133,15 @@
               "atk": 3.6,
               "def": 2.8,
               "ki": 3
+            },
+            "ki_meter": {
+              "12": {
+                "atk": 3.0,
+                "def": 3.0
+              },
+              "18": {
+                "atk": 3.6
+              }
             },
             "conditional": {
               "enemy": {
@@ -218,11 +233,13 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "1ターンATKが超大幅上昇し、相手に極大ダメージを与える"
+          "effect": "1ターンATKが超大幅上昇し、相手に極大ダメージを与える",
+          "multiplier": 3.95
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える"
+          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える",
+          "multiplier": 5.9
         },
         "passive_skill": {
           "name": "パッシブスキル",
@@ -266,11 +283,13 @@
         },
         "super_attack": {
           "name": "必殺技",
-          "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える"
+          "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える",
+          "multiplier": 3.95
         },
         "ultra_super_attack": {
           "name": "超必殺技",
-          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる"
+          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる",
+          "multiplier": 5.9
         },
         "passive_skill": {
           "name": "パッシブスキル",

@@ -32,7 +32,10 @@
       "Bash(PORT=3001 npx playwright test tests/character-duplicate-move-test.spec.js)",
       "Bash(PORT=3002 npm run dev)",
       "WebFetch(domain:lh4.googleusercontent.com)",
-      "Bash(PORT=3004 npx playwright test --headed tests/skill-display-test.spec.js)"
+      "Bash(PORT=3004 npx playwright test --headed tests/skill-display-test.spec.js)",
+      "Bash(PORT=3004 npm run dev)",
+      "Bash(PORT=3004 npx playwright test tests/skill-display-test.spec.js --headed)",
+      "Bash(open http://localhost:3004)"
     ],
     "deny": [],
     "ask": []
