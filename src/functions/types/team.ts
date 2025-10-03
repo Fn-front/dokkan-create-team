@@ -37,6 +37,12 @@ type StatBoosts = {
     atk?: number
     def?: number
   }
+  ki_meter?: {
+    [kiLevel: string]: {
+      atk?: number
+      def?: number
+    }
+  }
 }
 
 type Skill = {

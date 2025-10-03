@@ -141,15 +141,389 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
             <div className={styles.statRow}>
               <span className={styles.statLabel}>55%</span>
               <span className={styles.statValues}>
-                {slot.character.stats.potential_55.ATK} /{' '}
-                {slot.character.stats.potential_55.DEF}
+                {(() => {
+                  const leaderSkill = (() => {
+                    const leaderSlot = teamSlots.find((s) => s.position === 0)
+                    if (!leaderSlot?.character?.skills) return null
+                    const skills = leaderSlot.character.skills
+                    if (skills.super_extreme?.leader_skill?.conditions)
+                      return skills.super_extreme.leader_skill
+                    if (skills.post_extreme?.leader_skill?.conditions)
+                      return skills.post_extreme.leader_skill
+                    if (skills.pre_extreme?.leader_skill?.conditions)
+                      return skills.pre_extreme.leader_skill
+                    return null
+                  })()
+
+                  const friendSkill = (() => {
+                    const friendSlot = teamSlots.find((s) => s.position === 6)
+                    if (!friendSlot?.character?.skills) return null
+                    const skills = friendSlot.character.skills
+                    if (skills.super_extreme?.leader_skill?.conditions)
+                      return skills.super_extreme.leader_skill
+                    if (skills.post_extreme?.leader_skill?.conditions)
+                      return skills.post_extreme.leader_skill
+                    if (skills.pre_extreme?.leader_skill?.conditions)
+                      return skills.pre_extreme.leader_skill
+                    return null
+                  })()
+
+                  const baseATK = slot.character.stats.potential_55.ATK
+                  const baseDEF = slot.character.stats.potential_55.DEF
+
+                  let atkMultiplier = 0
+                  let defMultiplier = 0
+
+                  // リーダースキルの倍率取得
+                  if (leaderSkill?.conditions) {
+                    for (const condition of leaderSkill.conditions) {
+                      if (condition.atk !== undefined)
+                        atkMultiplier += condition.atk
+                      if (condition.def !== undefined)
+                        defMultiplier += condition.def
+                    }
+                  }
+
+                  // フレンドスキルの倍率取得
+                  if (friendSkill?.conditions) {
+                    for (const condition of friendSkill.conditions) {
+                      if (condition.atk !== undefined)
+                        atkMultiplier += condition.atk
+                      if (condition.def !== undefined)
+                        defMultiplier += condition.def
+                    }
+                  }
+
+                  // リーダースキル適用後の基本ステータス計算
+                  let currentATK = baseATK
+                  let currentDEF = baseDEF
+
+                  if (atkMultiplier > 0) {
+                    currentATK = Math.floor(baseATK * atkMultiplier)
+                  }
+                  if (defMultiplier > 0) {
+                    currentDEF = Math.floor(baseDEF * defMultiplier)
+                  }
+
+                  // パッシブスキルのstat_boosts計算
+                  const passiveSkill = (() => {
+                    if (!slot.character?.skills) return null
+                    const skills = slot.character.skills
+                    if (skills.super_extreme?.passive_skill?.stat_boosts)
+                      return skills.super_extreme.passive_skill
+                    if (skills.post_extreme?.passive_skill?.stat_boosts)
+                      return skills.post_extreme.passive_skill
+                    if (skills.pre_extreme?.passive_skill?.stat_boosts)
+                      return skills.pre_extreme.passive_skill
+                    return null
+                  })()
+
+                  // basic以外の全ATK/DEF値を再帰的に検索して合計
+                  const collectStatValues = (
+                    obj: Record<string, unknown>,
+                    statType: 'atk' | 'def' | 'def_down',
+                    excludeBasic = false
+                  ): number => {
+                    let sum = 0
+
+                    if (typeof obj === 'object' && obj !== null) {
+                      for (const [key, value] of Object.entries(obj)) {
+                        if (excludeBasic && key === 'basic') {
+                          continue
+                        }
+
+                        if (key === statType && typeof value === 'number') {
+                          sum += value
+                        } else if (
+                          typeof value === 'object' &&
+                          value !== null
+                        ) {
+                          sum += collectStatValues(
+                            value as Record<string, unknown>,
+                            statType,
+                            false
+                          )
+                        }
+                      }
+                    }
+
+                    return sum
+                  }
+
+                  let finalATK = currentATK
+                  let finalDEF = currentDEF
+
+                  if (passiveSkill?.stat_boosts) {
+                    const boosts = passiveSkill.stat_boosts
+
+                    // ATK計算: basic掛け算 → 他の値を足して掛け算
+                    const atkBoostSum = collectStatValues(boosts, 'atk', true)
+
+                    if (boosts.basic?.atk) {
+                      // basicで掛け算
+                      const basicATK = Math.floor(currentATK * boosts.basic.atk)
+                      // 他の値の合計で掛け算（-1処理）
+                      if (atkBoostSum > 0) {
+                        finalATK = Math.floor(basicATK * (atkBoostSum - 1))
+                      } else {
+                        finalATK = basicATK
+                      }
+                    } else if (atkBoostSum > 0) {
+                      // basicがない場合は他の値の合計で掛け算（-1処理）
+                      finalATK = Math.floor(currentATK * (atkBoostSum - 1))
+                    }
+
+                    // DEF計算: basic掛け算 → 他の値を足して掛け算
+                    const defBoostSum = collectStatValues(boosts, 'def', true)
+
+                    if (boosts.basic?.def) {
+                      // basicで掛け算
+                      const basicDEF = Math.floor(currentDEF * boosts.basic.def)
+                      // 他の値の合計で掛け算（-1処理）
+                      if (defBoostSum > 0) {
+                        finalDEF = Math.floor(basicDEF * (defBoostSum - 1))
+                      } else {
+                        finalDEF = basicDEF
+                      }
+                    } else if (defBoostSum > 0) {
+                      // basicがない場合は他の値の合計で掛け算（-1処理）
+                      finalDEF = Math.floor(currentDEF * (defBoostSum - 1))
+                    }
+
+                    // DEF down効果
+                    const defDownSum = collectStatValues(
+                      boosts,
+                      'def_down',
+                      false
+                    )
+                    if (defDownSum > 0) {
+                      finalDEF -= Math.floor(currentDEF * defDownSum)
+                    }
+                  }
+
+                  // post_extreme内の"_attack"で終わるキーの最後の項目のmultiplierを取得
+                  const getAttackMultiplier = () => {
+                    if (!slot.character?.skills?.post_extreme) return null
+
+                    const postExtreme = slot.character.skills.post_extreme
+                    const attackKeys = Object.keys(postExtreme).filter((key) =>
+                      key.endsWith('_attack')
+                    )
+
+                    if (attackKeys.length === 0) return null
+
+                    // 最後の項目を取得
+                    const lastAttackKey = attackKeys[attackKeys.length - 1]
+                    const lastAttack = postExtreme[
+                      lastAttackKey as keyof typeof postExtreme
+                    ] as Record<string, unknown>
+
+                    return typeof lastAttack.multiplier === 'number'
+                      ? lastAttack.multiplier
+                      : null
+                  }
+
+                  const attackMultiplier = getAttackMultiplier()
+                  if (attackMultiplier) {
+                    finalATK = Math.floor(finalATK * attackMultiplier)
+                  }
+
+                  return `${finalATK.toLocaleString()} / ${finalDEF.toLocaleString()}`
+                })()}
               </span>
             </div>
             <div className={styles.statRow}>
               <span className={styles.statLabel}>100%</span>
               <span className={styles.statValues}>
-                {slot.character.stats.potential_100.ATK} /{' '}
-                {slot.character.stats.potential_100.DEF}
+                {(() => {
+                  const leaderSkill = (() => {
+                    const leaderSlot = teamSlots.find((s) => s.position === 0)
+                    if (!leaderSlot?.character?.skills) return null
+                    const skills = leaderSlot.character.skills
+                    if (skills.super_extreme?.leader_skill?.conditions)
+                      return skills.super_extreme.leader_skill
+                    if (skills.post_extreme?.leader_skill?.conditions)
+                      return skills.post_extreme.leader_skill
+                    if (skills.pre_extreme?.leader_skill?.conditions)
+                      return skills.pre_extreme.leader_skill
+                    return null
+                  })()
+
+                  const friendSkill = (() => {
+                    const friendSlot = teamSlots.find((s) => s.position === 6)
+                    if (!friendSlot?.character?.skills) return null
+                    const skills = friendSlot.character.skills
+                    if (skills.super_extreme?.leader_skill?.conditions)
+                      return skills.super_extreme.leader_skill
+                    if (skills.post_extreme?.leader_skill?.conditions)
+                      return skills.post_extreme.leader_skill
+                    if (skills.pre_extreme?.leader_skill?.conditions)
+                      return skills.pre_extreme.leader_skill
+                    return null
+                  })()
+
+                  const baseATK = slot.character.stats.potential_100.ATK
+                  const baseDEF = slot.character.stats.potential_100.DEF
+
+                  let atkMultiplier = 0
+                  let defMultiplier = 0
+
+                  // リーダースキルの倍率取得
+                  if (leaderSkill?.conditions) {
+                    for (const condition of leaderSkill.conditions) {
+                      if (condition.atk !== undefined)
+                        atkMultiplier += condition.atk
+                      if (condition.def !== undefined)
+                        defMultiplier += condition.def
+                    }
+                  }
+
+                  // フレンドスキルの倍率取得
+                  if (friendSkill?.conditions) {
+                    for (const condition of friendSkill.conditions) {
+                      if (condition.atk !== undefined)
+                        atkMultiplier += condition.atk
+                      if (condition.def !== undefined)
+                        defMultiplier += condition.def
+                    }
+                  }
+
+                  // リーダースキル適用後の基本ステータス計算
+                  let currentATK = baseATK
+                  let currentDEF = baseDEF
+
+                  if (atkMultiplier > 0) {
+                    currentATK = Math.floor(baseATK * atkMultiplier)
+                  }
+                  if (defMultiplier > 0) {
+                    currentDEF = Math.floor(baseDEF * defMultiplier)
+                  }
+
+                  // パッシブスキルのstat_boosts計算
+                  const passiveSkill = (() => {
+                    if (!slot.character?.skills) return null
+                    const skills = slot.character.skills
+                    if (skills.super_extreme?.passive_skill?.stat_boosts)
+                      return skills.super_extreme.passive_skill
+                    if (skills.post_extreme?.passive_skill?.stat_boosts)
+                      return skills.post_extreme.passive_skill
+                    if (skills.pre_extreme?.passive_skill?.stat_boosts)
+                      return skills.pre_extreme.passive_skill
+                    return null
+                  })()
+
+                  // basic以外の全ATK/DEF値を再帰的に検索して合計
+                  const collectStatValues = (
+                    obj: Record<string, unknown>,
+                    statType: 'atk' | 'def' | 'def_down',
+                    excludeBasic = false
+                  ): number => {
+                    let sum = 0
+
+                    if (typeof obj === 'object' && obj !== null) {
+                      for (const [key, value] of Object.entries(obj)) {
+                        if (excludeBasic && key === 'basic') {
+                          continue
+                        }
+
+                        if (key === statType && typeof value === 'number') {
+                          sum += value
+                        } else if (
+                          typeof value === 'object' &&
+                          value !== null
+                        ) {
+                          sum += collectStatValues(
+                            value as Record<string, unknown>,
+                            statType,
+                            false
+                          )
+                        }
+                      }
+                    }
+
+                    return sum
+                  }
+
+                  let finalATK = currentATK
+                  let finalDEF = currentDEF
+
+                  if (passiveSkill?.stat_boosts) {
+                    const boosts = passiveSkill.stat_boosts
+
+                    // ATK計算: basic掛け算 → 他の値を足して掛け算
+                    const atkBoostSum = collectStatValues(boosts, 'atk', true)
+
+                    if (boosts.basic?.atk) {
+                      // basicで掛け算
+                      const basicATK = Math.floor(currentATK * boosts.basic.atk)
+                      // 他の値の合計で掛け算（-1処理）
+                      if (atkBoostSum > 0) {
+                        finalATK = Math.floor(basicATK * (atkBoostSum - 1))
+                      } else {
+                        finalATK = basicATK
+                      }
+                    } else if (atkBoostSum > 0) {
+                      // basicがない場合は他の値の合計で掛け算（-1処理）
+                      finalATK = Math.floor(currentATK * (atkBoostSum - 1))
+                    }
+
+                    // DEF計算: basic掛け算 → 他の値を足して掛け算
+                    const defBoostSum = collectStatValues(boosts, 'def', true)
+
+                    if (boosts.basic?.def) {
+                      // basicで掛け算
+                      const basicDEF = Math.floor(currentDEF * boosts.basic.def)
+                      // 他の値の合計で掛け算（-1処理）
+                      if (defBoostSum > 0) {
+                        finalDEF = Math.floor(basicDEF * (defBoostSum - 1))
+                      } else {
+                        finalDEF = basicDEF
+                      }
+                    } else if (defBoostSum > 0) {
+                      // basicがない場合は他の値の合計で掛け算（-1処理）
+                      finalDEF = Math.floor(currentDEF * (defBoostSum - 1))
+                    }
+
+                    // DEF down効果
+                    const defDownSum = collectStatValues(
+                      boosts,
+                      'def_down',
+                      false
+                    )
+                    if (defDownSum > 0) {
+                      finalDEF -= Math.floor(currentDEF * defDownSum)
+                    }
+                  }
+
+                  // post_extreme内の"_attack"で終わるキーの最後の項目のmultiplierを取得
+                  const getAttackMultiplier = () => {
+                    if (!slot.character?.skills?.post_extreme) return null
+
+                    const postExtreme = slot.character.skills.post_extreme
+                    const attackKeys = Object.keys(postExtreme).filter((key) =>
+                      key.endsWith('_attack')
+                    )
+
+                    if (attackKeys.length === 0) return null
+
+                    // 最後の項目を取得
+                    const lastAttackKey = attackKeys[attackKeys.length - 1]
+                    const lastAttack = postExtreme[
+                      lastAttackKey as keyof typeof postExtreme
+                    ] as Record<string, unknown>
+
+                    return typeof lastAttack.multiplier === 'number'
+                      ? lastAttack.multiplier
+                      : null
+                  }
+
+                  const attackMultiplier = getAttackMultiplier()
+                  if (attackMultiplier) {
+                    finalATK = Math.floor(finalATK * attackMultiplier)
+                  }
+
+                  return `${finalATK.toLocaleString()} / ${finalDEF.toLocaleString()}`
+                })()}
               </span>
             </div>
           </div>

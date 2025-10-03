@@ -85,6 +85,7 @@ export const sampleCharacters: Character[] = [
         ultra_super_attack: {
           name: '超必殺技',
           effect: '1ターンATKとDEFが上昇し、相手に超極大ダメージを与える',
+          multiplier: 4.2,
         },
         passive_skill: {
           name: 'パッシブスキル',
@@ -130,14 +131,24 @@ export const sampleCharacters: Character[] = [
         ultra_super_attack: {
           name: '超必殺技',
           effect: '1ターンATKとDEFが上昇し、相手に超極大ダメージを与える',
+          multiplier: 4.2,
         },
         passive_skill: {
           name: 'パッシブスキル',
           stat_boosts: {
             basic: {
-              atk: 3.6,
+              atk: 2.8,
               def: 2.8,
               ki: 3,
+            },
+            ki_meter: {
+              12: {
+                atk: 3.0,
+                def: 3.0,
+              },
+              18: {
+                atk: 3.6,
+              },
             },
             conditional: {
               enemy: {

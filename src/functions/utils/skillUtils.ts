@@ -44,7 +44,10 @@ export const getPassiveSkillKiValue = (skills: CharacterSkills): number => {
   for (const skillSet of skillSets) {
     if (skillSet?.passive_skill?.stat_boosts?.basic?.ki) {
       // ki値を0-24の範囲に制限
-      return Math.max(0, Math.min(24, skillSet.passive_skill.stat_boosts.basic.ki))
+      return Math.max(
+        0,
+        Math.min(24, skillSet.passive_skill.stat_boosts.basic.ki)
+      )
     }
   }
 
