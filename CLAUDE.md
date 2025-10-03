@@ -230,6 +230,8 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
 - **処理追加・変更後は必ずテスト検証を実行**
 - 既存機能の回帰テストを実施
 - 要件適合性をテスト結果で確認
+- **型定義変更時**: TypeScriptコンパイル確認 (`npx tsc --noEmit`)
+- **新機能追加時**: 対応するテストケースの作成・実行
 
 ## スキル表示システム
 
