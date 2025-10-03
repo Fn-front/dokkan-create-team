@@ -5,10 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 開発コマンド
 
 ```bash
-# 開発サーバー起動
+# 開発サーバー起動（Turbopack使用）
 npm run dev
 
-# ビルド
+# ビルド（Turbopack使用）
 npm run build
 
 # 本番サーバー起動
@@ -262,6 +262,48 @@ if (skills.pre_extreme?.leader_skill?.original_effect) {
 - **テスト内容**: 初期状態、キャラクター設置、削除時の動作検証
 - **表示メッセージ変更**: 「リーダーキャラクターを設置してください」→「リーダーを設置してください」
 
+## ステータス計算システム
+
+### ATK/DEF計算ロジック
+
+キャラクターの最終ステータス計算は以下の順序で実行：
+
+1. **基本ステータス**: `potential_55` または `potential_100` の値を使用
+2. **リーダー・フレンドスキル適用**: 条件に応じた倍率を累積して適用
+3. **パッシブスキル stat_boosts 計算**:
+   - `basic` 値で乗算（`basic.atk`, `basic.def`）
+   - `basic` 以外の全ATK/DEF値を再帰的に収集・合計
+   - 合計値から-1して乗算（basic以外の値のみ）
+4. **DEF down効果**: `def_down`値を基本DEFから減算
+5. **攻撃倍率適用**（ATKのみ）: `post_extreme`内の"\_attack"で終わるキーの最後の項目の`multiplier`
+
+### 再帰的ステータス収集
+
+```typescript
+const collectStatValues = (
+  obj: Record<string, unknown>,
+  statType: 'atk' | 'def' | 'def_down',
+  excludeBasic = false
+): number => {
+  // キー名に依存しない再帰的な値収集
+  // `ki_meter`, `conditional`, `turn_limited` など任意の構造に対応
+}
+```
+
+### 計算式例（ブロリー）
+
+```
+基本ATK: 20,080
+↓ (リーダー効果 2.2倍 × フレンド効果 2.2倍)
+リダフレ後: 97,190
+↓ (basic.atk = 2.8倍)
+basicATK: 272,132
+↓ (other boosts合計 7.86 - 1 = 6.86倍)
+stat_boosts後: 1,866,825
+↓ (ultra_super_attack multiplier = 4.2倍、-1処理なし)
+最終ATK: 7,840,665
+```
+
 ## 重要な技術的制約
 
 - **任意のCSS プロパティ設定**: ベンダープレフィックス付きCSSプロパティは`setProperty()`/`removeProperty()`を使用（型安全）
@@ -269,3 +311,4 @@ if (skills.pre_extreme?.leader_skill?.original_effect) {
 - **ドラッグ状態管理**: React stateではなく`useRef`を使用して即座に状態を保存（非同期更新回避）
 - **`any`型の使用禁止**: 型安全性を保つため、常に適切な型定義または型安全なAPIを使用
 - **コードフォーマット**: 変更後は必ず`npm run format`でPrettierを実行
+- **ステータス計算**: 計算順序の厳守、Math.floor()による切り捨て処理、multiplier適用時の-1処理の有無に注意
