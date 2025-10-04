@@ -195,7 +195,8 @@ export const sampleCharacters: Character[] = [
   {
     id: '2',
     name: '無敵を誇るサイヤ人の頂・超サイヤ人4ベジータ',
-    imagePath: '/images/character/sample-character-2.png',
+    imagePath:
+      '/images/character/muteki-wo-hokoru-saiyajin-no-itadaki-super-saiyan-4-vegeta.png',
     rarity: 5,
     type: 'PHY',
     cost: 77,
@@ -336,7 +337,8 @@ export const sampleCharacters: Character[] = [
   {
     id: '3',
     name: '破壊による世界調和・ビルス＆ウイス',
-    imagePath: '/images/character/sample-character-3.png',
+    imagePath:
+      '/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png',
     rarity: 5,
     type: 'PHY',
     cost: 77,
