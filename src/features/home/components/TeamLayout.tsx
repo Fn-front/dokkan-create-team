@@ -553,6 +553,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               </span>
               <span className={styles.statValues}>
                 {(() => {
+                  // 100%のfinalATKを計算
                   const leaderSkill = (() => {
                     const leaderSlot = teamSlots.find((s) => s.position === 0)
                     if (!leaderSlot?.character?.skills) return null
@@ -629,7 +630,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     return null
                   })()
 
-                  // conditions含めた全ATK/DEF値を再帰的に検索して合計（defensiveは除外）
+                  // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions含む、defensiveは除外）
                   const collectStatValuesWithConditions = (
                     obj: Record<string, unknown>,
                     statType: 'atk' | 'def' | 'def_down',
@@ -642,7 +643,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                         if (excludeBasic && key === 'basic') {
                           continue
                         }
-                        // defensiveを除外
+                        // defensiveのみ除外
                         if (key === 'defensive') {
                           continue
                         }
@@ -672,11 +673,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     const boosts = passiveSkill.stat_boosts
 
                     // ATK計算: basic掛け算 → 他の値を足して掛け算（conditions含む）
-                    const atkBoostSum = collectStatValuesWithConditions(
-                      boosts,
-                      'atk',
-                      true
-                    )
+                    const atkBoostSum = collectStatValuesWithConditions(boosts, 'atk', true)
 
                     if (boosts.basic?.atk) {
                       // basicで掛け算
@@ -693,11 +690,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
 
                     // DEF計算: basic掛け算 → 他の値を足して掛け算（conditions含む）
-                    const defBoostSum = collectStatValuesWithConditions(
-                      boosts,
-                      'def',
-                      true
-                    )
+                    const defBoostSum = collectStatValuesWithConditions(boosts, 'def', true)
 
                     if (boosts.basic?.def) {
                       // basicで掛け算
@@ -724,33 +717,6 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                   }
 
-                  // _extremeの最後のキーから攻撃倍率を取得
-                  const getAttackMultiplier = () => {
-                    if (!slot.character?.skills) return null
-
-                    const skills = slot.character.skills
-                    const extremeKeys = Object.keys(skills).filter((key) =>
-                      key.endsWith('_extreme')
-                    )
-
-                    if (extremeKeys.length === 0) return null
-
-                    // 最後の_extremeキーを取得
-                    const lastExtremeKey = extremeKeys[extremeKeys.length - 1]
-                    const skillSet =
-                      skills[lastExtremeKey as keyof typeof skills]
-
-                    if (!skillSet) return null
-
-                    // ultra_super_attackのmultiplierを取得
-                    return skillSet.ultra_super_attack?.multiplier || null
-                  }
-
-                  const attackMultiplier = getAttackMultiplier()
-                  if (attackMultiplier) {
-                    finalATK = Math.floor(finalATK * attackMultiplier)
-                  }
-
                   // super_attack_countとstat_boostを取得
                   const skills = slot.character.skills
                   const superAttackInfo = (() => {
@@ -763,19 +729,40 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     return null
                   })()
 
-                  if (superAttackInfo?.super_attack_count) {
+                  const ultraSuperAttackInfo = (() => {
+                    if (skills?.super_extreme?.ultra_super_attack)
+                      return skills.super_extreme.ultra_super_attack
+                    if (skills?.post_extreme?.ultra_super_attack)
+                      return skills.post_extreme.ultra_super_attack
+                    if (skills?.pre_extreme?.ultra_super_attack)
+                      return skills.pre_extreme.ultra_super_attack
+                    return null
+                  })()
+
+                  const isLR = slot.character.rarity === 'LR'
+
+                  if (isLR && superAttackInfo?.super_attack_count) {
+                    // LRの場合: 特殊な計算式
                     const count = superAttackInfo.super_attack_count
                     const statBoost = superAttackInfo.stat_boost
+                    const superMultiplier = superAttackInfo.multiplier
+                    const ultraMultiplier =
+                      ultraSuperAttackInfo?.multiplier || 0
 
+                    // (finalATK × ultra_super_attack.multiplier) + (finalATK × super_attack.multiplier × super_attack_count) + ((perAttackBoost × super_attack.stat_boost.atk) × super_attack_count)
+                    const ultraATK = Math.floor(finalATK * ultraMultiplier)
+                    const superATK = Math.floor(
+                      finalATK * superMultiplier * count
+                    )
+
+                    let boostATK = 0
                     if (statBoost?.atk) {
-                      const perAttackBoost = Math.floor(
-                        baseATK * statBoost.atk
-                      )
-                      // ATK計算: finalATK × (count + 1) + perAttackBoost × (count + 1)
-                      finalATK = Math.floor(
-                        finalATK * (count + 1) + perAttackBoost * (count + 1)
-                      )
+                      const perAttackBoost = Math.floor(baseATK * statBoost.atk)
+                      boostATK =
+                        Math.floor(perAttackBoost * statBoost.atk) * count
                     }
+
+                    finalATK = ultraATK + superATK + boostATK
 
                     // DEF: 基本DEF × stat_boost.atk × 回数を足す
                     if (statBoost?.atk) {
@@ -783,6 +770,13 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                         baseDEF * statBoost.atk * (count + 1)
                       )
                       finalDEF += defBoost
+                    }
+                  } else {
+                    // LR以外: 従来の計算式
+                    const attackMultiplier =
+                      ultraSuperAttackInfo?.multiplier || null
+                    if (attackMultiplier) {
+                      finalATK = Math.floor(finalATK * attackMultiplier)
                     }
                   }
 

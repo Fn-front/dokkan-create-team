@@ -138,7 +138,7 @@ export const sampleCharacters: Character[] = [
             atk: 1.3,
             def: 1.3,
           },
-          super_attack_count: 3,
+          super_attack_count: 2,
         },
         ultra_super_attack: {
           name: '超必殺技',
