@@ -35,9 +35,26 @@
       "Bash(PORT=3004 npx playwright test --headed tests/skill-display-test.spec.js)",
       "Bash(PORT=3004 npm run dev)",
       "Bash(PORT=3004 npx playwright test tests/skill-display-test.spec.js --headed)",
-      "Bash(open http://localhost:3004)"
+      "Bash(open http://localhost:3004)",
+      "Bash(claude mcp add:*)",
+      "Bash(npx:*)",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__new_page",
+      "Bash(PORT=3005 npm run dev)",
+      "Bash(xargs kill:*)",
+      "mcp__chrome-devtools__select_page",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__drag",
+      "mcp__chrome-devtools__evaluate_script"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
 }
