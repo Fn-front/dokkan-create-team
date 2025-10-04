@@ -16,6 +16,8 @@
     "test:single": "npm run test:prepare && npx playwright test"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-tabs": "^1.1.13",
     "clsx": "^2.1.1",
     "next": "15.5.4",
     "react": "19.1.0",
