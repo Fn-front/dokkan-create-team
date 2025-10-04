@@ -337,8 +337,7 @@ export const sampleCharacters: Character[] = [
   {
     id: '3',
     name: '破壊による世界調和・ビルス＆ウイス',
-    imagePath:
-      '/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png',
+    imagePath: '/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png',
     rarity: 5,
     type: 'PHY',
     cost: 77,
