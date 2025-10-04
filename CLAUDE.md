@@ -207,6 +207,31 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
 - **className結合**: `clsx`ライブラリを使用、`cn()`共通関数(`src/lib/utils.ts`)でラップ
 - **アイコンは今後react-iconsを使用**: `@/components/icons`で管理
 
+## 共通コンポーネント・Hooks
+
+### Radix UI統合
+
+- **Dialogコンポーネント**: `@radix-ui/react-dialog`を使用したモーダル実装
+- **Tabsコンポーネント**: `@/components/Tabs/Tabs.tsx`で再利用可能なタブUI提供
+  - `tabs`プロップで`{ value, label, content }`配列を受け取る
+  - 自動的に最初のタブをデフォルト選択、または`defaultValue`で指定可能
+  - スタイルは`text-align: center`を含む共通スタイル適用
+
+### カスタムHooks
+
+- **useDialog** (`functions/hooks/useDialog.ts`): ダイアログの開閉状態を管理
+  - `open`, `openDialog()`, `closeDialog()`, `toggleDialog()`, `setOpen()`を提供
+  - 複数のダイアログで再利用可能な汎用hooks
+
+### キャラクター詳細ダイアログ
+
+- **CharacterDetailDialog** (`components/CharacterDetailDialog/`): キャラクター詳細表示
+  - 通常/極限/超極限のタブ切り替え（存在するタブのみ表示）
+  - `original_effect`のみ表示、タブ外に`link_skills`と`categories`を配置
+  - `\n`改行表示のため`white-space: pre-line`を使用
+  - 固定幅600px、タブはセンター寄せ
+  - 詳細ボタン: 左上に配置、クリック領域3rem×3remで視認性とアクセシビリティ向上
+
 ## テスト
 
 ### 環境設定
