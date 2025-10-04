@@ -52,9 +52,27 @@ body {
   --gradient-slot-light-2: #e0e0e0;
   --gradient-slot-dark-1: #3a3a3a;
   --gradient-slot-dark-2: #2a2a2a;
+
+  /* Semantic Colors */
+  --color-background: #ffffff;
+  --color-card: #f9f9f9;
+  --color-text: #171717;
+  --color-text-secondary: #666666;
+  --color-border: #e0e0e0;
+  --color-hover: #f0f0f0;
+  --color-primary: #ff8f00;
 }
 
 @media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1a1a1a;
+    --color-card: #2a2a2a;
+    --color-text: #ededed;
+    --color-text-secondary: #999999;
+    --color-border: #3a3a3a;
+    --color-hover: #333333;
+  }
+
   body {
     background-color: var(--bg-dark);
     color: #ededed;

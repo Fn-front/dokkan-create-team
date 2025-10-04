@@ -59,6 +59,7 @@
 .hpLabel {
   display: inline-block;
   padding: 0.5rem 1rem;
+  margin-right: 0;
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-white);
@@ -68,19 +69,18 @@
     var(--color-green-500)
   );
   border-radius: 0.5rem 0 0 0.5rem;
-  margin-right: 0;
 }
 
 .hpValue {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 200px;
   width: max-content;
+  min-width: 200px;
   padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
   font-size: 1.4rem;
   font-weight: bold;
-  font-family: 'Courier New', monospace;
   color: var(--color-gray-800);
   background: var(--bg-overlay-light);
   border: 2px solid var(--color-green-500);
@@ -111,6 +111,7 @@
   min-width: 100px;
   max-width: 100px;
   aspect-ratio: 1;
+  margin: 2px;
   cursor: pointer;
   background: linear-gradient(
     135deg,
@@ -120,27 +121,26 @@
   border: 3px solid var(--color-gray-400);
   border-radius: 1rem;
   box-shadow: 0 4px 8px var(--shadow-light);
-  margin: 2px;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
     border-color 0.2s ease;
 
   &:hover {
+    border-color: var(--color-blue-400);
     box-shadow: 0 6px 12px var(--shadow-medium);
     transform: translateY(-2px);
-    border-color: var(--color-blue-400);
   }
 
   &:global(.drag-over) {
-    border-color: var(--color-green-500);
     background: linear-gradient(
       135deg,
       rgba(76, 175, 80, 0.3),
       rgba(139, 195, 74, 0.3)
     );
-    transform: scale(1.08);
+    border-color: var(--color-green-500);
     box-shadow: 0 8px 16px rgba(76, 175, 80, 0.4);
+    transform: scale(1.08);
   }
 
   &.occupied {
@@ -198,9 +198,9 @@
 .characterImage {
   width: 100%;
   height: 100%;
-  border-radius: 0.75rem;
-  object-fit: cover;
   pointer-events: none;
+  object-fit: cover;
+  border-radius: 0.75rem;
 }
 
 .leaderBadge,
@@ -238,14 +238,14 @@
 .characterStats {
   width: 100%;
   max-width: 10rem;
-  margin-top: 0.5rem;
   padding: 0.4rem 0.6rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid var(--color-gray-300);
   border-radius: 0.4rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 1rem;
-  text-align: center;
 
   @media (prefers-color-scheme: dark) {
     background: rgba(30, 30, 30, 0.95);
@@ -264,10 +264,10 @@
 }
 
 .statLabel {
-  text-align: left;
+  font-size: 0.9rem;
   font-weight: bold;
   color: var(--color-blue-600);
-  font-size: 0.9rem;
+  text-align: left;
 
   @media (prefers-color-scheme: dark) {
     color: var(--color-blue-400);
@@ -276,9 +276,9 @@
 
 .statValues {
   font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-gray-800);
-  font-size: 0.9rem;
 
   @media (prefers-color-scheme: dark) {
     color: var(--color-gray-200);
@@ -316,13 +316,13 @@
   }
 
   .hpLabel {
-    font-size: 1rem;
     padding: 0.4rem 0.8rem;
+    font-size: 1rem;
   }
 
   .hpValue {
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
     min-width: 150px;
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
   }
 }

@@ -5,7 +5,9 @@ import styles from './CharacterList.module.scss'
 import { sampleCharacters } from '@/functions/data/characters'
 import type { Character } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
-import { ProhibitIcon } from '@/components/icons'
+import { ProhibitIcon, DetailIcon } from '@/components/icons'
+import CharacterDetailDialog from '@/components/CharacterDetailDialog/CharacterDetailDialog'
+import { useDialog } from '@/functions/hooks/useDialog'
 
 type CharacterListProps = {
   onCharacterDragStart: (character: Character) => void
@@ -15,6 +17,9 @@ type CharacterListProps = {
 const CharacterList = memo<CharacterListProps>(
   ({ onCharacterDragStart, canPlaceCharacter }) => {
     const [isDragging, setIsDragging] = useState(false)
+    const [selectedCharacter, setSelectedCharacter] =
+      useState<Character | null>(null)
+    const { open: dialogOpen, setOpen: setDialogOpen } = useDialog()
 
     // キャラクターがどこかに配置可能かチェックする関数
     const canPlaceAnywhere = (character: Character): boolean => {
@@ -313,6 +318,16 @@ const CharacterList = memo<CharacterListProps>(
       dragImageRef.current = dragImage
     }
 
+    // 詳細ボタンクリック時の処理
+    const handleDetailClick = (
+      e: React.MouseEvent,
+      character: Character
+    ): void => {
+      e.stopPropagation() // ドラッグ開始を防ぐ
+      setSelectedCharacter(character)
+      setDialogOpen(true)
+    }
+
     return (
       <div className={styles.container}>
         <h2 className={styles.title}>キャラクター一覧</h2>
@@ -333,6 +348,16 @@ const CharacterList = memo<CharacterListProps>(
                 role="button"
                 tabIndex={isPlaceable ? 0 : -1}
               >
+                {character.skills && (
+                  <button
+                    className={styles.detailButton}
+                    onClick={(e) => handleDetailClick(e, character)}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    aria-label="詳細を表示"
+                  >
+                    <DetailIcon className={styles.detailIcon} />
+                  </button>
+                )}
                 {character.imagePath ? (
                   <Image
                     className={styles.characterImage}
@@ -348,6 +373,13 @@ const CharacterList = memo<CharacterListProps>(
             )
           })}
         </div>
+        {selectedCharacter && (
+          <CharacterDetailDialog
+            character={selectedCharacter}
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+          />
+        )}
       </div>
     )
   }
