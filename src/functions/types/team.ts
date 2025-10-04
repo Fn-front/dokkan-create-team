@@ -7,6 +7,11 @@ type SkillCondition = {
   def?: number
 }
 
+type StatBoost = {
+  atk?: number
+  def?: number
+}
+
 type StatBoosts = {
   basic?: {
     atk?: number
@@ -43,6 +48,34 @@ type StatBoosts = {
       def?: number
     }
   }
+  conditions?: {
+    enemy?: {
+      super?: {
+        ki?: number
+        atk?: number
+        def?: number
+      }
+      categories?: {
+        targets?: string[]
+        ki?: number
+      }
+    }
+    ally?: {
+      extreme?: {
+        atk?: number
+        def?: number
+      }
+      categories?: {
+        targets?: string[]
+        def?: number
+      }
+    }
+  }
+  defensive?: {
+    when_attacked?: {
+      def?: number
+    }
+  }
 }
 
 type Skill = {
@@ -51,14 +84,16 @@ type Skill = {
   original_effect?: string
   effect?: string
   stat_boosts?: StatBoosts
+  stat_boost?: StatBoost
   multiplier?: number
+  super_attack_count?: number
 }
 
 type SkillSet = {
-  leader_skill: Skill
-  super_attack: Skill
-  ultra_super_attack?: Skill
-  passive_skill: Skill
+  leader_skill: Skill | null
+  super_attack: Skill | null
+  ultra_super_attack?: Skill | null
+  passive_skill: Skill | null
   active_skill: Skill | null
 }
 
@@ -87,12 +122,11 @@ type CharacterStats = {
 }
 
 export type Character = {
-  id: string
   name: string
-  imagePath: string
-  rarity: number
-  type: string
-  cost: number
+  rarity?: string
+  attribute?: string
+  cost?: string
+  image_url?: string
   stats?: CharacterStats
   skills?: CharacterSkills
   link_skills?: string[]

@@ -97,7 +97,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               <>
                 <Image
                   className={styles.characterImage}
-                  src={slot.character.imagePath || ''}
+                  src={slot.character.image_url || ''}
                   alt={slot.character.name}
                   width={100}
                   height={100}
@@ -301,26 +301,26 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                   }
 
-                  // post_extreme内の"_attack"で終わるキーの最後の項目のmultiplierを取得
+                  // _extremeの最後のキーから攻撃倍率を取得
                   const getAttackMultiplier = () => {
-                    if (!slot.character?.skills?.post_extreme) return null
+                    if (!slot.character?.skills) return null
 
-                    const postExtreme = slot.character.skills.post_extreme
-                    const attackKeys = Object.keys(postExtreme).filter((key) =>
-                      key.endsWith('_attack')
+                    const skills = slot.character.skills
+                    const extremeKeys = Object.keys(skills).filter((key) =>
+                      key.endsWith('_extreme')
                     )
 
-                    if (attackKeys.length === 0) return null
+                    if (extremeKeys.length === 0) return null
 
-                    // 最後の項目を取得
-                    const lastAttackKey = attackKeys[attackKeys.length - 1]
-                    const lastAttack = postExtreme[
-                      lastAttackKey as keyof typeof postExtreme
-                    ] as Record<string, unknown>
+                    // 最後の_extremeキーを取得
+                    const lastExtremeKey = extremeKeys[extremeKeys.length - 1]
+                    const skillSet =
+                      skills[lastExtremeKey as keyof typeof skills]
 
-                    return typeof lastAttack.multiplier === 'number'
-                      ? lastAttack.multiplier
-                      : null
+                    if (!skillSet) return null
+
+                    // ultra_super_attackのmultiplierを取得
+                    return skillSet.ultra_super_attack?.multiplier || null
                   }
 
                   const attackMultiplier = getAttackMultiplier()
@@ -495,26 +495,26 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                   }
 
-                  // post_extreme内の"_attack"で終わるキーの最後の項目のmultiplierを取得
+                  // _extremeの最後のキーから攻撃倍率を取得
                   const getAttackMultiplier = () => {
-                    if (!slot.character?.skills?.post_extreme) return null
+                    if (!slot.character?.skills) return null
 
-                    const postExtreme = slot.character.skills.post_extreme
-                    const attackKeys = Object.keys(postExtreme).filter((key) =>
-                      key.endsWith('_attack')
+                    const skills = slot.character.skills
+                    const extremeKeys = Object.keys(skills).filter((key) =>
+                      key.endsWith('_extreme')
                     )
 
-                    if (attackKeys.length === 0) return null
+                    if (extremeKeys.length === 0) return null
 
-                    // 最後の項目を取得
-                    const lastAttackKey = attackKeys[attackKeys.length - 1]
-                    const lastAttack = postExtreme[
-                      lastAttackKey as keyof typeof postExtreme
-                    ] as Record<string, unknown>
+                    // 最後の_extremeキーを取得
+                    const lastExtremeKey = extremeKeys[extremeKeys.length - 1]
+                    const skillSet =
+                      skills[lastExtremeKey as keyof typeof skills]
 
-                    return typeof lastAttack.multiplier === 'number'
-                      ? lastAttack.multiplier
-                      : null
+                    if (!skillSet) return null
+
+                    // ultra_super_attackのmultiplierを取得
+                    return skillSet.ultra_super_attack?.multiplier || null
                   }
 
                   const attackMultiplier = getAttackMultiplier()
@@ -895,7 +895,7 @@ const TeamLayout = memo<TeamLayoutProps>(
       const offset = dragOffsetRef.current
 
       const dragImage = document.createElement('img')
-      dragImage.src = draggedCharacterRef.current.imagePath || ''
+      dragImage.src = draggedCharacterRef.current.image_url || ''
       dragImage.alt = draggedCharacterRef.current.name
       dragImage.style.position = 'fixed'
       dragImage.style.pointerEvents = 'none'

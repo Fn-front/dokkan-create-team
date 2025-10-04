@@ -2,13 +2,10 @@ import type { Character } from '../types/team'
 
 export const sampleCharacters: Character[] = [
   {
-    id: '1',
-    name: '不滅の最凶戦士伝説の超サイヤ人ブロリー',
-    imagePath:
-      '/images/character/fumetsu-no-saikyou-senshi-densetsu-no-super-saiyan-broly.png',
-    rarity: 5,
-    type: 'PHY',
-    cost: 58,
+    name: '不滅の最凶戦士\n・伝説の超サイヤ人ブロリー',
+    rarity: 'LR',
+    attribute: '極力',
+    cost: '77',
     stats: {
       max_level: {
         HP: 12013,
@@ -45,10 +42,13 @@ export const sampleCharacters: Character[] = [
         super_attack: {
           name: '必殺技',
           effect: '敵全体に極大ダメージを与える',
+          multiplier: 3.95,
+          super_attack_count: 2,
         },
         ultra_super_attack: {
           name: '超必殺技',
           effect: '相手に超極大ダメージを与える',
+          multiplier: 5.9,
         },
         passive_skill: {
           name: 'パッシブスキル',
@@ -81,11 +81,21 @@ export const sampleCharacters: Character[] = [
         super_attack: {
           name: '必殺技',
           effect: '1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える',
+          multiplier: 3.95,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
+          super_attack_count: 2,
         },
         ultra_super_attack: {
           name: '超必殺技',
           effect: '1ターンATKとDEFが上昇し、相手に超極大ダメージを与える',
-          multiplier: 4.2,
+          multiplier: 5.9,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
         },
         passive_skill: {
           name: 'パッシブスキル',
@@ -103,11 +113,7 @@ export const sampleCharacters: Character[] = [
           original_effect:
             '自身のATKとDEF50%UP必殺技発動時に更にATKとDEF50%UP必殺技が追加発動「純粋サイヤ人」または「混血サイヤ人」カテゴリの敵がいるとき自身の気力+5「孫悟空の系譜」カテゴリの敵がいるとき全属性に効果抜群で攻撃し、必ず攻撃が敵に命中する',
         },
-        active_skill: {
-          name: 'アクティブスキル',
-          effect:
-            '1ターン自身のATKが大幅上昇し、敵全体に超絶特大ダメージを与える',
-        },
+        active_skill: null,
       },
       super_extreme: {
         leader_skill: {
@@ -127,26 +133,36 @@ export const sampleCharacters: Character[] = [
         super_attack: {
           name: '必殺技',
           effect: '1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える',
+          multiplier: 3.95,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
+          super_attack_count: 3,
         },
         ultra_super_attack: {
           name: '超必殺技',
           effect: '1ターンATKとDEFが上昇し、相手に超極大ダメージを与える',
-          multiplier: 4.2,
+          multiplier: 5.9,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
         },
         passive_skill: {
           name: 'パッシブスキル',
           stat_boosts: {
             basic: {
-              atk: 2.8,
+              atk: 3.6,
               def: 2.8,
               ki: 3,
             },
             ki_meter: {
-              12: {
+              '12': {
                 atk: 3.0,
                 def: 3.0,
               },
-              18: {
+              '18': {
                 atk: 3.6,
               },
             },
@@ -159,6 +175,34 @@ export const sampleCharacters: Character[] = [
             turn_limited: {
               first_3: {
                 def: 3.0,
+              },
+            },
+            conditions: {
+              enemy: {
+                super: {
+                  ki: 3,
+                  atk: 1.26,
+                  def: 1.26,
+                },
+                categories: {
+                  targets: ['純粋サイヤ人', '混血サイヤ人', '孫悟空の系譜'],
+                  ki: 6,
+                },
+              },
+              ally: {
+                extreme: {
+                  atk: 1.26,
+                  def: 1.26,
+                },
+                categories: {
+                  targets: ['怒り爆発', '劇場版BOSS'],
+                  def: 3.0,
+                },
+              },
+            },
+            defensive: {
+              when_attacked: {
+                def: 3.6,
               },
             },
           },
@@ -191,15 +235,14 @@ export const sampleCharacters: Character[] = [
       '超サイヤ人を超えた力',
       '制御不能の力',
     ],
+    image_url:
+      '/images/character/fumetsu-no-saikyou-senshi-densetsu-no-super-saiyan-broly.png',
   },
   {
-    id: '2',
-    name: '無敵を誇るサイヤ人の頂・超サイヤ人4ベジータ',
-    imagePath:
-      '/images/character/muteki-wo-hokoru-saiyajin-no-itadaki-super-saiyan-4-vegeta.png',
-    rarity: 5,
-    type: 'PHY',
-    cost: 77,
+    name: '無敵を誇るサイヤ人の頂\n・超サイヤ人4ベジータ',
+    rarity: 'LR',
+    attribute: '超力',
+    cost: '77',
     stats: {
       max_level: {
         HP: 17538,
@@ -244,22 +287,38 @@ export const sampleCharacters: Character[] = [
         },
         super_attack: {
           name: '必殺技',
-          original_effect:
-            '1ターンATKが超大幅上昇し、相手に極大ダメージを与える',
+          effect: '1ターンATKが超大幅上昇し、相手に極大ダメージを与える',
+          multiplier: 3.95,
+          stat_boost: {
+            atk: 2,
+          },
+          super_attack_count: 1,
         },
         ultra_super_attack: {
           name: '超必殺技',
-          original_effect:
-            '1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える',
+          effect: '1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える',
+          multiplier: 5.9,
+          stat_boost: {
+            atk: 2,
+            def: 2,
+          },
         },
         passive_skill: {
           name: 'パッシブスキル',
+          stat_boosts: {
+            basic: {
+              def: 1.8,
+            },
+            turn_start: {
+              atk: 1.8,
+            },
+          },
           original_effect:
             '自身のDEF80%UP、ターン開始毎にATK20%UP(最大80%)&虹気玉か力気玉取得で気力が上がるたびに更に気力+2&敵必殺技を中確率で無効化し超絶大な威力で反撃',
         },
         active_skill: {
           name: 'アクティブスキル',
-          original_effect:
+          effect:
             '条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える',
         },
       },
@@ -289,24 +348,52 @@ export const sampleCharacters: Character[] = [
         },
         super_attack: {
           name: '必殺技',
-          original_effect:
+          effect:
             '1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える',
+          multiplier: 3.95,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
+          super_attack_count: 1,
         },
         ultra_super_attack: {
           name: '超必殺技',
-          original_effect:
+          effect:
             '1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる',
+          multiplier: 5.9,
+          stat_boost: {
+            atk: 2,
+            def: 2,
+          },
         },
         passive_skill: {
           name: 'パッシブスキル',
+          stat_boosts: {
+            basic: {
+              atk: 2.4,
+              def: 2.4,
+            },
+            turn_start: {
+              atk: 1.3,
+              def: 1.6,
+            },
+          },
           original_effect:
             '自身のATKとDEF140%UP、ターン開始毎にATK10%UP(最大30%)、DEF20%UP(最大60%)虹気玉か力気玉取得で気力が上がるたびに更に気力+2力気玉以外の属性気玉取得で気力が上がるたびに更に気力+1敵必殺技を中確率で無効化し超絶大な威力で反撃敵が2体以上のとき、アクティブスキル発動時または気力メーター24で1度だけ攻撃した敵の行動をそのターンのみ1回無効化する',
         },
         active_skill: {
           name: 'アクティブスキル',
-          original_effect:
+          effect:
             '条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える',
         },
+      },
+      super_extreme: {
+        leader_skill: null,
+        super_attack: null,
+        ultra_super_attack: null,
+        passive_skill: null,
+        active_skill: null,
       },
     },
     link_skills: [
@@ -333,14 +420,14 @@ export const sampleCharacters: Character[] = [
       '地球を守りし英雄',
       '継承する者',
     ],
+    image_url:
+      '/images/character/muteki-wo-hokoru-saiyajin-no-itadaki-super-saiyan-4-vegeta.png',
   },
   {
-    id: '3',
-    name: '破壊による世界調和・ビルス＆ウイス',
-    imagePath: '/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png',
-    rarity: 5,
-    type: 'PHY',
-    cost: 77,
+    name: '破壊による世界調和\n・ビルス＆ウイス',
+    rarity: 'LR',
+    attribute: '超力',
+    cost: '77',
     stats: {
       max_level: {
         HP: 16688,
@@ -385,16 +472,37 @@ export const sampleCharacters: Character[] = [
         },
         super_attack: {
           name: '必殺技',
-          original_effect:
+          effect:
             '1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復',
+          multiplier: 3.95,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
+          super_attack_count: 2,
         },
         ultra_super_attack: {
           name: '超必殺技',
-          original_effect:
+          effect:
             '1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復',
+          multiplier: 5.9,
+          stat_boost: {
+            atk: 1.5,
+            def: 1.5,
+          },
         },
         passive_skill: {
           name: 'パッシブスキル',
+          stat_boosts: {
+            basic: {
+              atk: 2.5,
+              def: 2.5,
+            },
+            after_hit: {
+              atk: 1.7,
+              def: 1.7,
+            },
+          },
           original_effect:
             '自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する攻撃を受けてから7ターンの間ATKとDEF70%UP、高確率で敵の攻撃を回避する&攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する',
         },
@@ -426,14 +534,26 @@ export const sampleCharacters: Character[] = [
         },
         super_attack: {
           name: '必殺技',
-          original_effect: '相手に極大ダメージを与え、HPを7%回復',
+          effect: '相手に極大ダメージを与え、HPを7%回復',
+          multiplier: 3.95,
+          super_attack_count: 1,
         },
         ultra_super_attack: {
           name: '超必殺技',
-          original_effect: '相手に超極大ダメージを与え、HPを12%回復',
+          effect: '相手に超極大ダメージを与え、HPを12%回復',
+          multiplier: 5.9,
         },
         passive_skill: {
           name: 'パッシブスキル',
+          stat_boosts: {
+            basic: {
+              atk: 1.8,
+            },
+            after_hit: {
+              atk: 1.6,
+              def: 1.6,
+            },
+          },
           original_effect:
             '自身のATK80%UP攻撃を受けてから5ターンの間ATKとDEF60%UP',
         },
@@ -465,16 +585,37 @@ export const sampleCharacters: Character[] = [
         },
         super_attack: {
           name: '必殺技',
-          original_effect:
+          effect:
             '1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復',
+          multiplier: 3.95,
+          stat_boost: {
+            atk: 1.3,
+            def: 1.3,
+          },
+          super_attack_count: 2,
         },
         ultra_super_attack: {
           name: '超必殺技',
-          original_effect:
+          effect:
             '1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復',
+          multiplier: 5.9,
+          stat_boost: {
+            atk: 1.5,
+            def: 1.5,
+          },
         },
         passive_skill: {
           name: 'パッシブスキル',
+          stat_boosts: {
+            basic: {
+              atk: 2.5,
+              def: 2.5,
+            },
+            after_hit: {
+              atk: 1.7,
+              def: 1.7,
+            },
+          },
           original_effect:
             '自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する攻撃を受けてから7ターンの間ATKとDEF70%UP、高確率で敵の攻撃を回避する&攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する',
         },
@@ -498,5 +639,6 @@ export const sampleCharacters: Character[] = [
       '師弟の絆',
       '宇宙をわたる戦士',
     ],
+    image_url: '/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png',
   },
 ]

@@ -297,7 +297,7 @@ const CharacterList = memo<CharacterListProps>(
       const offset = dragOffsetRef.current // refから最新の値を取得
 
       const dragImage = document.createElement('img')
-      dragImage.src = dragCharacterRef.current.imagePath || ''
+      dragImage.src = dragCharacterRef.current.image_url || ''
       dragImage.alt = dragCharacterRef.current.name
       dragImage.style.position = 'fixed'
       dragImage.style.pointerEvents = 'none'
@@ -336,7 +336,7 @@ const CharacterList = memo<CharacterListProps>(
             const isPlaceable = canPlaceAnywhere(character)
             return (
               <div
-                key={character.id}
+                key={character.name}
                 className={cn(
                   styles.characterCard,
                   !isPlaceable && styles.disabled
@@ -358,10 +358,10 @@ const CharacterList = memo<CharacterListProps>(
                     <DetailIcon className={styles.detailIcon} />
                   </button>
                 )}
-                {character.imagePath ? (
+                {character.image_url ? (
                   <Image
                     className={styles.characterImage}
-                    src={character.imagePath}
+                    src={character.image_url}
                     alt={character.name}
                     width={100}
                     height={100}
