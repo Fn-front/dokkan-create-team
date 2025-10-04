@@ -168,22 +168,335 @@ export const sampleCharacters: Character[] = [
         active_skill: null,
       },
     },
+    link_skills: [
+      '戦闘民族サイヤ人',
+      '超サイヤ人',
+      'サイヤ人の血',
+      'バーサーカー',
+      '臨戦態勢',
+      '超激戦',
+      '伝説の力',
+    ],
+    categories: [
+      '復活戦士',
+      '劇場版BOSS',
+      '純粋サイヤ人',
+      'フルパワー',
+      'ターゲット孫悟空',
+      '怒り爆発',
+      'リベンジ',
+      '悪逆非道',
+      '惑星破壊',
+      '伝説の存在',
+      '超サイヤ人を超えた力',
+      '制御不能の力',
+    ],
   },
   {
     id: '2',
-    name: 'サンプルキャラクター2',
+    name: '無敵を誇るサイヤ人の頂・超サイヤ人4ベジータ',
     imagePath: '/images/character/sample-character-2.png',
     rarity: 5,
-    type: 'AGL',
-    cost: 58,
+    type: 'PHY',
+    cost: 77,
+    stats: {
+      max_level: {
+        HP: 17538,
+        ATK: 16380,
+        DEF: 8381,
+      },
+      potential_55: {
+        HP: 19538,
+        ATK: 18380,
+        DEF: 10381,
+      },
+      potential_100: {
+        HP: 22538,
+        ATK: 21780,
+        DEF: 12981,
+      },
+    },
+    skills: {
+      pre_extreme: {
+        leader_skill: {
+          name: 'リーダースキル',
+          conditions: [
+            {
+              type: 'category',
+              target: 'ベジータの系譜',
+              ki: 3,
+              hp: 2.3,
+              atk: 2.7,
+              def: 2.7,
+            },
+            {
+              type: 'attribute',
+              target: '超力属性',
+              ki: 3,
+              hp: 2.2,
+              atk: 2.2,
+              def: 2.2,
+            },
+          ],
+          original_effect:
+            '「ベジータの系譜」カテゴリの 気力+3、HP130%UP、ATKとDEF170%UP、 または超力属性の気力+3、HPとATKとDEF120%UP',
+        },
+        super_attack: {
+          name: '必殺技',
+          original_effect:
+            '1ターンATKが超大幅上昇し、相手に極大ダメージを与える',
+        },
+        ultra_super_attack: {
+          name: '超必殺技',
+          original_effect:
+            '1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える',
+        },
+        passive_skill: {
+          name: 'パッシブスキル',
+          original_effect:
+            '自身のDEF80%UP、ターン開始毎にATK20%UP(最大80%)&虹気玉か力気玉取得で気力が上がるたびに更に気力+2&敵必殺技を中確率で無効化し超絶大な威力で反撃',
+        },
+        active_skill: {
+          name: 'アクティブスキル',
+          original_effect:
+            '条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える',
+        },
+      },
+      post_extreme: {
+        leader_skill: {
+          name: 'リーダースキル',
+          conditions: [
+            {
+              type: 'category',
+              target: 'ベジータの系譜',
+              ki: 3,
+              hp: 2.8,
+              atk: 2.8,
+              def: 2.8,
+            },
+            {
+              type: 'attribute',
+              target: '超力属性',
+              ki: 3,
+              hp: 2.3,
+              atk: 2.3,
+              def: 2.3,
+            },
+          ],
+          original_effect:
+            '「ベジータの系譜」カテゴリの気力+3、HPとATKとDEF180%UP、または超力属性の気力+3、HPとATKとDEF130%UP',
+        },
+        super_attack: {
+          name: '必殺技',
+          original_effect:
+            '1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える',
+        },
+        ultra_super_attack: {
+          name: '超必殺技',
+          original_effect:
+            '1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる',
+        },
+        passive_skill: {
+          name: 'パッシブスキル',
+          original_effect:
+            '自身のATKとDEF140%UP、ターン開始毎にATK10%UP(最大30%)、DEF20%UP(最大60%)虹気玉か力気玉取得で気力が上がるたびに更に気力+2力気玉以外の属性気玉取得で気力が上がるたびに更に気力+1敵必殺技を中確率で無効化し超絶大な威力で反撃敵が2体以上のとき、アクティブスキル発動時または気力メーター24で1度だけ攻撃した敵の行動をそのターンのみ1回無効化する',
+        },
+        active_skill: {
+          name: 'アクティブスキル',
+          original_effect:
+            '条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える',
+        },
+      },
+    },
+    link_skills: [
+      '超サイヤ人',
+      'サイヤ人の誇り',
+      'GT',
+      '臨戦態勢',
+      '超激戦',
+      'サイヤの咆哮',
+      '伝説の力',
+    ],
+    categories: [
+      'ベジータの系譜',
+      '純粋サイヤ人',
+      '邪悪龍編',
+      '好敵手',
+      '救世主',
+      '大猿パワー',
+      '天才戦士',
+      'GT HERO',
+      '命運をかけた闘い',
+      '超サイヤ人を超えた力',
+      '親子の絆',
+      '地球を守りし英雄',
+      '継承する者',
+    ],
   },
   {
     id: '3',
-    name: 'サンプルキャラクター3',
+    name: '破壊による世界調和・ビルス＆ウイス',
     imagePath: '/images/character/sample-character-3.png',
-    rarity: 4,
-    type: 'TEQ',
-    cost: 48,
+    rarity: 5,
+    type: 'PHY',
+    cost: 77,
+    stats: {
+      max_level: {
+        HP: 16688,
+        ATK: 14425,
+        DEF: 11250,
+      },
+      potential_55: {
+        HP: 18688,
+        ATK: 16425,
+        DEF: 13125,
+      },
+      potential_100: {
+        HP: 21688,
+        ATK: 19825,
+        DEF: 15850,
+      },
+    },
+    skills: {
+      pre_extreme: {
+        leader_skill: {
+          name: 'リーダースキル',
+          conditions: [
+            {
+              type: 'attribute',
+              target: '超力属性',
+              ki: 4,
+              hp: 2.2,
+              atk: 2.2,
+              def: 2.2,
+            },
+            {
+              type: 'attribute',
+              target: '極力属性',
+              ki: 3,
+              hp: 1.9,
+              atk: 1.9,
+              def: 1.9,
+            },
+          ],
+          original_effect:
+            '超力属性の気力+4、HPとATKとDEF120%UP＆極力属性の気力+3、HPとATKとDEF90%UP',
+        },
+        super_attack: {
+          name: '必殺技',
+          original_effect:
+            '1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復',
+        },
+        ultra_super_attack: {
+          name: '超必殺技',
+          original_effect:
+            '1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復',
+        },
+        passive_skill: {
+          name: 'パッシブスキル',
+          original_effect:
+            '自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する攻撃を受けてから7ターンの間ATKとDEF70%UP、高確率で敵の攻撃を回避する&攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する',
+        },
+        active_skill: null,
+      },
+      post_extreme: {
+        leader_skill: {
+          name: 'リーダースキル',
+          conditions: [
+            {
+              type: 'attribute',
+              target: '超力属性',
+              ki: 4,
+              hp: 2.0,
+              atk: 2.0,
+              def: 2.0,
+            },
+            {
+              type: 'attribute',
+              target: '極力属性',
+              ki: 2,
+              hp: 1.7,
+              atk: 1.7,
+              def: 1.7,
+            },
+          ],
+          original_effect:
+            '超力属性の気力+4、HPとATKとDEF100%UP＆極力属性の気力+2、HPとATKとDEF70%UP',
+        },
+        super_attack: {
+          name: '必殺技',
+          original_effect: '相手に極大ダメージを与え、HPを7%回復',
+        },
+        ultra_super_attack: {
+          name: '超必殺技',
+          original_effect: '相手に超極大ダメージを与え、HPを12%回復',
+        },
+        passive_skill: {
+          name: 'パッシブスキル',
+          original_effect:
+            '自身のATK80%UP攻撃を受けてから5ターンの間ATKとDEF60%UP',
+        },
+        active_skill: null,
+      },
+      super_extreme: {
+        leader_skill: {
+          name: 'リーダースキル',
+          conditions: [
+            {
+              type: 'attribute',
+              target: '超力属性',
+              ki: 4,
+              hp: 2.2,
+              atk: 2.2,
+              def: 2.2,
+            },
+            {
+              type: 'attribute',
+              target: '極力属性',
+              ki: 3,
+              hp: 1.9,
+              atk: 1.9,
+              def: 1.9,
+            },
+          ],
+          original_effect:
+            '超力属性の気力+4、HPとATKとDEF120%UP＆極力属性の気力+3、HPとATKとDEF90%UP',
+        },
+        super_attack: {
+          name: '必殺技',
+          original_effect:
+            '1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復',
+        },
+        ultra_super_attack: {
+          name: '超必殺技',
+          original_effect:
+            '1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復',
+        },
+        passive_skill: {
+          name: 'パッシブスキル',
+          original_effect:
+            '自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する攻撃を受けてから7ターンの間ATKとDEF70%UP、高確率で敵の攻撃を回避する&攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する',
+        },
+        active_skill: null,
+      },
+    },
+    link_skills: [
+      '無邪気',
+      '天才',
+      '驚異的なスピード',
+      'グルメ',
+      '神の次元',
+      '超激戦',
+      '伝説の力',
+    ],
+    categories: [
+      '神次元',
+      '劇場版BOSS',
+      'コンビネーション',
+      '兄弟の絆',
+      '師弟の絆',
+      '宇宙をわたる戦士',
+    ],
   },
   {
     id: '4',

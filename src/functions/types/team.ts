@@ -95,6 +95,8 @@ export type Character = {
   cost: number
   stats?: CharacterStats
   skills?: CharacterSkills
+  link_skills?: string[]
+  categories?: string[]
 }
 
 export type TeamSlot = {
