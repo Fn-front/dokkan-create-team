@@ -296,13 +296,13 @@ if (skills.pre_extreme?.leader_skill?.original_effect) {
 キャラクターの最終ステータス計算は以下の順序で実行：
 
 1. **基本ステータス**: `potential_55` または `potential_100` の値を使用
-2. **リーダー・フレンドスキル適用**: 条件に応じた倍率を累積して適用
+2. **リーダー・フレンドスキル適用**: 条件に応じた倍率を累積乗算
 3. **パッシブスキル stat_boosts 計算**:
    - `basic` 値で乗算（`basic.atk`, `basic.def`）
    - `basic` 以外の全ATK/DEF値を再帰的に収集・合計
-   - 合計値から-1して乗算（basic以外の値のみ）
+   - **合計値から-1して乗算**（basic以外の値のみ）
 4. **DEF down効果**: `def_down`値を基本DEFから減算
-5. **攻撃倍率適用**（ATKのみ）: `post_extreme`内の"\_attack"で終わるキーの最後の項目の`multiplier`
+5. **攻撃倍率適用**（ATKのみ）: 最後の`_extreme`キーの`ultra_super_attack.multiplier`
 
 ### 再帰的ステータス収集
 
@@ -317,19 +317,38 @@ const collectStatValues = (
 }
 ```
 
-### 計算式例（ブロリー）
+### 計算式例（ブロリー、super_extreme、potential_55、フレンドあり）
+
+**条件**: リーダー倍率2.2倍、フレンド倍率2.2倍、conditions除外
 
 ```
-基本ATK: 20,080
-↓ (リーダー効果 2.2倍 × フレンド効果 2.2倍)
-リダフレ後: 97,190
-↓ (basic.atk = 2.8倍)
-basicATK: 272,132
-↓ (other boosts合計 7.86 - 1 = 6.86倍)
-stat_boosts後: 1,866,825
-↓ (ultra_super_attack multiplier = 4.2倍、-1処理なし)
-最終ATK: 7,840,665
+1. 基本ATK: 20,080
+
+2. リーダー・フレンド適用:
+   currentATK = floor(20,080 × 2.2 × 2.2) = floor(97,190.4) = 97,190
+
+3. Basic適用:
+   basic.atk = 2.8 + 0.8 = 3.6
+   basicATK = floor(97,190 × 3.6) = floor(349,884) = 349,884
+
+4. その他ブースト収集（basic以外、conditions除外）:
+   - ki_meter["12_or_more"].atk = 3.0
+   - turn_start.atk = 3.6
+   - after_hit.atk = 1.26
+   合計 = 3.0 + 3.6 + 1.26 = 7.86
+
+5. -1処理適用:
+   finalATK = floor(349,884 × (7.86 - 1)) = floor(349,884 × 6.86) = 2,400,224
+
+6. 攻撃倍率適用:
+   multiplier = ultra_super_attack.multiplier = 5.9
+   最終ATK = floor(2,400,224 × 5.9) = 14,161,321
 ```
+
+### -1処理の適用範囲
+
+- **適用**: passive_skillのstat_boosts（basic以外の値のみ）
+- **非適用**: リーダースキル、フレンドスキル、basic値、攻撃倍率(multiplier)
 
 ## 重要な技術的制約
 
