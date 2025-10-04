@@ -54,7 +54,5 @@
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "chrome-devtools"
-  ]
+  "enabledMcpjsonServers": ["chrome-devtools"]
 }
