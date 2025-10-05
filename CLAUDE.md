@@ -571,6 +571,126 @@ if (leaderSkill?.conditions) {
 
 **注意**: TeamLayoutとuseCharacterStatsの両方に同じ条件判定ロジックがあります。将来的には共通化を検討してください。
 
+## リバーシブルフォーム切り替えシステム
+
+### 概要
+
+一部のキャラクターは`reversible_forms`プロパティを持ち、2つのフォーム間で切り替え可能です（例: ベジータ&孫悟空 ⇔ 孫悟空&ベジータ）。
+
+### データ構造
+
+- **reversible_forms配列**: 2つのフォームデータを持つ（切り替え可能なキャラクター専用）
+- **forms配列との違い**: `reversible_forms`を持つキャラクターは`forms`を持たない（相互排他）
+- **各フォーム**: `form_id`, `form_name`, `display_name`, `image_url`, `stats`, `skills`
+
+### 実装コンポーネント
+
+#### SwitchIconコンポーネント
+- **場所**: `@/components/icons/SwitchIcon.tsx`
+- **アイコン**: Material Design `MdSwapHoriz`
+- **用途**: フォーム切り替えボタンのアイコン
+
+#### 判定関数
+```typescript
+// characterUtils.ts
+export const isReversibleCharacter = (character: Character): boolean => {
+  return !!(character.reversible_forms && character.reversible_forms.length > 1)
+}
+
+export const getImageUrl = (character: Character, formIndex: number = 0): string => {
+  if (character.reversible_forms && character.reversible_forms.length > 0) {
+    const index = Math.min(formIndex, character.reversible_forms.length - 1)
+    return character.reversible_forms[index].image_url || ''
+  }
+  // ... forms処理
+}
+```
+
+#### 状態管理（useTeam）
+```typescript
+// reversibleフォームの現在のインデックスを管理 (characterId -> formIndex)
+const [reversibleFormIndexes, setReversibleFormIndexes] = useState<
+  Record<string, number>
+>({})
+
+// フォーム切り替え
+const toggleReversibleForm = useCallback((characterId: string) => {
+  setReversibleFormIndexes((prev) => {
+    const currentIndex = prev[characterId] || 0
+    return {
+      ...prev,
+      [characterId]: currentIndex === 0 ? 1 : 0,
+    }
+  })
+}, [])
+
+// インデックス取得
+const getReversibleFormIndex = useCallback(
+  (characterId: string) => {
+    return reversibleFormIndexes[characterId] || 0
+  },
+  [reversibleFormIndexes]
+)
+```
+
+### UI実装
+
+#### CharacterList
+- 右上に回転アイコンボタン配置
+- クリックでフォーム切り替え（画像のみ変更）
+- オレンジ色ホバーエフェクト
+
+#### TeamLayout
+- 同様に右上に回転アイコン配置
+- **イベント競合解決**: スロットクリック（削除）との競合を回避
+  - `onClickCapture`を使用してキャプチャフェーズで処理
+  - `useRef`フラグ + `setTimeout(0)`で非同期リセット
+  - `z-index: 100`で独立レイヤー化
+
+### 画像切り替えメカニズム
+
+```tsx
+// key propで強制再レンダリング
+const formIndex = isReversible ? getReversibleFormIndex(character.id) : 0
+
+<Image
+  src={getImageUrl(character, formIndex)}
+  key={formIndex}  // formIndexが変わるとImageが再マウント
+  ...
+/>
+```
+
+### スタイリング
+
+```scss
+.switchButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;  // 他のボタンより上位
+  pointer-events: auto;  // 親のpointer-eventsに関係なく有効
+
+  &:hover::before {
+    background-color: var(--color-orange-500);  // オレンジホバー
+  }
+}
+```
+
+### 重要な技術的ポイント
+
+1. **イベント伝播制御**:
+   - `onClickCapture`でキャプチャフェーズ処理
+   - `e.preventDefault()` + `e.stopPropagation()`
+   - 親要素のonClickをスキップするrefフラグ方式
+
+2. **状態同期**:
+   - キャラクターID単位で管理（position依存ではない）
+   - CharacterListとTeamLayoutで同じ状態を共有
+
+3. **型安全性**:
+   - `reversible_forms`の存在チェック必須
+   - formsとreversible_formsは相互排他
+
 ## 重要な技術的制約
 
 - **任意のCSS プロパティ設定**: ベンダープレフィックス付きCSSプロパティは`setProperty()`/`removeProperty()`を使用（型安全）
@@ -580,3 +700,4 @@ if (leaderSkill?.conditions) {
 - **コードフォーマット**: 変更後は必ず`npm run format`でPrettierを実行
 - **ステータス計算**: 計算順序の厳守、Math.floor()による切り捨て処理、multiplier適用時の-1処理の有無に注意
 - **リーダースキル条件判定**: 必ず`matchesLeaderSkillCondition`を使用し、条件チェックなしで倍率を加算しない
+- **イベント競合解決**: ボタンクリックとスロットクリックの競合は`onClickCapture` + refフラグ + `setTimeout(0)`パターンを使用
