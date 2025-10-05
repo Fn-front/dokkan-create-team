@@ -26,6 +26,13 @@ export const getCharacterSkills = (character: Character): CharacterSkills | null
 }
 
 /**
+ * reversible_forms を持つキャラクターかどうか判定
+ */
+export const isReversibleCharacter = (character: Character): boolean => {
+  return !!(character.reversible_forms && character.reversible_forms.length > 1)
+}
+
+/**
  * キャラクターの表示名を取得
  * reversible_forms使用時はname、forms使用時はforms[0].display_name
  */
@@ -41,11 +48,18 @@ export const getDisplayName = (character: Character): string => {
 
 /**
  * キャラクターの画像URLを取得
- * reversible_forms使用時はreversible_forms[0].image_url、forms使用時はforms[0].image_urls[0]
+ * reversible_forms使用時はreversible_forms[formIndex].image_url、forms使用時はforms[0].image_urls[0]
  */
-export const getImageUrl = (character: Character): string => {
+export const getImageUrl = (
+  character: Character,
+  formIndex: number = 0
+): string => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
-    return character.reversible_forms[0].image_url || ''
+    const index = Math.min(
+      formIndex,
+      character.reversible_forms.length - 1
+    )
+    return character.reversible_forms[index].image_url || ''
   }
   if (character.forms && character.forms.length > 0) {
     return character.forms[0].image_urls?.[0] || ''

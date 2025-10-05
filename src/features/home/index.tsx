@@ -15,6 +15,8 @@ export default function HomePage() {
     getAllSlots,
     canPlaceCharacter,
     team,
+    toggleReversibleForm,
+    getReversibleFormIndex,
   } = useTeam()
 
   const handleCharacterDragStart = useCallback(() => {
@@ -181,10 +183,14 @@ export default function HomePage() {
           onCharacterRemove={removeCharacterFromSlot}
           onCharacterMove={handleCharacterMove}
           canMoveCharacter={canMoveCharacter}
+          toggleReversibleForm={toggleReversibleForm}
+          getReversibleFormIndex={getReversibleFormIndex}
         />
         <CharacterList
           onCharacterDragStart={handleCharacterDragStart}
           canPlaceCharacter={canPlaceCharacter}
+          toggleReversibleForm={toggleReversibleForm}
+          getReversibleFormIndex={getReversibleFormIndex}
         />
       </main>
     </div>

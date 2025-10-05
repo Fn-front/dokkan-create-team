@@ -14,6 +14,10 @@ const initialTeam: Team = {
 
 export const useTeam = () => {
   const [team, setTeam] = useState<Team>(initialTeam)
+  // reversibleフォームの現在のインデックスを管理 (characterId -> formIndex)
+  const [reversibleFormIndexes, setReversibleFormIndexes] = useState<
+    Record<string, number>
+  >({})
 
   // キャラクターが配置可能かチェックする関数
   const canPlaceCharacter = useCallback(
@@ -236,6 +240,25 @@ export const useTeam = () => {
     [team]
   )
 
+  // reversibleフォームを切り替える
+  const toggleReversibleForm = useCallback((characterId: string) => {
+    setReversibleFormIndexes((prev) => {
+      const currentIndex = prev[characterId] || 0
+      return {
+        ...prev,
+        [characterId]: currentIndex === 0 ? 1 : 0,
+      }
+    })
+  }, [])
+
+  // 特定キャラクターのreversibleフォームインデックスを取得
+  const getReversibleFormIndex = useCallback(
+    (characterId: string) => {
+      return reversibleFormIndexes[characterId] || 0
+    },
+    [reversibleFormIndexes]
+  )
+
   return {
     team,
     addCharacterToSlot,
@@ -244,5 +267,7 @@ export const useTeam = () => {
     getAllSlots,
     getSlotByPosition,
     canPlaceCharacter,
+    toggleReversibleForm,
+    getReversibleFormIndex,
   }
 }

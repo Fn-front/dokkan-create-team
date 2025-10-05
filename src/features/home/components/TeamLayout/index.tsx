@@ -4,7 +4,7 @@ import Image from 'next/image'
 import styles from './style.module.scss'
 import type { Character, TeamSlot } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
-import { ProhibitIcon } from '@/components/icons'
+import { ProhibitIcon, SwitchIcon } from '@/components/icons'
 import KiMeter from '@/components/KiMeter'
 import {
   getLeaderSkillKiValue,
@@ -18,6 +18,7 @@ import {
   getLeaderSkillFromSlots,
   getFriendSkillFromSlots,
   getPassiveSkill,
+  isReversibleCharacter,
 } from '@/functions/utils/characterUtils'
 
 type TeamSlotComponentProps = {
@@ -29,6 +30,8 @@ type TeamSlotComponentProps = {
   onCharacterDrop: (character: Character, position: number) => void
   onSlotClick: (position: number) => void
   onMouseDown: (e: React.MouseEvent, slot: TeamSlot) => void
+  toggleReversibleForm: (characterId: string) => void
+  getReversibleFormIndex: (characterId: string) => number
 }
 
 const TeamSlotComponent = memo<TeamSlotComponentProps>(
@@ -41,7 +44,10 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
     onCharacterDrop,
     onSlotClick,
     onMouseDown,
+    toggleReversibleForm,
+    getReversibleFormIndex,
   }) => {
+    const switchButtonClickedRef = useRef(false)
     const isLeader = index === 0
     const isFriend = index === 6
     const slotRef = useRef<HTMLDivElement>(null)
@@ -76,7 +82,13 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
             slot.character && styles.occupied,
             draggedFromPosition === slot.position && isDragging && 'dragging'
           )}
-          onClick={() => onSlotClick(slot.position)}
+          onClick={(e) => {
+            // 回転ボタンのクリック時はスロットクリックを無視
+            if (switchButtonClickedRef.current) {
+              return
+            }
+            onSlotClick(slot.position)
+          }}
           onMouseDown={(e) => onMouseDown(e, slot)}
           data-testid="team-slot"
           data-position={slot.position}
@@ -104,13 +116,51 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
           <div className={styles.slotContent}>
             {slot.character ? (
               <>
-                <Image
-                  className={styles.characterImage}
-                  src={getImageUrl(slot.character)}
-                  alt={getDisplayName(slot.character)}
-                  width={100}
-                  height={100}
-                />
+                {(() => {
+                  const isReversible = isReversibleCharacter(slot.character)
+                  const formIndex = isReversible
+                    ? getReversibleFormIndex(slot.character.id)
+                    : 0
+                  return (
+                    <>
+                      <Image
+                        className={styles.characterImage}
+                        src={getImageUrl(slot.character, formIndex)}
+                        alt={getDisplayName(slot.character)}
+                        width={100}
+                        height={100}
+                        key={formIndex}
+                      />
+                      {isReversible && (
+                        <button
+                          className={styles.switchButton}
+                          onClickCapture={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            switchButtonClickedRef.current = true
+                            toggleReversibleForm(slot.character!.id)
+                            // 次のイベントループでフラグをリセット
+                            setTimeout(() => {
+                              switchButtonClickedRef.current = false
+                            }, 0)
+                          }}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          onMouseUp={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          data-switch-button="true"
+                          aria-label="フォーム切り替え"
+                        >
+                          <SwitchIcon className={styles.switchIcon} />
+                        </button>
+                      )}
+                    </>
+                  )
+                })()}
                 {(() => {
                   const skills = getCharacterSkills(slot.character)
                   if (!skills) return null
@@ -927,6 +977,8 @@ type TeamLayoutProps = {
   onCharacterRemove: (position: number) => void
   onCharacterMove: (fromPosition: number, toPosition: number) => void
   canMoveCharacter?: (fromPosition: number, toPosition: number) => boolean
+  toggleReversibleForm: (characterId: string) => void
+  getReversibleFormIndex: (characterId: string) => number
 }
 
 const TeamLayout = memo<TeamLayoutProps>(
@@ -937,6 +989,8 @@ const TeamLayout = memo<TeamLayoutProps>(
     onCharacterRemove,
     onCharacterMove,
     canMoveCharacter,
+    toggleReversibleForm,
+    getReversibleFormIndex,
   }) => {
     // リーダースキルを取得する関数
     const getLeaderSkill = () => {
@@ -1393,6 +1447,8 @@ const TeamLayout = memo<TeamLayoutProps>(
               onCharacterDrop={onCharacterDrop}
               onSlotClick={onSlotClick}
               onMouseDown={handleSlotMouseDown}
+              toggleReversibleForm={toggleReversibleForm}
+              getReversibleFormIndex={getReversibleFormIndex}
             />
           ))}
         </div>

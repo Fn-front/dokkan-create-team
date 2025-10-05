@@ -5,22 +5,30 @@ import styles from './style.module.scss'
 import { sampleCharacters } from '@/functions/data/characters'
 import type { Character } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
-import { ProhibitIcon, DetailIcon } from '@/components/icons'
+import { ProhibitIcon, DetailIcon, SwitchIcon } from '@/components/icons'
 import CharacterDetailDialog from '@/components/CharacterDetailDialog/CharacterDetailDialog'
 import { useDialog } from '@/functions/hooks/useDialog'
 import {
   getDisplayName,
   getImageUrl,
   getCharacterSkills,
+  isReversibleCharacter,
 } from '@/functions/utils/characterUtils'
 
 type CharacterListProps = {
   onCharacterDragStart: (character: Character) => void
   canPlaceCharacter: (character: Character, position: number) => boolean
+  toggleReversibleForm: (characterId: string) => void
+  getReversibleFormIndex: (characterId: string) => number
 }
 
 const CharacterList = memo<CharacterListProps>(
-  ({ onCharacterDragStart, canPlaceCharacter }) => {
+  ({
+    onCharacterDragStart,
+    canPlaceCharacter,
+    toggleReversibleForm,
+    getReversibleFormIndex,
+  }) => {
     const [isDragging, setIsDragging] = useState(false)
     const [selectedCharacter, setSelectedCharacter] =
       useState<Character | null>(null)
@@ -333,6 +341,15 @@ const CharacterList = memo<CharacterListProps>(
       setDialogOpen(true)
     }
 
+    // 回転アイコンクリック時の処理
+    const handleSwitchClick = (
+      e: React.MouseEvent,
+      character: Character
+    ): void => {
+      e.stopPropagation() // ドラッグ開始を防ぐ
+      toggleReversibleForm(character.id)
+    }
+
     return (
       <div className={styles.container}>
         <h2 className={styles.title}>キャラクター一覧</h2>
@@ -340,7 +357,11 @@ const CharacterList = memo<CharacterListProps>(
           {sampleCharacters.map((character) => {
             const isPlaceable = canPlaceAnywhere(character)
             const displayName = getDisplayName(character)
-            const imageUrl = getImageUrl(character)
+            const isReversible = isReversibleCharacter(character)
+            const formIndex = isReversible
+              ? getReversibleFormIndex(character.id)
+              : 0
+            const imageUrl = getImageUrl(character, formIndex)
             const skills = getCharacterSkills(character)
             return (
               <div
@@ -366,6 +387,16 @@ const CharacterList = memo<CharacterListProps>(
                     <DetailIcon className={styles.detailIcon} />
                   </button>
                 )}
+                {isReversible && (
+                  <button
+                    className={styles.switchButton}
+                    onClick={(e) => handleSwitchClick(e, character)}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    aria-label="フォーム切り替え"
+                  >
+                    <SwitchIcon className={styles.switchIcon} />
+                  </button>
+                )}
                 {imageUrl ? (
                   <Image
                     className={styles.characterImage}
@@ -373,6 +404,7 @@ const CharacterList = memo<CharacterListProps>(
                     alt={displayName}
                     width={100}
                     height={100}
+                    key={formIndex}
                   />
                 ) : (
                   <div className={styles.characterText}>{displayName}</div>
