@@ -453,16 +453,12 @@ const collectStatValuesWithConditions = (
 
 - **conditions**: 55%/100%計算時のみ除外（行動後は含む）
 - **defensive**: 全計算で除外（防御時のみ発動する効果）
-- **_support**: 全計算で除外（味方サポート効果、自身には適用されない）
+- **\_support**: 全計算で除外（味方サポート効果、自身には適用されない）
   - 例: `ally_support`, `extreme_ally_support` など
 
 ```typescript
 // collectStatValues内での除外判定
-if (
-  key === 'conditions' ||
-  key === 'defensive' ||
-  key.endsWith('_support')
-) {
+if (key === 'conditions' || key === 'defensive' || key.endsWith('_support')) {
   continue
 }
 ```
@@ -506,13 +502,11 @@ if (
 `TeamLayout/index.tsx`の3つの計算セクション（55%/100%/行動後）に`countAlliesForAllyCount`関数を配置:
 
 ```typescript
-const countAlliesForAllyCount = (
-  condition: {
-    type: string
-    targets: string[]
-    select: string
-  }
-): number => {
+const countAlliesForAllyCount = (condition: {
+  type: string
+  targets: string[]
+  select: string
+}): number => {
   if (condition.type === 'attribute_or_category') {
     let attributeCount = 0
     let categoryCount = 0
@@ -554,11 +548,13 @@ const collectStatValues = (
   if (parentKey === 'ally_count' && key === statType) {
     const perAlly = (value as Record<string, unknown>)?.per_ally
     if (typeof perAlly === 'number') {
-      const condition = obj.condition as {
-        type: string
-        targets: string[]
-        select: string
-      } | undefined
+      const condition = obj.condition as
+        | {
+            type: string
+            targets: string[]
+            select: string
+          }
+        | undefined
       if (condition) {
         const allyCount = countAlliesForAllyCount(condition)
         return 1.0 + perAlly * allyCount
@@ -600,6 +596,7 @@ const getAttackMultiplier = () => {
 ```
 
 **ポイント**:
+
 - 最後の`_extreme`キーから順に遡り、`ultra_super_attack.multiplier`が存在する最初のキーを使用
 - `super_extreme`が全てnullの場合は、`post_extreme`のmultiplierを使用
 - multiplierが見つからない場合は適用しない（DEFには常に適用しない）
@@ -670,6 +667,7 @@ if (leaderSkill?.conditions) {
 ### よくあるバグ
 
 ❌ **間違い**: 条件チェックなしで全条件を加算
+
 ```typescript
 // これはバグ！条件に関係なく全て加算される
 if (leaderSkill?.conditions) {
@@ -680,6 +678,7 @@ if (leaderSkill?.conditions) {
 ```
 
 ✅ **正しい**: 条件チェックして最初の一致のみ適用
+
 ```typescript
 if (leaderSkill?.conditions) {
   for (const condition of leaderSkill.conditions) {
@@ -713,18 +712,23 @@ if (leaderSkill?.conditions) {
 ### 実装コンポーネント
 
 #### SwitchIconコンポーネント
+
 - **場所**: `@/components/icons/SwitchIcon.tsx`
 - **アイコン**: Material Design `MdSwapHoriz`
 - **用途**: フォーム切り替えボタンのアイコン
 
 #### 判定関数
+
 ```typescript
 // characterUtils.ts
 export const isReversibleCharacter = (character: Character): boolean => {
   return !!(character.reversible_forms && character.reversible_forms.length > 1)
 }
 
-export const getImageUrl = (character: Character, formIndex: number = 0): string => {
+export const getImageUrl = (
+  character: Character,
+  formIndex: number = 0
+): string => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
     const index = Math.min(formIndex, character.reversible_forms.length - 1)
     return character.reversible_forms[index].image_url || ''
@@ -734,6 +738,7 @@ export const getImageUrl = (character: Character, formIndex: number = 0): string
 ```
 
 #### 状態管理（useTeam）
+
 ```typescript
 // reversibleフォームの現在のインデックスを管理 (characterId -> formIndex)
 const [reversibleFormIndexes, setReversibleFormIndexes] = useState<
@@ -763,11 +768,13 @@ const getReversibleFormIndex = useCallback(
 ### UI実装
 
 #### CharacterList
+
 - 右上に回転アイコンボタン配置
 - クリックでフォーム切り替え（画像のみ変更）
 - オレンジ色ホバーエフェクト
 
 #### TeamLayout
+
 - 同様に右上に回転アイコン配置
 - **イベント競合解決**: スロットクリック（削除）との競合を回避
   - `onClickCapture`を使用してキャプチャフェーズで処理
@@ -794,11 +801,11 @@ const formIndex = isReversible ? getReversibleFormIndex(character.id) : 0
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 100;  // 他のボタンより上位
-  pointer-events: auto;  // 親のpointer-eventsに関係なく有効
+  z-index: 100; // 他のボタンより上位
+  pointer-events: auto; // 親のpointer-eventsに関係なく有効
 
   &:hover::before {
-    background-color: var(--color-orange-500);  // オレンジホバー
+    background-color: var(--color-orange-500); // オレンジホバー
   }
 }
 ```
