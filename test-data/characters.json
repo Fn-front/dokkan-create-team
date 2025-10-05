@@ -1,212 +1,729 @@
 [
   {
-    "name": "不滅の最凶戦士\n・伝説の超サイヤ人ブロリー",
+    "id": "char_reversible_001",
+    "name": "怒涛の未来最終決戦\n・超サイヤ人ゴッドSS孫悟空＋超サイヤ人ゴッドSSベジータ",
+    "rarity": "LR",
+    "attribute": "超力",
+    "cost": "77",
+    "stats": {
+      "max_level": {
+        "HP": "20938",
+        "ATK": "14550",
+        "DEF": "8594"
+      },
+      "potential_55": {
+        "HP": "22938",
+        "ATK": "16550",
+        "DEF": "10594"
+      },
+      "potential_100": {
+        "HP": "25938",
+        "ATK": "19950",
+        "DEF": "13194"
+      }
+    },
+    "reversible_forms": [
+      {
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "融合/合体戦士",
+                  "ki": 3,
+                  "hp": 3.0,
+                  "atk": 2.7,
+                  "def": 2.7
+                }
+              ],
+              "original_effect": "「未来編」または「融合/合体戦士」カテゴリの気力+3、HP200%UP、ATKとDEF170%UP、「親子の絆」または「最後の切り札」カテゴリを含む場合は更にHPとATKとDEF50%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKが大幅上昇、DEFが上昇し、相手に極大ダメージを与え、ATKを低下させる",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              },
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "ATKが大幅上昇し、相手に超極大ダメージを与える＆1ターン自身を除く仲間DEF60%UP",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.5,
+                "def": 1.5
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 3.0,
+                  "def": 3.0
+                },
+                "ki_meter": {
+                  "18": {
+                    "atk": 3.0
+                  }
+                },
+                "defensive": {
+                  "when_attacked": {
+                    "def": 2.8
+                  }
+                },
+                "ally_count": {
+                  "atk": {
+                    "per_ally": 0.5,
+                    "max": 2.5
+                  },
+                  "def": {
+                    "per_ally": 0.5,
+                    "max": 2.5
+                  }
+                },
+                "evasion": 60,
+                "damage_reduction": 60
+              },
+              "original_effect": "基本効果\n・ATK/DEF200%UP\n・気玉取得時の気力上昇量+2 チームの超系または「未来編」カテゴリのうち体数の多い味方1体につき \n・ATK/DEF50%UP（最大150%)\n・回避率/ダメージ軽減率20%UP(最大60%) バトル開始から4ターン目以降 \n・超サイヤ人ゴッドSSベジータと合流し、リバーシブルチェンジ可能になる 攻撃参加中の味方全員が超系のとき、または自身の他に攻撃参加中の「未来編」カテゴリがいるとき \n・必殺技が追加発動\n・回避率20%UP\n・ダメージ軽減率10%UP アクティブスキル発動時、または\n気力メーター18以上で攻撃時\n・ATK200%UP\n・全属性で効果抜群で攻撃 攻撃を受けるとき \n・DEF180%UP"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：バトル開始から4ターン目以降発動可能 （リバーシブルチェンジ前後でいずれか1回のみ）効果：一時的にATKが300%上昇し、相手に究極ダメージを与える＆バトル中、自身のATKとDEF20%UP、必中効果を無効化し回避ができるようになる"
+            }
+          },
+          "post_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          },
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          }
+        },
+        "image_url": "/images/character/dotou-no-mirai-saishu-kessen-super-saiyan-god-ss-vegeta-super-saiyan-god-ss-goku.png"
+      },
+      {
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "融合/合体戦士",
+                  "ki": 3,
+                  "hp": 3.0,
+                  "atk": 2.7,
+                  "def": 2.7
+                }
+              ],
+              "original_effect": "「未来編」または「融合/合体戦士」カテゴリの気力+3、HP200%UP、ATKとDEF170%UP、「親子の絆」または「最後の切り札」カテゴリを含む場合は更にHPとATKとDEF50%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが大幅上昇し、相手に極大ダメージを与え、DEFを低下させる",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.5,
+                "def": 1.5
+              },
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 3.0,
+                  "def": 3.0,
+                  "ki": 7
+                },
+                "damage_reduction": 40
+              },
+              "original_effect": "基本効果\n・超サイヤゴッドSS孫悟空とリバーシブルチェンジ可能\n・気力+7、ATK/DEF200%UP\n・高確率で会心が発動\n・高確率で敵の攻撃を回避\n・ダメージ軽減率40%UP\n・自身と名称に「トランクス」を含むキャラの気力+3、ATK/DEF80%UP \n3番目で攻撃時 \n・ATK150%UP\n・必ず会心が発動 \n気力メーター18以上で攻撃時\n・ATK/DEF250%UP\n・必殺技が追加発動 アクティブスキル発動時、または\n気力メーター20以上で攻撃時\n・DEF150%UP\n・必殺技が追加発動"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：攻撃参加ターンになると発動可能（リバーシブルチェンジ前後でいずれか1回のみ）効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える＆4ターンの間、全ての攻撃をガード、「未来編」カテゴリの味方全員のATKとDEF15%UP、「親子の絆」カテゴリを含む場合は更にDEF10%UP"
+            }
+          },
+          "post_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          },
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          }
+        },
+        "image_url": "/images/character/dotou-no-mirai-saishu-kessen-super-saiyan-god-ss-goku-super-saiyan-god-ss-vegeta.png"
+      }
+    ],
+    "link_skills": [
+      "超サイヤ人",
+      "戦闘民族サイヤ人",
+      "神戦士",
+      "かめはめ波",
+      "臨戦態勢",
+      "超激戦",
+      "伝説の力"
+    ],
+    "categories": [
+      "未来編",
+      "融合/合体戦士",
+      "親子の絆",
+      "最後の切り札",
+      "神次元",
+      "純粋サイヤ人",
+      "時空を超えし者",
+      "孫悟空の系譜",
+      "怒り爆発",
+      "亀仙流",
+      "体得した進化",
+      "親友の絆",
+      "高速戦闘",
+      "超サイヤ人を超えた力",
+      "超HERO"
+    ]
+  },
+  {
+    "id": "char_05f0677b",
+    "base_name": "究極最強の融合",
+    "rarity": "LR",
+    "attribute": "超力",
+    "cost": "77",
+    "forms": [
+      {
+        "form_id": "form_1683b7be",
+        "form_name": "ゴジータ",
+        "display_name": "究極最強の融合\n・ゴジータ",
+        "form_order": 1,
+        "is_base_form": true,
+        "is_only_form": false,
+        "stats": {
+          "max_level": {
+            "HP": "19025",
+            "ATK": "17230",
+            "DEF": "6575"
+          },
+          "potential_55": {
+            "HP": "21025",
+            "ATK": "19230",
+            "DEF": "8575"
+          },
+          "potential_100": {
+            "HP": "24025",
+            "ATK": "22630",
+            "DEF": "11175"
+          }
+        },
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "フュージョン",
+                  "ki": 3,
+                  "hp": 2.5,
+                  "atk": 2.5,
+                  "def": 2.5
+                }
+              ],
+              "original_effect": "「最後の切り札」または「フュージョン」カテゴリの気力+3、HPとATKとDEF150%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "ATKが上昇し、相手に極大ダメージを与える",
+              "super_attack_count": 1,
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3
+              }
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "ATKが上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.3
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 1.7,
+                  "def": 1.7,
+                  "ki": 3
+                }
+              },
+              "original_effect": "自身のATKとDEF70%UP敵を攻撃するとき自身の気力+3、必ず追加攻撃し中確率で必殺技が発動\n3番目に攻撃すると高確率で攻撃を回避条件を満たすと変身する"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：変身した次のターン以降、敵が1体で敵のHP50%以下のとき発動可能(1回のみ)効果：一時的にATKが大幅上昇し、相手に究極ダメージを与える"
+            }
+          },
+          "post_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "フュージョン",
+                  "ki": 3,
+                  "hp": 2.7,
+                  "atk": 2.7,
+                  "def": 2.7
+                }
+              ],
+              "original_effect": "「最後の切り札」または「フュージョン」カテゴリの気力+3、HPとATKとDEF170%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "ATKが上昇、1ターンDEFが上昇し、相手に極大ダメージを与える",
+              "super_attack_count": 2,
+              "multiplier": 3.95,
+              "stat_boost": {
+                "def": 1.3
+              }
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "ATKが上昇、1ターンDEFが大幅上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "def": 1.5
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 2.4,
+                  "def": 2.4,
+                  "ki": 4
+                }
+              },
+              "original_effect": "自身のATKとDEF140%UP敵を攻撃するとき自身の気力+4\n\n1番目か\n2番目に攻撃すると必ず追加攻撃し超高確率で必殺技が発動\n3番目に攻撃すると必ず必殺技が追加発動し、超高確率で攻撃を回避\n\n攻撃時に更にDEF100%UP条件を満たすと変身する"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：変身した次のターン以降、敵が1体で敵のHP50%以下のとき発動可能(1回のみ)効果：一時的にATKが大幅上昇し、相手に究極ダメージを与える"
+            }
+          },
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          }
+        },
+        "image_urls": [
+          "/images/character/kyukyoku-saikyo-no-yugo-gogeta.png"
+        ]
+      },
+      {
+        "form_id": "form_c7752240",
+        "form_name": "超サイヤ人ゴッドSSゴジータ",
+        "display_name": "究極最強の融合\n・超サイヤ人ゴッドSSゴジータ",
+        "form_order": 2,
+        "is_base_form": false,
+        "is_only_form": false,
+        "stats": {
+          "max_level": {
+            "HP": "19025",
+            "ATK": "17230",
+            "DEF": "6575"
+          },
+          "potential_55": {
+            "HP": "21025",
+            "ATK": "19230",
+            "DEF": "8575"
+          },
+          "potential_100": {
+            "HP": "24025",
+            "ATK": "22630",
+            "DEF": "11175"
+          }
+        },
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "フュージョン",
+                  "ki": 3,
+                  "hp": 2.5,
+                  "atk": 2.5,
+                  "def": 2.5
+                }
+              ],
+              "original_effect": "「最後の切り札」または「フュージョン」カテゴリの気力+3、HPとATKとDEF150%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが上昇し、相手に極大ダメージを与える",
+              "super_attack_count": 2,
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              }
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンDEFが上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "def": 1.3
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 1.77,
+                  "def": 1.77,
+                  "ki": 5
+                }
+              },
+              "original_effect": "自身のATKとDEF77%UP\n1番目か\n2番目に攻撃すると自身の気力+5、必ず追加攻撃し、攻撃するたびに更にATKとDEF7%UP(最大77%)、全属性に効果抜群で攻撃\n3番目に攻撃すると必ず必殺技が追加発動し、高確率で攻撃を回避"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：次の攻撃参加ターン以降、敵が1体で敵のHP50%以下のとき発動可能(1回のみ)効果：一時的にATKが大幅上昇し、相手に究極ダメージを与える"
+            }
+          },
+          "post_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "フュージョン",
+                  "ki": 3,
+                  "hp": 2.7,
+                  "atk": 2.7,
+                  "def": 2.7
+                }
+              ],
+              "original_effect": "「最後の切り札」または「フュージョン」カテゴリの気力+3、HPとATKとDEF170%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが大幅上昇し、相手に極大ダメージを与える",
+              "super_attack_count": 2,
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.5,
+                "def": 1.5
+              }
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "3ターンDEFが大幅上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "def": 1.5
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 1.22,
+                  "def": 1.22,
+                  "ki": 5
+                }
+              },
+              "original_effect": "変身した1ターンの間、必ず攻撃を回避自身のATKとDEF150%UP\n1番目か\n2番目に攻撃すると自身の気力+5、必ず2回追加攻撃し中確率で必殺技が発動、全属性に効果抜群で攻撃\n3番目に攻撃すると自身の気力+7、必ず必殺技が追加発動し、超高確率で攻撃を回避攻撃するたびに更に自身の気力+1(最大+5)、ATKとDEF22%UP(最大88%)アクティブスキル発動時または気力メーター24のとき必ず会心が発動"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：次の攻撃参加ターン以降、敵が1体で敵のHP50%以下のとき発動可能(1回のみ)効果：一時的にATKが大幅上昇し、相手に究極ダメージを与える"
+            }
+          },
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          }
+        },
+        "image_urls": [
+          "/images/character/kyukyoku-saikyo-no-yugo-super-saiyan-god-ss-gogeta.png"
+        ]
+      }
+    ],
+    "link_skills": [
+      "戦闘民族サイヤ人",
+      "かめはめ波",
+      "短期決戦",
+      "臨戦態勢",
+      "超激戦",
+      "合体戦士",
+      "伝説の力"
+    ],
+    "categories": [
+      "最後の切り札",
+      "フュージョン",
+      "神次元",
+      "劇場版HERO",
+      "かめはめ波",
+      "変身強化",
+      "再起する力",
+      "時間制限",
+      "融合/合体戦士",
+      "超サイヤ人を超えた力",
+      "超HERO",
+      "地球を守りし英雄"
+    ]
+  },
+  {
+    "id": "char_7a75fcb3",
+    "base_name": "不滅の最凶戦士",
     "rarity": "LR",
     "attribute": "極力",
     "cost": "77",
-    "stats": {
-      "最大レベル": {
-        "HP": "12013",
-        "ATK": "18080",
-        "DEF": "9019"
-      },
-      "潜在解放55%": {
-        "HP": "14013",
-        "ATK": "20080",
-        "DEF": "11019"
-      },
-      "潜在解放100%": {
-        "HP": "17013",
-        "ATK": "23480",
-        "DEF": "13619"
-      }
-    },
-    "skills": {
-      "pre_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "力属性",
-              "ki": 3,
-              "hp": 1.9,
-              "atk": 1.9,
-              "def": 1.9
-            }
-          ],
-          "original_effect": "力属性の気力+3、HPとATKとDEF90%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "敵全体に極大ダメージを与える",
-          "multiplier": 3.95,
-          "super_attack_count": 2
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "相手に超極大ダメージを与える",
-          "multiplier": 5.9
-        },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 80000,
-              "def_down": 20000
-            }
+    "forms": [
+      {
+        "form_id": "form_77dd1057",
+        "form_name": "伝説の超サイヤ人ブロリー",
+        "display_name": "不滅の最凶戦士\n・伝説の超サイヤ人ブロリー",
+        "form_order": 1,
+        "is_base_form": true,
+        "is_only_form": true,
+        "stats": {
+          "max_level": {
+            "HP": "12013",
+            "ATK": "18080",
+            "DEF": "9019"
           },
-          "original_effect": "必殺技発動時にATK80000UPし自身のDEF20000DOWN必殺技が追加発動"
-        },
-        "active_skill": null
-      },
-      "post_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "力属性",
-              "ki": 4,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
-            }
-          ],
-          "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
-          "multiplier": 3.95,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
+          "potential_55": {
+            "HP": "14013",
+            "ATK": "20080",
+            "DEF": "11019"
           },
-          "super_attack_count": 2
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
-          "multiplier": 5.9,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
+          "potential_100": {
+            "HP": "17013",
+            "ATK": "23480",
+            "DEF": "13619"
           }
         },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 1.5,
-              "def": 1.5,
-              "ki": 5
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "attribute",
+                  "target": "力属性",
+                  "ki": 3,
+                  "hp": 1.9,
+                  "atk": 1.9,
+                  "def": 1.9
+                }
+              ],
+              "original_effect": "力属性の気力+3、HPとATKとDEF90%UP"
             },
             "super_attack": {
-              "atk": 1.5,
-              "def": 1.5
-            }
+              "name": "必殺技",
+              "effect": "敵全体に極大ダメージを与える",
+              "multiplier": 3.95,
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "相手に超極大ダメージを与える",
+              "multiplier": 5.9
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 80000,
+                  "def_down": 20000
+                }
+              },
+              "original_effect": "必殺技発動時にATK80000UPし自身のDEF20000DOWN必殺技が追加発動"
+            },
+            "active_skill": null
           },
-          "original_effect": "自身のATKとDEF50%UP必殺技発動時に更にATKとDEF50%UP必殺技が追加発動「純粋サイヤ人」または「混血サイヤ人」カテゴリの敵がいるとき自身の気力+5「孫悟空の系譜」カテゴリの敵がいるとき全属性に効果抜群で攻撃し、必ず攻撃が敵に命中する"
-        },
-        "active_skill": null
-      },
-      "super_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "力属性",
-              "ki": 4,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
-            }
-          ],
-          "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
-          "multiplier": 3.95,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
+          "post_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "attribute",
+                  "target": "力属性",
+                  "ki": 4,
+                  "hp": 2.2,
+                  "atk": 2.2,
+                  "def": 2.2
+                }
+              ],
+              "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              },
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 1.5,
+                  "def": 1.5,
+                  "ki": 5
+                },
+                "super_attack": {
+                  "atk": 1.5,
+                  "def": 1.5
+                }
+              },
+              "original_effect": "自身のATKとDEF50%UP\n\n必殺技発動時に更にATKとDEF50%UP必殺技が追加発動「純粋サイヤ人」または\n\n「混血サイヤ人」カテゴリの敵がいるとき\n自身の気力+5\n\n「孫悟空の系譜」カテゴリの敵がいるとき\n全属性に効果抜群で攻撃し、必ず攻撃が敵に命中する"
+            },
+            "active_skill": null
           },
-          "super_attack_count": 2
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
-          "multiplier": 5.9,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
+          "super_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "attribute",
+                  "target": "力属性",
+                  "ki": 4,
+                  "hp": 2.2,
+                  "atk": 2.2,
+                  "def": 2.2
+                }
+              ],
+              "original_effect": "力属性の気力+4、HPとATKとDEF120%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが上昇し、敵全体に極大ダメージを与える",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              },
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 2.8,
+                  "def": 2.8,
+                  "ki": 3
+                },
+                "ki_meter": {
+                  "12": {
+                    "atk": 3.0,
+                    "def": 3.0
+                  },
+                  "18": {
+                    "atk": 3.6
+                  }
+                },
+                "conditional": {
+                  "enemy": {
+                    "def": 3.6
+                  }
+                },
+                "conditions": {
+                  "enemy": {
+                    "super": {
+                      "ki": 3,
+                      "atk": 1.26,
+                      "def": 1.26
+                    }
+                  },
+                  "ally": {
+                    "extreme": {
+                      "atk": 1.26,
+                      "def": 1.26
+                    },
+                    "categories": {
+                      "targets": ["怒り爆発", "劇場版BOSS"],
+                      "def": 3.0
+                    }
+                  }
+                },
+                "defensive": {
+                  "when_attacked": {
+                    "def": 3.6
+                  }
+                },
+                "damage_reduction": 26
+              },
+              "original_effect": "基本効果\n・気力+3、ATK/DEF180%UP\n・気玉取得時の気力上昇量+1\n・必ず必殺技が追加発動\n・会心率/ダメージ軽減率26%UP\n・攻撃が必中する \n\n気力メーター12以上で攻撃時\n・ATK/DEF200%UP \n\n気力メーター18以上で攻撃時\n・ATK260%UP \n\n超系の敵がいるとき、または自身の他に攻撃参加中の極系の味方がいるとき \n・気力+3\n・会心率/ダメージ軽減率26%UP\n・2ターンの間、極系の味方全員のATK/DEF26%UP\n・攻撃を受けるときにDEF260%UP 「純粋サイヤ人」または「混血サイヤ人」または\n\n「孫悟空の系譜」カテゴリの敵がいるとき\n・バトル中、気力+6、必ず会心が発動 \n\n登場から3ターンの間\n・\n\n攻撃参加中の味方全員が「怒り爆発」または「劇場版BOSS」カテゴリのとき攻撃するまでDEF200%UP、ダメージ軽減率26%UP"
+            },
+            "active_skill": null
           }
         },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 3.6,
-              "def": 2.8,
-              "ki": 3
-            },
-            "ki_meter": {
-              "12": {
-                "atk": 3.0,
-                "def": 3.0
-              },
-              "18": {
-                "atk": 3.6
-              }
-            },
-            "conditional": {
-              "enemy": {
-                "atk": 1.26,
-                "def": 3.6
-              }
-            },
-            "turn_limited": {
-              "first_3": {
-                "def": 3.0
-              }
-            },
-            "conditions": {
-              "enemy": {
-                "super": {
-                  "ki": 3,
-                  "atk": 1.26,
-                  "def": 1.26
-                },
-                "categories": {
-                  "targets": ["純粋サイヤ人", "混血サイヤ人", "孫悟空の系譜"],
-                  "ki": 6
-                }
-              },
-              "ally": {
-                "extreme": {
-                  "atk": 1.26,
-                  "def": 1.26
-                },
-                "categories": {
-                  "targets": ["怒り爆発", "劇場版BOSS"],
-                  "def": 3.0
-                }
-              }
-            },
-            "defensive": {
-              "when_attacked": {
-                "def": 3.6
-              }
-            }
-          },
-          "original_effect": "基本効果 \n・気力+3、ATK/DEF180%UP\n・気玉取得時の気力上昇量+1\n・必ず必殺技が追加発動\n・会心率/ダメージ軽減率26%UP\n・攻撃が必中する 気力メーター12以上で攻撃時 \n・ATK/DEF200%UP 気力メーター18以上で攻撃時 \n・ATK260%UP 超系の敵がいるとき、または自身の他に攻撃参加中の極系の味方がいるとき \n・気力+3\n・会心率/ダメージ軽減率26%UP\n・2ターンの間、極系の味方全員のATK/DEF26%UP\n・攻撃を受けるときにDEF260%UP 「純粋サイヤ人」または「混血サイヤ人」または「孫悟空の系譜」カテゴリの敵がいるとき \n・バトル中、気力+6、必ず会心が発動 登場から3ターンの間 \n・攻撃参加中の味方全員が「怒り爆発」または「劇場版BOSS」カテゴリのとき攻撃するまでDEF200%UP、ダメージ軽減率26%UP"
-        },
-        "active_skill": null
+        "image_urls": [
+          "/images/character/fumetsu-no-saikyou-senshi-densetsu-no-super-saiyan-broly.png"
+        ]
       }
-    },
+    ],
     "link_skills": [
       "戦闘民族サイヤ人",
       "超サイヤ人",
@@ -229,159 +746,174 @@
       "伝説の存在",
       "超サイヤ人を超えた力",
       "制御不能の力"
-    ],
-    "image_url": "https://lh3.googleusercontent.com/FWEWS00GuAxM9c6597mFbIHfvBZvOrszjodUeVw1AnQAuJ83mX8tUrU1iOX2TfhHbbdp-0UQsbNAJU9YPFDC30j_fcOiv3dkEf-fpTDcBXvI"
+    ]
   },
   {
-    "name": "無敵を誇るサイヤ人の頂\n・超サイヤ人4ベジータ",
+    "id": "char_fc7fea23",
+    "base_name": "無敵を誇るサイヤ人の頂",
     "rarity": "LR",
     "attribute": "超力",
     "cost": "77",
-    "stats": {
-      "max_level": {
-        "HP": "17538",
-        "ATK": "16380",
-        "DEF": "8381"
-      },
-      "potential_55": {
-        "HP": "19538",
-        "ATK": "18380",
-        "DEF": "10381"
-      },
-      "potential_100": {
-        "HP": "22538",
-        "ATK": "21780",
-        "DEF": "12981"
-      }
-    },
-    "skills": {
-      "pre_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "category",
-              "target": "ベジータの系譜",
-              "ki": 3,
-              "hp": 2.3,
-              "atk": 2.7,
-              "def": 2.7
-            },
-            {
-              "type": "attribute",
-              "target": "超力属性",
-              "ki": 3,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
-            }
-          ],
-          "original_effect": "「ベジータの系譜」カテゴリの 気力+3、HP130%UP、ATKとDEF170%UP、 または超力属性の気力+3、HPとATKとDEF120%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKが超大幅上昇し、相手に極大ダメージを与える",
-          "multiplier": 3.95,
-          "stat_boost": {
-            "atk": 2
+    "forms": [
+      {
+        "form_id": "form_a2232f5e",
+        "form_name": "超サイヤ人4ベジータ",
+        "display_name": "無敵を誇るサイヤ人の頂\n・超サイヤ人4ベジータ",
+        "form_order": 1,
+        "is_base_form": true,
+        "is_only_form": true,
+        "stats": {
+          "max_level": {
+            "HP": "17538",
+            "ATK": "16380",
+            "DEF": "8381"
           },
-          "super_attack_count": 1
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える",
-          "multiplier": 5.9,
-          "stat_boost": {
-            "atk": 2,
-            "def": 2
+          "potential_55": {
+            "HP": "19538",
+            "ATK": "18380",
+            "DEF": "10381"
+          },
+          "potential_100": {
+            "HP": "22538",
+            "ATK": "21780",
+            "DEF": "12981"
           }
         },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "def": 1.8
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "ベジータの系譜",
+                  "ki": 3,
+                  "hp": 2.3,
+                  "atk": 2.7,
+                  "def": 2.7
+                },
+                {
+                  "type": "attribute",
+                  "target": "超力属性",
+                  "ki": 3,
+                  "hp": 2.2,
+                  "atk": 2.2,
+                  "def": 2.2
+                }
+              ],
+              "original_effect": "「ベジータの系譜」カテゴリの 気力+3、HP130%UP、ATKとDEF170%UP、 または超力属性の気力+3、HPとATKとDEF120%UP"
             },
-            "turn_start": {
-              "atk": 1.8
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKが超大幅上昇し、相手に極大ダメージを与える",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 2
+              },
+              "super_attack_count": 1
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与える",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 2,
+                "def": 2
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "def": 1.8,
+                  "ki": 2
+                },
+                "turn_start": {
+                  "atk": 1.8
+                }
+              },
+              "original_effect": "自身のDEF80%UP、\n\nターン開始毎にATK20%UP(最大80%)&虹気玉か力気玉取得で気力が上がるたびに更に気力+2&敵必殺技を中確率で無効化し超絶大な威力で反撃"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える"
             }
           },
-          "original_effect": "自身のDEF80%UP、ターン開始毎にATK20%UP(最大80%)&虹気玉か力気玉取得で気力が上がるたびに更に気力+2&敵必殺技を中確率で無効化し超絶大な威力で反撃"
-        },
-        "active_skill": {
-          "name": "アクティブスキル",
-          "effect": "条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える"
-        }
-      },
-      "post_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "category",
-              "target": "ベジータの系譜",
-              "ki": 3,
-              "hp": 2.8,
-              "atk": 2.8,
-              "def": 2.8
+          "post_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": "ベジータの系譜",
+                  "ki": 3,
+                  "hp": 2.8,
+                  "atk": 2.8,
+                  "def": 2.8
+                },
+                {
+                  "type": "attribute",
+                  "target": "超力属性",
+                  "ki": 3,
+                  "hp": 2.3,
+                  "atk": 2.3,
+                  "def": 2.3
+                }
+              ],
+              "original_effect": "「ベジータの系譜」カテゴリの気力+3、HPとATKとDEF180%UP、または超力属性の気力+3、HPとATKとDEF130%UP"
             },
-            {
-              "type": "attribute",
-              "target": "超力属性",
-              "ki": 3,
-              "hp": 2.3,
-              "atk": 2.3,
-              "def": 2.3
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              },
+              "super_attack_count": 1
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 2,
+                "def": 2
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 2.4,
+                  "def": 2.4,
+                  "ki": 2
+                },
+                "turn_start": {
+                  "atk": 1.3,
+                  "def": 1.6
+                }
+              },
+              "original_effect": "自身のATKとDEF140%UP、\n\nターン開始毎にATK10%UP(最大30%)、DEF20%UP(最大60%)虹気玉か力気玉取得で気力が上がるたびに更に気力+2力気玉以外の属性気玉取得で気力が上がるたびに更に気力+1敵必殺技を中確率で無効化し超絶大な威力で反撃\n\n敵が2体以上のとき、アクティブスキル発動時または気力メーター24で1度だけ攻撃した敵の行動をそのターンのみ1回無効化する"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える"
             }
-          ],
-          "original_effect": "「ベジータの系譜」カテゴリの気力+3、HPとATKとDEF180%UP、または超力属性の気力+3、HPとATKとDEF130%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKが超大幅上昇、DEFが上昇し、相手に極大ダメージを与える",
-          "multiplier": 3.95,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
           },
-          "super_attack_count": 1
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが超大幅上昇し、相手に超極大ダメージを与え、DEFを大幅低下させる",
-          "multiplier": 5.9,
-          "stat_boost": {
-            "atk": 2,
-            "def": 2
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
           }
         },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 2.4,
-              "def": 2.4
-            },
-            "turn_start": {
-              "atk": 1.3,
-              "def": 1.6
-            }
-          },
-          "original_effect": "自身のATKとDEF140%UP、ターン開始毎にATK10%UP(最大30%)、DEF20%UP(最大60%)虹気玉か力気玉取得で気力が上がるたびに更に気力+2力気玉以外の属性気玉取得で気力が上がるたびに更に気力+1敵必殺技を中確率で無効化し超絶大な威力で反撃敵が2体以上のとき、アクティブスキル発動時または気力メーター24で1度だけ攻撃した敵の行動をそのターンのみ1回無効化する"
-        },
-        "active_skill": {
-          "name": "アクティブスキル",
-          "effect": "条件：バトル開始から4ターン目以降に発動可能(1回のみ)効果：一時的にATKが超大幅上昇し、相手に究極ダメージを与える"
-        }
-      },
-      "super_extreme": {
-        "leader_skill": null,
-        "super_attack": null,
-        "ultra_super_attack": null,
-        "passive_skill": null,
-        "active_skill": null
+        "image_urls": [
+          "/images/character/muteki-wo-hokoru-saiyajin-no-itadaki-super-saiyan-4-vegeta.png"
+        ]
       }
-    },
+    ],
     "link_skills": [
       "超サイヤ人",
       "サイヤ人の誇り",
@@ -405,195 +937,198 @@
       "親子の絆",
       "地球を守りし英雄",
       "継承する者"
-    ],
-    "image_url": "https://lh3.googleusercontent.com/X-rz5hZmuXM0hUFbvF3vw4DK39pbZJcE5lgtNVPPb1EwLvE8nC95rs-FaQmGIsKN715r7zsYEU1TvcB7k0Ta4JqyHB-kwet3qcXjchnWOVXEQQ"
+    ]
   },
   {
-    "name": "破壊による世界調和\n・ビルス＆ウイス",
+    "id": "char_a4f6aabb",
+    "base_name": "破壊による世界調和",
     "rarity": "LR",
     "attribute": "超力",
     "cost": "77",
-    "stats": {
-      "max_level": {
-        "HP": "16688",
-        "ATK": "14425",
-        "DEF": "11250"
-      },
-      "potential_55": {
-        "HP": "18688",
-        "ATK": "16425",
-        "DEF": "13125"
-      },
-      "potential_100": {
-        "HP": "21688",
-        "ATK": "19825",
-        "DEF": "15850"
-      }
-    },
-    "skills": {
-      "pre_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "超力属性",
-              "ki": 4,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
-            },
-            {
-              "type": "attribute",
-              "target": "極力属性",
-              "ki": 3,
-              "hp": 1.9,
-              "atk": 1.9,
-              "def": 1.9
-            }
-          ],
-          "original_effect": "超力属性の気力+4、HPとATKとDEF120%UP＆極力属性の気力+3、HPとATKとDEF90%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復",
-          "multiplier": 3.95,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
+    "forms": [
+      {
+        "form_id": "form_76543bd3",
+        "form_name": "ビルス＆ウイス",
+        "display_name": "破壊による世界調和\n・ビルス＆ウイス",
+        "form_order": 1,
+        "is_base_form": true,
+        "is_only_form": true,
+        "stats": {
+          "max_level": {
+            "HP": "16688",
+            "ATK": "14425",
+            "DEF": "11250"
           },
-          "super_attack_count": 2
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復",
-          "multiplier": 5.9,
-          "stat_boost": {
-            "atk": 1.5,
-            "def": 1.5
+          "potential_55": {
+            "HP": "18688",
+            "ATK": "16425",
+            "DEF": "13125"
+          },
+          "potential_100": {
+            "HP": "21688",
+            "ATK": "19825",
+            "DEF": "15850"
           }
         },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 2.5,
-              "def": 2.5
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "attribute",
+                  "target": "超力属性",
+                  "ki": 4,
+                  "hp": 2.2,
+                  "atk": 2.2,
+                  "def": 2.2
+                },
+                {
+                  "type": "attribute",
+                  "target": "極力属性",
+                  "ki": 3,
+                  "hp": 1.9,
+                  "atk": 1.9,
+                  "def": 1.9
+                }
+              ],
+              "original_effect": "超力属性の気力+4、HPとATKとDEF120%UP＆極力属性の気力+3、HPとATKとDEF90%UP"
             },
-            "after_hit": {
-              "atk": 1.7,
-              "def": 1.7
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              },
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.5,
+                "def": 1.5
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 2.5,
+                  "def": 2.5,
+                  "ki": 7
+                }
+              },
+              "original_effect": "自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する\n\n攻撃を受けてから7ターンの間\nATKとDEF70%UP、高確率で敵の攻撃を回避する&\n\n攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する"
             }
           },
-          "original_effect": "自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する攻撃を受けてから7ターンの間ATKとDEF70%UP、高確率で敵の攻撃を回避する&攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する"
-        }
-      },
-      "post_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "超力属性",
-              "ki": 4,
-              "hp": 2.0,
-              "atk": 2.0,
-              "def": 2.0
+          "post_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "attribute",
+                  "target": "超力属性",
+                  "ki": 4,
+                  "hp": 2.0,
+                  "atk": 2.0,
+                  "def": 2.0
+                },
+                {
+                  "type": "attribute",
+                  "target": "極力属性",
+                  "ki": 2,
+                  "hp": 1.7,
+                  "atk": 1.7,
+                  "def": 1.7
+                }
+              ],
+              "original_effect": "超力属性の気力+4、HPとATKとDEF100%UP＆極力属性の気力+2、HPとATKとDEF70%UP"
             },
-            {
-              "type": "attribute",
-              "target": "極力属性",
-              "ki": 2,
-              "hp": 1.7,
-              "atk": 1.7,
-              "def": 1.7
-            }
-          ],
-          "original_effect": "超力属性の気力+4、HPとATKとDEF100%UP＆極力属性の気力+2、HPとATKとDEF70%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "相手に極大ダメージを与え、HPを7%回復",
-          "multiplier": 3.95,
-          "super_attack_count": 1
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "相手に超極大ダメージを与え、HPを12%回復",
-          "multiplier": 5.9
-        },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 1.8
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "相手に極大ダメージを与え、HPを7%回復",
+              "multiplier": 3.95,
+              "super_attack_count": 1
             },
-            "after_hit": {
-              "atk": 1.6,
-              "def": 1.6
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "相手に超極大ダメージを与え、HPを12%回復",
+              "multiplier": 5.9
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 1.8
+                }
+              },
+              "original_effect": "自身のATK80%UP\n\n攻撃を受けてから5ターンの間\nATKとDEF60%UP"
             }
           },
-          "original_effect": "自身のATK80%UP攻撃を受けてから5ターンの間ATKとDEF60%UP"
-        }
-      },
-      "super_extreme": {
-        "leader_skill": {
-          "name": "リーダースキル",
-          "conditions": [
-            {
-              "type": "attribute",
-              "target": "超力属性",
-              "ki": 4,
-              "hp": 2.2,
-              "atk": 2.2,
-              "def": 2.2
+          "super_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "attribute",
+                  "target": "超力属性",
+                  "ki": 4,
+                  "hp": 2.2,
+                  "atk": 2.2,
+                  "def": 2.2
+                },
+                {
+                  "type": "attribute",
+                  "target": "極力属性",
+                  "ki": 3,
+                  "hp": 1.9,
+                  "atk": 1.9,
+                  "def": 1.9
+                }
+              ],
+              "original_effect": "超力属性の気力+4、HPとATKとDEF120%UP＆極力属性の気力+3、HPとATKとDEF90%UP"
             },
-            {
-              "type": "attribute",
-              "target": "極力属性",
-              "ki": 3,
-              "hp": 1.9,
-              "atk": 1.9,
-              "def": 1.9
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復",
+              "multiplier": 3.95,
+              "stat_boost": {
+                "atk": 1.3,
+                "def": 1.3
+              },
+              "super_attack_count": 2
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復",
+              "multiplier": 5.9,
+              "stat_boost": {
+                "atk": 1.5,
+                "def": 1.5
+              }
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 2.5,
+                  "def": 2.5,
+                  "ki": 7
+                }
+              },
+              "original_effect": "自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する\n\n攻撃を受けてから7ターンの間\nATKとDEF70%UP、高確率で敵の攻撃を回避する&\n\n攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する"
             }
-          ],
-          "original_effect": "超力属性の気力+4、HPとATKとDEF120%UP＆極力属性の気力+3、HPとATKとDEF90%UP"
-        },
-        "super_attack": {
-          "name": "必殺技",
-          "effect": "1ターンATKとDEFが上昇し、相手に極大ダメージを与え、HPを10%回復",
-          "multiplier": 3.95,
-          "stat_boost": {
-            "atk": 1.3,
-            "def": 1.3
-          },
-          "super_attack_count": 2
-        },
-        "ultra_super_attack": {
-          "name": "超必殺技",
-          "effect": "1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与え、HPを15%回復",
-          "multiplier": 5.9,
-          "stat_boost": {
-            "atk": 1.5,
-            "def": 1.5
           }
         },
-        "passive_skill": {
-          "name": "パッシブスキル",
-          "stat_boosts": {
-            "basic": {
-              "atk": 2.5,
-              "def": 2.5
-            },
-            "after_hit": {
-              "atk": 1.7,
-              "def": 1.7
-            }
-          },
-          "original_effect": "自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する攻撃を受けてから7ターンの間ATKとDEF70%UP、高確率で敵の攻撃を回避する&攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する"
-        }
+        "image_urls": [
+          "/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png"
+        ]
       }
-    },
+    ],
     "link_skills": [
       "無邪気",
       "天才",
@@ -610,7 +1145,6 @@
       "兄弟の絆",
       "師弟の絆",
       "宇宙をわたる戦士"
-    ],
-    "image_url": "https://lh3.googleusercontent.com/xJbTuZP5il0Q-jjzQe8dAFiY5_acUYqEJ_0qH2MZkAbCohXAbuBJT7XqgPWvB3Bc1rlzf4uIyqcP53CItvu1W8nB4SyHzHezIhGh7qNeJ06a"
+    ]
   }
 ]
