@@ -69,17 +69,21 @@ export const getImageUrl = (
     return character.reversible_forms[index].image_url || ''
   }
   if (character.forms && character.forms.length > 0) {
-    return character.forms[0].image_urls?.[0] || ''
+    return character.forms[0].image_url || ''
   }
   return ''
 }
 
 /**
  * キャラクターのステータスを取得
- * reversible_forms使用時はstats、forms使用時はforms[0].stats
+ * reversible_forms使用時はcharacter.stats、forms使用時はforms[0].stats
  */
-export const getCharacterStats = (character: Character) => {
+export const getCharacterStats = (
+  character: Character,
+  formIndex: number = 0
+) => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
+    // reversible_formsの場合、statsはキャラクターレベルに存在
     return character.stats || null
   }
   if (character.forms && character.forms.length > 0) {
@@ -135,8 +139,11 @@ export const getFriendSkillFromSlots = (teamSlots: { character: Character | null
 /**
  * キャラクターのパッシブスキルを取得（優先順位: super_extreme > post_extreme > pre_extreme）
  */
-export const getPassiveSkill = (character: Character) => {
-  const skills = getCharacterSkills(character)
+export const getPassiveSkill = (
+  character: Character,
+  formIndex: number = 0
+) => {
+  const skills = getCharacterSkills(character, formIndex)
   if (!skills) return null
 
   if (skills.super_extreme?.passive_skill?.stat_boosts) {

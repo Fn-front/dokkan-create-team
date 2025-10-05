@@ -1,6 +1,6 @@
 [
   {
-    "id": "char_reversible_001",
+    "id": "char_be9d1473",
     "name": "怒涛の未来最終決戦\n・超サイヤ人ゴッドSS孫悟空＋超サイヤ人ゴッドSSベジータ",
     "rarity": "LR",
     "attribute": "超力",
@@ -77,6 +77,11 @@
                   }
                 },
                 "ally_count": {
+                  "condition": {
+                    "type": "attribute_or_category",
+                    "targets": ["超", "未来編"],
+                    "select": "most"
+                  },
                   "atk": {
                     "per_ally": 0.5,
                     "max": 2.5
@@ -138,7 +143,7 @@
                 "atk": 1.5,
                 "def": 1.5
               },
-              "super_attack_count": 2
+              "super_attack_count": 3
             },
             "ultra_super_attack": {
               "name": "超必殺技",
@@ -157,7 +162,30 @@
                   "def": 3.0,
                   "ki": 7
                 },
-                "damage_reduction": 40
+                "damage_reduction": 40,
+                "ki_meter": {
+                  "18": {
+                    "atk": 3.5,
+                    "def": 3.5
+                  },
+                  "20": {
+                    "def": 2.5
+                  }
+                },
+                "evasion": 70,
+                "attack_position": {
+                  "3": {
+                    "atk": 2.5
+                  }
+                },
+                "ally_support": {
+                  "name_condition": {
+                    "target": "トランクス",
+                    "ki": 3,
+                    "atk": 1.8,
+                    "def": 1.8
+                  }
+                }
               },
               "original_effect": "基本効果\n・超サイヤゴッドSS孫悟空とリバーシブルチェンジ可能\n・気力+7、ATK/DEF200%UP\n・高確率で会心が発動\n・高確率で敵の攻撃を回避\n・ダメージ軽減率40%UP\n・自身と名称に「トランクス」を含むキャラの気力+3、ATK/DEF80%UP \n3番目で攻撃時 \n・ATK150%UP\n・必ず会心が発動 \n気力メーター18以上で攻撃時\n・ATK/DEF250%UP\n・必殺技が追加発動 アクティブスキル発動時、または\n気力メーター20以上で攻撃時\n・DEF150%UP\n・必殺技が追加発動"
             },
@@ -282,7 +310,8 @@
                   "atk": 1.7,
                   "def": 1.7,
                   "ki": 3
-                }
+                },
+                "evasion": 70
               },
               "original_effect": "自身のATKとDEF70%UP敵を攻撃するとき自身の気力+3、必ず追加攻撃し中確率で必殺技が発動\n3番目に攻撃すると高確率で攻撃を回避条件を満たすと変身する"
             },
@@ -330,7 +359,8 @@
                   "atk": 2.4,
                   "def": 2.4,
                   "ki": 4
-                }
+                },
+                "evasion": 70
               },
               "original_effect": "自身のATKとDEF140%UP敵を攻撃するとき自身の気力+4\n\n1番目か\n2番目に攻撃すると必ず追加攻撃し超高確率で必殺技が発動\n3番目に攻撃すると必ず必殺技が追加発動し、超高確率で攻撃を回避\n\n攻撃時に更にDEF100%UP条件を満たすと変身する"
             },
@@ -347,9 +377,7 @@
             "active_skill": null
           }
         },
-        "image_urls": [
-          "/images/character/kyukyoku-saikyo-no-yugo-gogeta.png"
-        ]
+        "image_url": "/images/character/kyukyoku-saikyo-no-yugo-gogeta.png"
       },
       {
         "form_id": "form_c7752240",
@@ -416,7 +444,8 @@
                   "atk": 1.77,
                   "def": 1.77,
                   "ki": 5
-                }
+                },
+                "evasion": 70
               },
               "original_effect": "自身のATKとDEF77%UP\n1番目か\n2番目に攻撃すると自身の気力+5、必ず追加攻撃し、攻撃するたびに更にATKとDEF7%UP(最大77%)、全属性に効果抜群で攻撃\n3番目に攻撃すると必ず必殺技が追加発動し、高確率で攻撃を回避"
             },
@@ -465,7 +494,8 @@
                   "atk": 1.22,
                   "def": 1.22,
                   "ki": 5
-                }
+                },
+                "evasion": 70
               },
               "original_effect": "変身した1ターンの間、必ず攻撃を回避自身のATKとDEF150%UP\n1番目か\n2番目に攻撃すると自身の気力+5、必ず2回追加攻撃し中確率で必殺技が発動、全属性に効果抜群で攻撃\n3番目に攻撃すると自身の気力+7、必ず必殺技が追加発動し、超高確率で攻撃を回避攻撃するたびに更に自身の気力+1(最大+5)、ATKとDEF22%UP(最大88%)アクティブスキル発動時または気力メーター24のとき必ず会心が発動"
             },
@@ -482,9 +512,7 @@
             "active_skill": null
           }
         },
-        "image_urls": [
-          "/images/character/kyukyoku-saikyo-no-yugo-super-saiyan-god-ss-gogeta.png"
-        ]
+        "image_url": "/images/character/kyukyoku-saikyo-no-yugo-super-saiyan-god-ss-gogeta.png"
       }
     ],
     "link_skills": [
@@ -719,9 +747,7 @@
             "active_skill": null
           }
         },
-        "image_urls": [
-          "/images/character/fumetsu-no-saikyou-senshi-densetsu-no-super-saiyan-broly.png"
-        ]
+        "image_url": "/images/character/fumetsu-no-saikyo-senshi-densetsu-no-super-saiyan-broly.png"
       }
     ],
     "link_skills": [
@@ -909,9 +935,7 @@
             "active_skill": null
           }
         },
-        "image_urls": [
-          "/images/character/muteki-wo-hokoru-saiyajin-no-itadaki-super-saiyan-4-vegeta.png"
-        ]
+        "image_url": "/images/character/muteki-wo-hokoru-saiyan-no-itadaki-super-saiyan-4-vegeta.png"
       }
     ],
     "link_skills": [
@@ -1020,7 +1044,8 @@
                   "atk": 2.5,
                   "def": 2.5,
                   "ki": 7
-                }
+                },
+                "evasion": 70
               },
               "original_effect": "自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する\n\n攻撃を受けてから7ターンの間\nATKとDEF70%UP、高確率で敵の攻撃を回避する&\n\n攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する"
             }
@@ -1118,15 +1143,14 @@
                   "atk": 2.5,
                   "def": 2.5,
                   "ki": 7
-                }
+                },
+                "evasion": 70
               },
               "original_effect": "自身の気力+7、ATKとDEF150%UP&中確率で会心が発動する\n\n攻撃を受けてから7ターンの間\nATKとDEF70%UP、高確率で敵の攻撃を回避する&\n\n攻撃時に自身がHP70%以下の場合、必殺技を追加で発動する"
             }
           }
         },
-        "image_urls": [
-          "/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png"
-        ]
+        "image_url": "/images/character/hakai-ni-yoru-sekai-chouwa-beerus-whis.png"
       }
     ],
     "link_skills": [

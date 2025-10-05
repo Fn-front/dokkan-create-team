@@ -198,7 +198,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
             {isFriend && <span className={styles.friendBadge}>FRIEND</span>}
           </div>
         </div>
-        {slot.character && getCharacterStats(slot.character) && (
+        {slot.character && (
           <div className={styles.characterStats}>
             <div className={styles.statRow}>
               <span className={styles.statLabel}>55%</span>
@@ -207,7 +207,11 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   const leaderSkill = getLeaderSkillFromSlots(teamSlots)
                   const friendSkill = getFriendSkillFromSlots(teamSlots)
 
-                  const characterStats = getCharacterStats(slot.character)
+                  const isReversible = isReversibleCharacter(slot.character)
+                  const formIndex = isReversible
+                    ? getReversibleFormIndex(slot.character.id)
+                    : 0
+                  const characterStats = getCharacterStats(slot.character, formIndex)
                   const stats55 = characterStats?.potential_55
                   if (!stats55) return '0 / 0'
                   const baseATK = parseInt(stats55.ATK)
@@ -215,6 +219,43 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
 
                   let atkMultiplier = 0
                   let defMultiplier = 0
+
+                  // ally_count条件に合う味方の体数をカウントする関数
+                  const countAlliesForAllyCount = (
+                    condition: {
+                      type: string
+                      targets: string[]
+                      select: string
+                    }
+                  ): number => {
+                    if (condition.type === 'attribute_or_category') {
+                      let attributeCount = 0
+                      let categoryCount = 0
+
+                      teamSlots.forEach((ts) => {
+                        if (!ts.character || ts.position === slot.position) return
+
+                        // 属性判定（「超」「極」）
+                        condition.targets.forEach((target) => {
+                          if (target === '超' || target === '極') {
+                            if (ts.character.attribute.startsWith(target)) {
+                              attributeCount++
+                            }
+                          }
+                          // カテゴリ判定
+                          else if (ts.character.categories?.includes(target)) {
+                            categoryCount++
+                          }
+                        })
+                      })
+
+                      // "most" = 体数の多い方を返す
+                      if (condition.select === 'most') {
+                        return Math.max(attributeCount, categoryCount)
+                      }
+                    }
+                    return 0
+                  }
 
                   // 条件判定関数
                   const matchesLeaderSkillCondition = (
@@ -310,14 +351,15 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
 
                   // パッシブスキルのstat_boosts計算
                   const passiveSkill = slot.character
-                    ? getPassiveSkill(slot.character)
+                    ? getPassiveSkill(slot.character, formIndex)
                     : null
 
                   // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions, defensiveは除外）
                   const collectStatValues = (
                     obj: Record<string, unknown>,
                     statType: 'atk' | 'def' | 'def_down',
-                    excludeBasic = false
+                    excludeBasic = false,
+                    parentKey = ''
                   ): number => {
                     let sum = 0
 
@@ -326,9 +368,31 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                         if (excludeBasic && key === 'basic') {
                           continue
                         }
-                        // conditions と defensive を除外
-                        if (key === 'conditions' || key === 'defensive') {
+                        // conditions と defensive と _support を除外
+                        if (
+                          key === 'conditions' ||
+                          key === 'defensive' ||
+                          key.endsWith('_support')
+                        ) {
                           continue
+                        }
+
+                        // ally_countの場合は体数計算
+                        if (parentKey === 'ally_count' && key === statType) {
+                          const perAlly = (value as Record<string, unknown>)?.per_ally
+                          if (typeof perAlly === 'number') {
+                            // 親オブジェクトから condition を取得
+                            const condition = obj.condition as {
+                              type: string
+                              targets: string[]
+                              select: string
+                            } | undefined
+                            if (condition) {
+                              const allyCount = countAlliesForAllyCount(condition)
+                              sum += 1.0 + perAlly * allyCount
+                              continue
+                            }
+                          }
                         }
 
                         if (key === statType && typeof value === 'number') {
@@ -340,7 +404,8 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                           sum += collectStatValues(
                             value as Record<string, unknown>,
                             statType,
-                            false
+                            false,
+                            key
                           )
                         }
                       }
@@ -401,7 +466,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   // ultra_super_attackがある_extremeキーから攻撃倍率を取得
                   const getAttackMultiplier = () => {
                     if (!slot.character) return null
-                    const skills = getCharacterSkills(slot.character)
+                    const skills = getCharacterSkills(slot.character, formIndex)
                     if (!skills) return null
                     const extremeKeys = Object.keys(skills).filter((key) =>
                       key.endsWith('_extreme')
@@ -442,7 +507,11 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   const leaderSkill = getLeaderSkillFromSlots(teamSlots)
                   const friendSkill = getFriendSkillFromSlots(teamSlots)
 
-                  const characterStats = getCharacterStats(slot.character)
+                  const isReversible = isReversibleCharacter(slot.character)
+                  const formIndex = isReversible
+                    ? getReversibleFormIndex(slot.character.id)
+                    : 0
+                  const characterStats = getCharacterStats(slot.character, formIndex)
                   const stats100 = characterStats?.potential_100
                   if (!stats100) return '0 / 0'
                   const baseATK = parseInt(stats100.ATK)
@@ -450,6 +519,43 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
 
                   let atkMultiplier = 0
                   let defMultiplier = 0
+
+                  // ally_count条件に合う味方の体数をカウントする関数
+                  const countAlliesForAllyCount = (
+                    condition: {
+                      type: string
+                      targets: string[]
+                      select: string
+                    }
+                  ): number => {
+                    if (condition.type === 'attribute_or_category') {
+                      let attributeCount = 0
+                      let categoryCount = 0
+
+                      teamSlots.forEach((ts) => {
+                        if (!ts.character || ts.position === slot.position) return
+
+                        // 属性判定（「超」「極」）
+                        condition.targets.forEach((target) => {
+                          if (target === '超' || target === '極') {
+                            if (ts.character.attribute.startsWith(target)) {
+                              attributeCount++
+                            }
+                          }
+                          // カテゴリ判定
+                          else if (ts.character.categories?.includes(target)) {
+                            categoryCount++
+                          }
+                        })
+                      })
+
+                      // "most" = 体数の多い方を返す
+                      if (condition.select === 'most') {
+                        return Math.max(attributeCount, categoryCount)
+                      }
+                    }
+                    return 0
+                  }
 
                   // 条件判定関数
                   const matchesLeaderSkillCondition = (
@@ -545,14 +651,15 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
 
                   // パッシブスキルのstat_boosts計算
                   const passiveSkill = slot.character
-                    ? getPassiveSkill(slot.character)
+                    ? getPassiveSkill(slot.character, formIndex)
                     : null
 
                   // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions, defensiveは除外）
                   const collectStatValues = (
                     obj: Record<string, unknown>,
                     statType: 'atk' | 'def' | 'def_down',
-                    excludeBasic = false
+                    excludeBasic = false,
+                    parentKey = ''
                   ): number => {
                     let sum = 0
 
@@ -561,9 +668,31 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                         if (excludeBasic && key === 'basic') {
                           continue
                         }
-                        // conditions と defensive を除外
-                        if (key === 'conditions' || key === 'defensive') {
+                        // conditions と defensive と _support を除外
+                        if (
+                          key === 'conditions' ||
+                          key === 'defensive' ||
+                          key.endsWith('_support')
+                        ) {
                           continue
+                        }
+
+                        // ally_countの場合は体数計算
+                        if (parentKey === 'ally_count' && key === statType) {
+                          const perAlly = (value as Record<string, unknown>)?.per_ally
+                          if (typeof perAlly === 'number') {
+                            // 親オブジェクトから condition を取得
+                            const condition = obj.condition as {
+                              type: string
+                              targets: string[]
+                              select: string
+                            } | undefined
+                            if (condition) {
+                              const allyCount = countAlliesForAllyCount(condition)
+                              sum += 1.0 + perAlly * allyCount
+                              continue
+                            }
+                          }
                         }
 
                         if (key === statType && typeof value === 'number') {
@@ -575,7 +704,8 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                           sum += collectStatValues(
                             value as Record<string, unknown>,
                             statType,
-                            false
+                            false,
+                            key
                           )
                         }
                       }
@@ -636,7 +766,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   // ultra_super_attackがある_extremeキーから攻撃倍率を取得
                   const getAttackMultiplier = () => {
                     if (!slot.character) return null
-                    const skills = getCharacterSkills(slot.character)
+                    const skills = getCharacterSkills(slot.character, formIndex)
                     if (!skills) return null
                     const extremeKeys = Object.keys(skills).filter((key) =>
                       key.endsWith('_extreme')
@@ -673,7 +803,11 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
             <div className={styles.statRow}>
               <span className={styles.statLabel}>
                 {(() => {
-                  const skills = getCharacterSkills(slot.character)
+                  const isReversible = isReversibleCharacter(slot.character)
+                  const formIndex = isReversible
+                    ? getReversibleFormIndex(slot.character.id)
+                    : 0
+                  const skills = getCharacterSkills(slot.character, formIndex)
                   const superAttackCount = (() => {
                     if (skills?.super_extreme?.super_attack?.super_attack_count)
                       return skills.super_extreme.super_attack
@@ -693,7 +827,11 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   const leaderSkill = getLeaderSkillFromSlots(teamSlots)
                   const friendSkill = getFriendSkillFromSlots(teamSlots)
 
-                  const characterStats = getCharacterStats(slot.character)
+                  const isReversible = isReversibleCharacter(slot.character)
+                  const formIndex = isReversible
+                    ? getReversibleFormIndex(slot.character.id)
+                    : 0
+                  const characterStats = getCharacterStats(slot.character, formIndex)
                   const stats100 = characterStats?.potential_100
                   if (!stats100) return '0 / 0'
                   const baseATK = parseInt(stats100.ATK)
@@ -701,6 +839,43 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
 
                   let atkMultiplier = 0
                   let defMultiplier = 0
+
+                  // ally_count条件に合う味方の体数をカウントする関数
+                  const countAlliesForAllyCount = (
+                    condition: {
+                      type: string
+                      targets: string[]
+                      select: string
+                    }
+                  ): number => {
+                    if (condition.type === 'attribute_or_category') {
+                      let attributeCount = 0
+                      let categoryCount = 0
+
+                      teamSlots.forEach((ts) => {
+                        if (!ts.character || ts.position === slot.position) return
+
+                        // 属性判定（「超」「極」）
+                        condition.targets.forEach((target) => {
+                          if (target === '超' || target === '極') {
+                            if (ts.character.attribute.startsWith(target)) {
+                              attributeCount++
+                            }
+                          }
+                          // カテゴリ判定
+                          else if (ts.character.categories?.includes(target)) {
+                            categoryCount++
+                          }
+                        })
+                      })
+
+                      // "most" = 体数の多い方を返す
+                      if (condition.select === 'most') {
+                        return Math.max(attributeCount, categoryCount)
+                      }
+                    }
+                    return 0
+                  }
 
                   // 条件判定関数
                   const matchesLeaderSkillCondition = (
@@ -796,7 +971,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
 
                   // パッシブスキルのstat_boosts計算
                   const passiveSkill = slot.character
-                    ? getPassiveSkill(slot.character)
+                    ? getPassiveSkill(slot.character, formIndex)
                     : null
 
                   // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions含む、defensiveは除外）

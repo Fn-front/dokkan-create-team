@@ -218,7 +218,7 @@
 
 .switchButton {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
   z-index: 100;
   display: flex;
@@ -232,11 +232,11 @@
   background-color: transparent;
   border: none;
   transition: all 0.2s ease;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 
   &::before {
     position: absolute;
-    top: 50%;
+    top: 0.3rem;
     left: 50%;
     width: 2.4rem;
     height: 2.4rem;
@@ -246,7 +246,7 @@
     border-radius: 50%;
     box-shadow: 0 2px 4px rgba(0 0 0 / 15%);
     transition: all 0.2s ease;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
 
     @media (prefers-color-scheme: dark) {
       background-color: rgba(42 42 42 / 95%);
@@ -265,7 +265,7 @@
   }
 
   &:active::before {
-    transform: translate(-50%, -50%) scale(0.95);
+    transform: translateX(-50%) scale(0.95);
   }
 }
 
