@@ -24,12 +24,26 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
   ({ character, open, onOpenChange }) => {
     const { skills } = character
 
-    // 存在するタブを取得
+    // 存在するタブを取得（少なくとも1つのスキルがnullでない場合のみ）
     const availableTabs: ExtremeLevelKey[] = useMemo(() => {
       const tabs: ExtremeLevelKey[] = []
-      if (skills?.pre_extreme) tabs.push('pre_extreme')
-      if (skills?.post_extreme) tabs.push('post_extreme')
-      if (skills?.super_extreme) tabs.push('super_extreme')
+
+      const hasAnySkill = (key: ExtremeLevelKey) => {
+        const skillSet = skills?.[key]
+        if (!skillSet) return false
+
+        return !!(
+          skillSet.leader_skill ||
+          skillSet.super_attack ||
+          skillSet.ultra_super_attack ||
+          skillSet.passive_skill ||
+          skillSet.active_skill
+        )
+      }
+
+      if (hasAnySkill('pre_extreme')) tabs.push('pre_extreme')
+      if (hasAnySkill('post_extreme')) tabs.push('post_extreme')
+      if (hasAnySkill('super_extreme')) tabs.push('super_extreme')
       return tabs
     }, [skills])
 
@@ -47,9 +61,6 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
                 {skillSet.leader_skill?.original_effect && (
                   <div className={styles.skillSection}>
                     <h3 className={styles.skillTitle}>リーダースキル</h3>
-                    <p className={styles.skillName}>
-                      {skillSet.leader_skill.name}
-                    </p>
                     <p className={styles.skillEffect}>
                       {skillSet.leader_skill.original_effect}
                     </p>
@@ -60,9 +71,6 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
                 {skillSet.super_attack?.original_effect && (
                   <div className={styles.skillSection}>
                     <h3 className={styles.skillTitle}>必殺技</h3>
-                    <p className={styles.skillName}>
-                      {skillSet.super_attack.name}
-                    </p>
                     <p className={styles.skillEffect}>
                       {skillSet.super_attack.original_effect}
                     </p>
@@ -73,9 +81,6 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
                 {skillSet.ultra_super_attack?.original_effect && (
                   <div className={styles.skillSection}>
                     <h3 className={styles.skillTitle}>超必殺技</h3>
-                    <p className={styles.skillName}>
-                      {skillSet.ultra_super_attack.name}
-                    </p>
                     <p className={styles.skillEffect}>
                       {skillSet.ultra_super_attack.original_effect}
                     </p>
@@ -86,9 +91,6 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
                 {skillSet.passive_skill?.original_effect && (
                   <div className={styles.skillSection}>
                     <h3 className={styles.skillTitle}>パッシブスキル</h3>
-                    <p className={styles.skillName}>
-                      {skillSet.passive_skill.name}
-                    </p>
                     <p className={styles.skillEffect}>
                       {skillSet.passive_skill.original_effect}
                     </p>
@@ -99,9 +101,6 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
                 {skillSet.active_skill?.original_effect && (
                   <div className={styles.skillSection}>
                     <h3 className={styles.skillTitle}>アクティブスキル</h3>
-                    <p className={styles.skillName}>
-                      {skillSet.active_skill.name}
-                    </p>
                     <p className={styles.skillEffect}>
                       {skillSet.active_skill.original_effect}
                     </p>

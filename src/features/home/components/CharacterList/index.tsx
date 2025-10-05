@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import Image from 'next/image'
-import styles from './CharacterList.module.scss'
+import styles from './style.module.scss'
 import { sampleCharacters } from '@/functions/data/characters'
 import type { Character } from '@/functions/types/team'
 import { cn } from '@/lib/utils'

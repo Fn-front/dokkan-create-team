@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import Image from 'next/image'
-import styles from './TeamLayout.module.scss'
+import styles from './style.module.scss'
 import type { Character, TeamSlot } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
 import { ProhibitIcon } from '@/components/icons'
@@ -174,23 +174,83 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   let atkMultiplier = 0
                   let defMultiplier = 0
 
-                  // リーダースキルの倍率取得
+                  // 条件判定関数
+                  const matchesLeaderSkillCondition = (
+                    character: Character,
+                    condition: { type: string; target: string }
+                  ): boolean => {
+                    if (condition.type === 'attribute') {
+                      const target = condition.target
+                      if (!target.startsWith('超') && !target.startsWith('極')) {
+                        const baseAttr = target.replace('属性', '')
+                        return (
+                          character.attribute === `超${baseAttr}` ||
+                          character.attribute === `極${baseAttr}`
+                        )
+                      }
+                      const targetAttr = target.replace('属性', '')
+                      return character.attribute === targetAttr
+                    }
+                    if (condition.type === 'character') {
+                      const target = condition.target
+                      if (target.includes('または')) {
+                        const names = target.split('または').map((n) => n.trim())
+                        const firstMatchIndex = names.findIndex((name) =>
+                          character.name.includes(name)
+                        )
+                        if (firstMatchIndex === -1) return false
+                        for (let i = 0; i < names.length; i++) {
+                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                            return false
+                          }
+                        }
+                        return true
+                      }
+                      if (target.includes('&')) {
+                        const names = target.split('&').map((n) => n.trim())
+                        const firstMatchIndex = names.findIndex((name) =>
+                          character.name.includes(name)
+                        )
+                        if (firstMatchIndex === -1) return false
+                        for (let i = 0; i < names.length; i++) {
+                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                            return false
+                          }
+                        }
+                        return true
+                      }
+                      return character.name.includes(target)
+                    }
+                    if (condition.type === 'category') {
+                      if (!character.categories) return false
+                      return character.categories.includes(condition.target)
+                    }
+                    return false
+                  }
+
+                  // リーダースキルの倍率取得（条件チェック付き）
                   if (leaderSkill?.conditions) {
                     for (const condition of leaderSkill.conditions) {
-                      if (condition.atk !== undefined)
-                        atkMultiplier += condition.atk
-                      if (condition.def !== undefined)
-                        defMultiplier += condition.def
+                      if (matchesLeaderSkillCondition(slot.character, condition)) {
+                        if (condition.atk !== undefined)
+                          atkMultiplier += condition.atk
+                        if (condition.def !== undefined)
+                          defMultiplier += condition.def
+                        break // 最初に一致した条件のみ適用
+                      }
                     }
                   }
 
-                  // フレンドスキルの倍率取得
+                  // フレンドスキルの倍率取得（条件チェック付き）
                   if (friendSkill?.conditions) {
                     for (const condition of friendSkill.conditions) {
-                      if (condition.atk !== undefined)
-                        atkMultiplier += condition.atk
-                      if (condition.def !== undefined)
-                        defMultiplier += condition.def
+                      if (matchesLeaderSkillCondition(slot.character, condition)) {
+                        if (condition.atk !== undefined)
+                          atkMultiplier += condition.atk
+                        if (condition.def !== undefined)
+                          defMultiplier += condition.def
+                        break // 最初に一致した条件のみ適用
+                      }
                     }
                   }
 
@@ -372,23 +432,83 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   let atkMultiplier = 0
                   let defMultiplier = 0
 
-                  // リーダースキルの倍率取得
+                  // 条件判定関数
+                  const matchesLeaderSkillCondition = (
+                    character: Character,
+                    condition: { type: string; target: string }
+                  ): boolean => {
+                    if (condition.type === 'attribute') {
+                      const target = condition.target
+                      if (!target.startsWith('超') && !target.startsWith('極')) {
+                        const baseAttr = target.replace('属性', '')
+                        return (
+                          character.attribute === `超${baseAttr}` ||
+                          character.attribute === `極${baseAttr}`
+                        )
+                      }
+                      const targetAttr = target.replace('属性', '')
+                      return character.attribute === targetAttr
+                    }
+                    if (condition.type === 'character') {
+                      const target = condition.target
+                      if (target.includes('または')) {
+                        const names = target.split('または').map((n) => n.trim())
+                        const firstMatchIndex = names.findIndex((name) =>
+                          character.name.includes(name)
+                        )
+                        if (firstMatchIndex === -1) return false
+                        for (let i = 0; i < names.length; i++) {
+                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                            return false
+                          }
+                        }
+                        return true
+                      }
+                      if (target.includes('&')) {
+                        const names = target.split('&').map((n) => n.trim())
+                        const firstMatchIndex = names.findIndex((name) =>
+                          character.name.includes(name)
+                        )
+                        if (firstMatchIndex === -1) return false
+                        for (let i = 0; i < names.length; i++) {
+                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                            return false
+                          }
+                        }
+                        return true
+                      }
+                      return character.name.includes(target)
+                    }
+                    if (condition.type === 'category') {
+                      if (!character.categories) return false
+                      return character.categories.includes(condition.target)
+                    }
+                    return false
+                  }
+
+                  // リーダースキルの倍率取得（条件チェック付き）
                   if (leaderSkill?.conditions) {
                     for (const condition of leaderSkill.conditions) {
-                      if (condition.atk !== undefined)
-                        atkMultiplier += condition.atk
-                      if (condition.def !== undefined)
-                        defMultiplier += condition.def
+                      if (matchesLeaderSkillCondition(slot.character, condition)) {
+                        if (condition.atk !== undefined)
+                          atkMultiplier += condition.atk
+                        if (condition.def !== undefined)
+                          defMultiplier += condition.def
+                        break // 最初に一致した条件のみ適用
+                      }
                     }
                   }
 
-                  // フレンドスキルの倍率取得
+                  // フレンドスキルの倍率取得（条件チェック付き）
                   if (friendSkill?.conditions) {
                     for (const condition of friendSkill.conditions) {
-                      if (condition.atk !== undefined)
-                        atkMultiplier += condition.atk
-                      if (condition.def !== undefined)
-                        defMultiplier += condition.def
+                      if (matchesLeaderSkillCondition(slot.character, condition)) {
+                        if (condition.atk !== undefined)
+                          atkMultiplier += condition.atk
+                        if (condition.def !== undefined)
+                          defMultiplier += condition.def
+                        break // 最初に一致した条件のみ適用
+                      }
                     }
                   }
 
@@ -586,23 +706,83 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   let atkMultiplier = 0
                   let defMultiplier = 0
 
-                  // リーダースキルの倍率取得
+                  // 条件判定関数
+                  const matchesLeaderSkillCondition = (
+                    character: Character,
+                    condition: { type: string; target: string }
+                  ): boolean => {
+                    if (condition.type === 'attribute') {
+                      const target = condition.target
+                      if (!target.startsWith('超') && !target.startsWith('極')) {
+                        const baseAttr = target.replace('属性', '')
+                        return (
+                          character.attribute === `超${baseAttr}` ||
+                          character.attribute === `極${baseAttr}`
+                        )
+                      }
+                      const targetAttr = target.replace('属性', '')
+                      return character.attribute === targetAttr
+                    }
+                    if (condition.type === 'character') {
+                      const target = condition.target
+                      if (target.includes('または')) {
+                        const names = target.split('または').map((n) => n.trim())
+                        const firstMatchIndex = names.findIndex((name) =>
+                          character.name.includes(name)
+                        )
+                        if (firstMatchIndex === -1) return false
+                        for (let i = 0; i < names.length; i++) {
+                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                            return false
+                          }
+                        }
+                        return true
+                      }
+                      if (target.includes('&')) {
+                        const names = target.split('&').map((n) => n.trim())
+                        const firstMatchIndex = names.findIndex((name) =>
+                          character.name.includes(name)
+                        )
+                        if (firstMatchIndex === -1) return false
+                        for (let i = 0; i < names.length; i++) {
+                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                            return false
+                          }
+                        }
+                        return true
+                      }
+                      return character.name.includes(target)
+                    }
+                    if (condition.type === 'category') {
+                      if (!character.categories) return false
+                      return character.categories.includes(condition.target)
+                    }
+                    return false
+                  }
+
+                  // リーダースキルの倍率取得（条件チェック付き）
                   if (leaderSkill?.conditions) {
                     for (const condition of leaderSkill.conditions) {
-                      if (condition.atk !== undefined)
-                        atkMultiplier += condition.atk
-                      if (condition.def !== undefined)
-                        defMultiplier += condition.def
+                      if (matchesLeaderSkillCondition(slot.character, condition)) {
+                        if (condition.atk !== undefined)
+                          atkMultiplier += condition.atk
+                        if (condition.def !== undefined)
+                          defMultiplier += condition.def
+                        break // 最初に一致した条件のみ適用
+                      }
                     }
                   }
 
-                  // フレンドスキルの倍率取得
+                  // フレンドスキルの倍率取得（条件チェック付き）
                   if (friendSkill?.conditions) {
                     for (const condition of friendSkill.conditions) {
-                      if (condition.atk !== undefined)
-                        atkMultiplier += condition.atk
-                      if (condition.def !== undefined)
-                        defMultiplier += condition.def
+                      if (matchesLeaderSkillCondition(slot.character, condition)) {
+                        if (condition.atk !== undefined)
+                          atkMultiplier += condition.atk
+                        if (condition.def !== undefined)
+                          defMultiplier += condition.def
+                        break // 最初に一致した条件のみ適用
+                      }
                     }
                   }
 
@@ -673,7 +853,11 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     const boosts = passiveSkill.stat_boosts
 
                     // ATK計算: basic掛け算 → 他の値を足して掛け算（conditions含む）
-                    const atkBoostSum = collectStatValuesWithConditions(boosts, 'atk', true)
+                    const atkBoostSum = collectStatValuesWithConditions(
+                      boosts,
+                      'atk',
+                      true
+                    )
 
                     if (boosts.basic?.atk) {
                       // basicで掛け算
@@ -690,7 +874,11 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
 
                     // DEF計算: basic掛け算 → 他の値を足して掛け算（conditions含む）
-                    const defBoostSum = collectStatValuesWithConditions(boosts, 'def', true)
+                    const defBoostSum = collectStatValuesWithConditions(
+                      boosts,
+                      'def',
+                      true
+                    )
 
                     if (boosts.basic?.def) {
                       // basicで掛け算
@@ -745,7 +933,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     // LRの場合: 特殊な計算式
                     const count = superAttackInfo.super_attack_count
                     const statBoost = superAttackInfo.stat_boost
-                    const superMultiplier = superAttackInfo.multiplier
+                    const superMultiplier = superAttackInfo.multiplier || 0
                     const ultraMultiplier =
                       ultraSuperAttackInfo?.multiplier || 0
 
