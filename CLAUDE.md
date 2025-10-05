@@ -196,13 +196,18 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
 #### キャラクターデータ構造の重要なポイント
 
 - **forms配列**: 各キャラクターは複数のフォーム（通常/極限/超極限）を持つ
-- **データアクセス**: 常に`character.forms[0]`で最初のフォームを参照
-  - 表示名: `character.forms[0].display_name`
-  - 画像: `character.forms[0].image_urls[0]`
-  - スキル: `character.forms[0].skills`
-  - ステータス: `character.forms[0].stats.potential_55` or `potential_100`
+- **reversible_forms配列**: リバーシブルキャラクターは2つのフォームを持つ（formsと相互排他）
+- **データアクセス**:
+  - **通常キャラ**: `character.forms[0]`で最初のフォームを参照
+  - **リバーシブルキャラ**: `character.reversible_forms[formIndex]`で現在のフォームを参照
+  - 表示名: `character.forms[0].display_name` または `character.name`（reversibleの場合）
+  - 画像: `character.forms[0].image_url` または `character.reversible_forms[formIndex].image_url`
+  - スキル: `character.forms[0].skills` または `character.reversible_forms[formIndex].skills`
+  - ステータス: `character.forms[0].stats` または `character.stats`（reversibleの場合）
+- **画像プロパティ名**: `image_url`（単数形）を使用（`image_urls`ではない）
 - **画像パス**: `/images/character/`配下のローカル画像（ローマ字ファイル名）
 - **キャラクター一意性**: `character.id`を使用（`name`ではない）
+- **重要**: `characterUtils.ts`のヘルパー関数を使用してデータアクセスすること
 
 #### キャラクタースキル型定義
 
@@ -439,8 +444,130 @@ const collectStatValuesWithConditions = (
 
 ### 条件分岐
 
-- **55%/100%表示**: `conditions`と`defensive`を除外
-- **行動後表示（LRのみ）**: `conditions`を含み、`defensive`を除外
+- **55%/100%表示**: `conditions`と`defensive`と`_support`を除外
+- **行動後表示（LRのみ）**: `conditions`を含み、`defensive`と`_support`を除外
+
+### stat_boosts除外ルール
+
+パッシブスキルの`stat_boosts`計算時、以下のキーは**除外**されます:
+
+- **conditions**: 55%/100%計算時のみ除外（行動後は含む）
+- **defensive**: 全計算で除外（防御時のみ発動する効果）
+- **_support**: 全計算で除外（味方サポート効果、自身には適用されない）
+  - 例: `ally_support`, `extreme_ally_support` など
+
+```typescript
+// collectStatValues内での除外判定
+if (
+  key === 'conditions' ||
+  key === 'defensive' ||
+  key.endsWith('_support')
+) {
+  continue
+}
+```
+
+### ally_count計算システム
+
+**ally_count**は、実際のチーム構成に基づいて動的にブースト値を計算します。
+
+#### JSON構造
+
+```json
+"ally_count": {
+  "condition": {
+    "type": "attribute_or_category",
+    "targets": ["超", "未来編"],
+    "select": "most"
+  },
+  "atk": { "per_ally": 0.5, "max": 2.5 },
+  "def": { "per_ally": 0.5, "max": 2.5 }
+}
+```
+
+#### 計算ロジック
+
+1. **体数カウント**:
+   - `targets`配列の各要素に対してマッチするキャラクターをカウント
+   - 属性（"超"/"極"）: `character.attribute.startsWith(target)`でチェック
+   - カテゴリ（"未来編"等）: `character.categories?.includes(target)`でチェック
+   - 自分自身は除外（`ts.position === slot.position`）
+
+2. **最終値の選択**:
+   - `select: "most"`: 属性カウントとカテゴリカウントの大きい方を使用
+   - `Math.max(attributeCount, categoryCount)`
+
+3. **ブースト計算**:
+   - 計算式: `1.0 + (per_ally × 体数)`
+   - 例: `per_ally: 0.5`、体数1の場合 → `1.0 + (0.5 × 1) = 1.5`
+
+#### 実装箇所
+
+`TeamLayout/index.tsx`の3つの計算セクション（55%/100%/行動後）に`countAlliesForAllyCount`関数を配置:
+
+```typescript
+const countAlliesForAllyCount = (
+  condition: {
+    type: string
+    targets: string[]
+    select: string
+  }
+): number => {
+  if (condition.type === 'attribute_or_category') {
+    let attributeCount = 0
+    let categoryCount = 0
+
+    teamSlots.forEach((ts) => {
+      if (!ts.character || ts.position === slot.position) return
+
+      condition.targets.forEach((target) => {
+        if (target === '超' || target === '極') {
+          if (ts.character.attribute.startsWith(target)) {
+            attributeCount++
+          }
+        } else if (ts.character.categories?.includes(target)) {
+          categoryCount++
+        }
+      })
+    })
+
+    if (condition.select === 'most') {
+      return Math.max(attributeCount, categoryCount)
+    }
+  }
+  return 0
+}
+```
+
+#### collectStatValues統合
+
+`parentKey`パラメータを追加し、`ally_count`を検出した場合に動的計算:
+
+```typescript
+const collectStatValues = (
+  obj: Record<string, unknown>,
+  statType: 'atk' | 'def' | 'def_down',
+  excludeBasic = false,
+  parentKey = ''
+): number => {
+  // ...
+  if (parentKey === 'ally_count' && key === statType) {
+    const perAlly = (value as Record<string, unknown>)?.per_ally
+    if (typeof perAlly === 'number') {
+      const condition = obj.condition as {
+        type: string
+        targets: string[]
+        select: string
+      } | undefined
+      if (condition) {
+        const allyCount = countAlliesForAllyCount(condition)
+        return 1.0 + perAlly * allyCount
+      }
+    }
+  }
+  // ...
+}
+```
 
 ### multiplier適用ロジック（55%/100%）
 
@@ -698,6 +825,12 @@ const formIndex = isReversible ? getReversibleFormIndex(character.id) : 0
 - **ドラッグ状態管理**: React stateではなく`useRef`を使用して即座に状態を保存（非同期更新回避）
 - **`any`型の使用禁止**: 型安全性を保つため、常に適切な型定義または型安全なAPIを使用
 - **コードフォーマット**: 変更後は必ず`npm run format`でPrettierを実行
-- **ステータス計算**: 計算順序の厳守、Math.floor()による切り捨て処理、multiplier適用時の-1処理の有無に注意
+- **ステータス計算**:
+  - 計算順序の厳守、Math.floor()による切り捨て処理
+  - multiplier適用時の-1処理の有無に注意
+  - `conditions`と`defensive`と`_support`の除外ルールを守る
+  - `ally_count`は動的計算（`per_ally × 体数`）
 - **リーダースキル条件判定**: 必ず`matchesLeaderSkillCondition`を使用し、条件チェックなしで倍率を加算しない
 - **イベント競合解決**: ボタンクリックとスロットクリックの競合は`onClickCapture` + refフラグ + `setTimeout(0)`パターンを使用
+- **キャラクターデータアクセス**: `characterUtils.ts`のヘルパー関数を使用（`getImageUrl`, `getCharacterSkills`等）
+- **画像プロパティ**: `image_url`（単数形）を使用、`image_urls`は存在しない
