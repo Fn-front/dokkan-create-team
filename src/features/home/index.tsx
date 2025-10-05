@@ -55,7 +55,7 @@ export default function HomePage() {
       // 移動先にキャラクターがいる場合は入れ替えを考慮
       if (toSlot?.character) {
         // 同じキャラクター同士の入れ替えは許可
-        if (fromSlot.character.name === toSlot.character.name) {
+        if (fromSlot.character.id === toSlot.character.id) {
           return true
         }
 
@@ -83,7 +83,7 @@ export default function HomePage() {
           (slot) =>
             slot.character &&
             fromSlot.character &&
-            slot.character.name === fromSlot.character.name
+            slot.character.id === fromSlot.character.id
         )
 
         if (existingSlot1) {
@@ -116,7 +116,7 @@ export default function HomePage() {
           (slot) =>
             slot.character &&
             toSlot.character &&
-            slot.character.name === toSlot.character.name
+            slot.character.id === toSlot.character.id
         )
 
         if (existingSlot2) {
@@ -151,7 +151,7 @@ export default function HomePage() {
           (slot) =>
             slot.character &&
             fromSlot.character &&
-            slot.character.name === fromSlot.character.name
+            slot.character.id === fromSlot.character.id
         )
 
         if (existingSlot) {

@@ -8,6 +8,11 @@ import { cn } from '@/lib/utils'
 import { ProhibitIcon, DetailIcon } from '@/components/icons'
 import CharacterDetailDialog from '@/components/CharacterDetailDialog/CharacterDetailDialog'
 import { useDialog } from '@/functions/hooks/useDialog'
+import {
+  getDisplayName,
+  getImageUrl,
+  getCharacterSkills,
+} from '@/functions/utils/characterUtils'
 
 type CharacterListProps = {
   onCharacterDragStart: (character: Character) => void
@@ -297,8 +302,8 @@ const CharacterList = memo<CharacterListProps>(
       const offset = dragOffsetRef.current // refから最新の値を取得
 
       const dragImage = document.createElement('img')
-      dragImage.src = dragCharacterRef.current.image_url || ''
-      dragImage.alt = dragCharacterRef.current.name
+      dragImage.src = getImageUrl(dragCharacterRef.current)
+      dragImage.alt = getDisplayName(dragCharacterRef.current)
       dragImage.style.position = 'fixed'
       dragImage.style.pointerEvents = 'none'
       dragImage.style.zIndex = '9999'
@@ -334,9 +339,12 @@ const CharacterList = memo<CharacterListProps>(
         <div className={styles.grid}>
           {sampleCharacters.map((character) => {
             const isPlaceable = canPlaceAnywhere(character)
+            const displayName = getDisplayName(character)
+            const imageUrl = getImageUrl(character)
+            const skills = getCharacterSkills(character)
             return (
               <div
-                key={character.name}
+                key={character.id}
                 className={cn(
                   styles.characterCard,
                   !isPlaceable && styles.disabled
@@ -348,7 +356,7 @@ const CharacterList = memo<CharacterListProps>(
                 role="button"
                 tabIndex={isPlaceable ? 0 : -1}
               >
-                {character.skills && (
+                {skills && (
                   <button
                     className={styles.detailButton}
                     onClick={(e) => handleDetailClick(e, character)}
@@ -358,16 +366,16 @@ const CharacterList = memo<CharacterListProps>(
                     <DetailIcon className={styles.detailIcon} />
                   </button>
                 )}
-                {character.image_url ? (
+                {imageUrl ? (
                   <Image
                     className={styles.characterImage}
-                    src={character.image_url}
-                    alt={character.name}
+                    src={imageUrl}
+                    alt={displayName}
                     width={100}
                     height={100}
                   />
                 ) : (
-                  <div className={styles.characterText}>{character.name}</div>
+                  <div className={styles.characterText}>{displayName}</div>
                 )}
               </div>
             )

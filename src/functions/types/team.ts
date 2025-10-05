@@ -104,33 +104,53 @@ export type CharacterSkills = {
 }
 
 type CharacterStats = {
-  max_level: {
-    HP: number
-    ATK: number
-    DEF: number
+  max_level?: {
+    HP: string
+    ATK: string
+    DEF: string
   }
-  potential_55: {
-    HP: number
-    ATK: number
-    DEF: number
+  potential_55?: {
+    HP: string
+    ATK: string
+    DEF: string
   }
-  potential_100: {
-    HP: number
-    ATK: number
-    DEF: number
+  potential_100?: {
+    HP: string
+    ATK: string
+    DEF: string
   }
 }
 
+export type CharacterForm = {
+  form_id: string
+  form_name: string
+  display_name: string
+  form_order: number
+  is_base_form: boolean
+  is_only_form: boolean
+  stats: CharacterStats
+  skills: CharacterSkills
+  image_urls?: string[]
+  image_url?: string
+}
+
+export type ReversibleForm = {
+  skills: CharacterSkills
+  image_url?: string
+}
+
 export type Character = {
-  name: string
-  rarity?: string
-  attribute?: string
-  cost?: string
+  id: string
+  rarity: string
+  attribute: string
+  cost: string
+  forms?: CharacterForm[]
+  reversible_forms?: ReversibleForm[]
+  link_skills: string[]
+  categories: string[]
+  name?: string
   image_url?: string
   stats?: CharacterStats
-  skills?: CharacterSkills
-  link_skills?: string[]
-  categories?: string[]
 }
 
 export type TeamSlot = {

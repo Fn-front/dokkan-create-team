@@ -6,6 +6,7 @@ import {
   useLRActionStats,
   useSuperAttackCount,
 } from '../../hooks/useCharacterStats'
+import { getCharacterSkills } from '@/functions/utils/characterUtils'
 
 type TeamSlotStatsProps = {
   character: Character
@@ -31,7 +32,9 @@ const TeamSlotStats = memo<TeamSlotStatsProps>(({ character, teamSlots }) => {
   const actionStats = useLRActionStats({ character, teamSlots })
 
   // super_attack_count取得
-  const superAttackCount = useSuperAttackCount(character.skills)
+  const superAttackCount = useSuperAttackCount(
+    getCharacterSkills(character) || undefined
+  )
 
   return (
     <div className={styles.characterStats}>

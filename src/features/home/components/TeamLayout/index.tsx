@@ -10,6 +10,15 @@ import {
   getLeaderSkillKiValue,
   getPassiveSkillKiValue,
 } from '@/functions/utils/skillUtils'
+import {
+  getDisplayName,
+  getImageUrl,
+  getCharacterSkills,
+  getCharacterStats,
+  getLeaderSkillFromSlots,
+  getFriendSkillFromSlots,
+  getPassiveSkill,
+} from '@/functions/utils/characterUtils'
 
 type TeamSlotComponentProps = {
   slot: TeamSlot
@@ -97,79 +106,62 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               <>
                 <Image
                   className={styles.characterImage}
-                  src={slot.character.image_url || ''}
-                  alt={slot.character.name}
+                  src={getImageUrl(slot.character)}
+                  alt={getDisplayName(slot.character)}
                   width={100}
                   height={100}
                 />
-                {slot.character.skills && (
-                  <KiMeter
-                    kiValue={(() => {
-                      // 自分のパッシブスキルからのki値を取得
-                      const passiveKi = getPassiveSkillKiValue(
-                        slot.character.skills
-                      )
+                {(() => {
+                  const skills = getCharacterSkills(slot.character)
+                  if (!skills) return null
 
-                      if (isLeader || isFriend) {
-                        const leaderSlot = teamSlots.find(
-                          (s: TeamSlot) => s.position === 0
-                        )
-                        const friendSlot = teamSlots.find(
-                          (s: TeamSlot) => s.position === 6
-                        )
-                        const leaderKi = leaderSlot?.character?.skills
-                          ? getLeaderSkillKiValue(leaderSlot.character.skills)
-                          : 0
-                        const friendKi = friendSlot?.character?.skills
-                          ? getLeaderSkillKiValue(friendSlot.character.skills)
-                          : 0
-                        return leaderKi + friendKi + passiveKi
-                      } else {
-                        return passiveKi
-                      }
-                    })()}
-                  />
-                )}
+                  // 自分のパッシブスキルからのki値を取得
+                  const passiveKi = getPassiveSkillKiValue(skills)
+
+                  if (isLeader || isFriend) {
+                    const leaderSlot = teamSlots.find(
+                      (s: TeamSlot) => s.position === 0
+                    )
+                    const friendSlot = teamSlots.find(
+                      (s: TeamSlot) => s.position === 6
+                    )
+                    const leaderSkills = leaderSlot?.character
+                      ? getCharacterSkills(leaderSlot.character)
+                      : null
+                    const friendSkills = friendSlot?.character
+                      ? getCharacterSkills(friendSlot.character)
+                      : null
+                    const leaderKi = leaderSkills
+                      ? getLeaderSkillKiValue(leaderSkills)
+                      : 0
+                    const friendKi = friendSkills
+                      ? getLeaderSkillKiValue(friendSkills)
+                      : 0
+                    return <KiMeter kiValue={leaderKi + friendKi + passiveKi} />
+                  } else {
+                    return <KiMeter kiValue={passiveKi} />
+                  }
+                })()}
               </>
             ) : null}
             {isLeader && <span className={styles.leaderBadge}>LEADER</span>}
             {isFriend && <span className={styles.friendBadge}>FRIEND</span>}
           </div>
         </div>
-        {slot.character?.stats && (
+        {slot.character && getCharacterStats(slot.character) && (
           <div className={styles.characterStats}>
             <div className={styles.statRow}>
               <span className={styles.statLabel}>55%</span>
               <span className={styles.statValues}>
                 {(() => {
-                  const leaderSkill = (() => {
-                    const leaderSlot = teamSlots.find((s) => s.position === 0)
-                    if (!leaderSlot?.character?.skills) return null
-                    const skills = leaderSlot.character.skills
-                    if (skills.super_extreme?.leader_skill?.conditions)
-                      return skills.super_extreme.leader_skill
-                    if (skills.post_extreme?.leader_skill?.conditions)
-                      return skills.post_extreme.leader_skill
-                    if (skills.pre_extreme?.leader_skill?.conditions)
-                      return skills.pre_extreme.leader_skill
-                    return null
-                  })()
+                  const leaderSkill = getLeaderSkillFromSlots(teamSlots)
+                  const friendSkill = getFriendSkillFromSlots(teamSlots)
 
-                  const friendSkill = (() => {
-                    const friendSlot = teamSlots.find((s) => s.position === 6)
-                    if (!friendSlot?.character?.skills) return null
-                    const skills = friendSlot.character.skills
-                    if (skills.super_extreme?.leader_skill?.conditions)
-                      return skills.super_extreme.leader_skill
-                    if (skills.post_extreme?.leader_skill?.conditions)
-                      return skills.post_extreme.leader_skill
-                    if (skills.pre_extreme?.leader_skill?.conditions)
-                      return skills.pre_extreme.leader_skill
-                    return null
-                  })()
-
-                  const baseATK = slot.character.stats.potential_55.ATK
-                  const baseDEF = slot.character.stats.potential_55.DEF
+                  const characterStats = getCharacterStats(slot.character)
+                  const stats55 = characterStats?.potential_55
+                  if (!stats55) return '0 / 0'
+                  const baseATK = parseInt(stats55.ATK)
+                  const baseDEF = parseInt(stats55.DEF)
 
                   let atkMultiplier = 0
                   let defMultiplier = 0
@@ -193,14 +185,15 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                     if (condition.type === 'character') {
                       const target = condition.target
+                      const displayName = getDisplayName(character)
                       if (target.includes('または')) {
                         const names = target.split('または').map((n) => n.trim())
                         const firstMatchIndex = names.findIndex((name) =>
-                          character.name.includes(name)
+                          displayName.includes(name)
                         )
                         if (firstMatchIndex === -1) return false
                         for (let i = 0; i < names.length; i++) {
-                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                          if (i !== firstMatchIndex && displayName.includes(names[i])) {
                             return false
                           }
                         }
@@ -209,17 +202,17 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       if (target.includes('&')) {
                         const names = target.split('&').map((n) => n.trim())
                         const firstMatchIndex = names.findIndex((name) =>
-                          character.name.includes(name)
+                          displayName.includes(name)
                         )
                         if (firstMatchIndex === -1) return false
                         for (let i = 0; i < names.length; i++) {
-                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                          if (i !== firstMatchIndex && displayName.includes(names[i])) {
                             return false
                           }
                         }
                         return true
                       }
-                      return character.name.includes(target)
+                      return displayName.includes(target)
                     }
                     if (condition.type === 'category') {
                       if (!character.categories) return false
@@ -266,17 +259,9 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   }
 
                   // パッシブスキルのstat_boosts計算
-                  const passiveSkill = (() => {
-                    if (!slot.character?.skills) return null
-                    const skills = slot.character.skills
-                    if (skills.super_extreme?.passive_skill?.stat_boosts)
-                      return skills.super_extreme.passive_skill
-                    if (skills.post_extreme?.passive_skill?.stat_boosts)
-                      return skills.post_extreme.passive_skill
-                    if (skills.pre_extreme?.passive_skill?.stat_boosts)
-                      return skills.pre_extreme.passive_skill
-                    return null
-                  })()
+                  const passiveSkill = slot.character
+                    ? getPassiveSkill(slot.character)
+                    : null
 
                   // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions, defensiveは除外）
                   const collectStatValues = (
@@ -363,26 +348,32 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                   }
 
-                  // _extremeの最後のキーから攻撃倍率を取得
+                  // ultra_super_attackがある_extremeキーから攻撃倍率を取得
                   const getAttackMultiplier = () => {
-                    if (!slot.character?.skills) return null
-
-                    const skills = slot.character.skills
+                    if (!slot.character) return null
+                    const skills = getCharacterSkills(slot.character)
+                    if (!skills) return null
                     const extremeKeys = Object.keys(skills).filter((key) =>
                       key.endsWith('_extreme')
                     )
 
                     if (extremeKeys.length === 0) return null
 
-                    // 最後の_extremeキーを取得
-                    const lastExtremeKey = extremeKeys[extremeKeys.length - 1]
-                    const skillSet =
-                      skills[lastExtremeKey as keyof typeof skills]
+                    // 後ろから順にultra_super_attackがあるキーを探す
+                    for (let i = extremeKeys.length - 1; i >= 0; i--) {
+                      const extremeKey = extremeKeys[i]
+                      const skillSet =
+                        skills[extremeKey as keyof typeof skills]
 
-                    if (!skillSet) return null
+                      if (
+                        skillSet &&
+                        skillSet.ultra_super_attack?.multiplier
+                      ) {
+                        return skillSet.ultra_super_attack.multiplier
+                      }
+                    }
 
-                    // ultra_super_attackのmultiplierを取得
-                    return skillSet.ultra_super_attack?.multiplier || null
+                    return null
                   }
 
                   const attackMultiplier = getAttackMultiplier()
@@ -398,34 +389,14 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               <span className={styles.statLabel}>100%</span>
               <span className={styles.statValues}>
                 {(() => {
-                  const leaderSkill = (() => {
-                    const leaderSlot = teamSlots.find((s) => s.position === 0)
-                    if (!leaderSlot?.character?.skills) return null
-                    const skills = leaderSlot.character.skills
-                    if (skills.super_extreme?.leader_skill?.conditions)
-                      return skills.super_extreme.leader_skill
-                    if (skills.post_extreme?.leader_skill?.conditions)
-                      return skills.post_extreme.leader_skill
-                    if (skills.pre_extreme?.leader_skill?.conditions)
-                      return skills.pre_extreme.leader_skill
-                    return null
-                  })()
+                  const leaderSkill = getLeaderSkillFromSlots(teamSlots)
+                  const friendSkill = getFriendSkillFromSlots(teamSlots)
 
-                  const friendSkill = (() => {
-                    const friendSlot = teamSlots.find((s) => s.position === 6)
-                    if (!friendSlot?.character?.skills) return null
-                    const skills = friendSlot.character.skills
-                    if (skills.super_extreme?.leader_skill?.conditions)
-                      return skills.super_extreme.leader_skill
-                    if (skills.post_extreme?.leader_skill?.conditions)
-                      return skills.post_extreme.leader_skill
-                    if (skills.pre_extreme?.leader_skill?.conditions)
-                      return skills.pre_extreme.leader_skill
-                    return null
-                  })()
-
-                  const baseATK = slot.character.stats.potential_100.ATK
-                  const baseDEF = slot.character.stats.potential_100.DEF
+                  const characterStats = getCharacterStats(slot.character)
+                  const stats100 = characterStats?.potential_100
+                  if (!stats100) return '0 / 0'
+                  const baseATK = parseInt(stats100.ATK)
+                  const baseDEF = parseInt(stats100.DEF)
 
                   let atkMultiplier = 0
                   let defMultiplier = 0
@@ -449,14 +420,15 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                     if (condition.type === 'character') {
                       const target = condition.target
+                      const displayName = getDisplayName(character)
                       if (target.includes('または')) {
                         const names = target.split('または').map((n) => n.trim())
                         const firstMatchIndex = names.findIndex((name) =>
-                          character.name.includes(name)
+                          displayName.includes(name)
                         )
                         if (firstMatchIndex === -1) return false
                         for (let i = 0; i < names.length; i++) {
-                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                          if (i !== firstMatchIndex && displayName.includes(names[i])) {
                             return false
                           }
                         }
@@ -465,17 +437,17 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       if (target.includes('&')) {
                         const names = target.split('&').map((n) => n.trim())
                         const firstMatchIndex = names.findIndex((name) =>
-                          character.name.includes(name)
+                          displayName.includes(name)
                         )
                         if (firstMatchIndex === -1) return false
                         for (let i = 0; i < names.length; i++) {
-                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                          if (i !== firstMatchIndex && displayName.includes(names[i])) {
                             return false
                           }
                         }
                         return true
                       }
-                      return character.name.includes(target)
+                      return displayName.includes(target)
                     }
                     if (condition.type === 'category') {
                       if (!character.categories) return false
@@ -522,17 +494,9 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   }
 
                   // パッシブスキルのstat_boosts計算
-                  const passiveSkill = (() => {
-                    if (!slot.character?.skills) return null
-                    const skills = slot.character.skills
-                    if (skills.super_extreme?.passive_skill?.stat_boosts)
-                      return skills.super_extreme.passive_skill
-                    if (skills.post_extreme?.passive_skill?.stat_boosts)
-                      return skills.post_extreme.passive_skill
-                    if (skills.pre_extreme?.passive_skill?.stat_boosts)
-                      return skills.pre_extreme.passive_skill
-                    return null
-                  })()
+                  const passiveSkill = slot.character
+                    ? getPassiveSkill(slot.character)
+                    : null
 
                   // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions, defensiveは除外）
                   const collectStatValues = (
@@ -619,26 +583,32 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                   }
 
-                  // _extremeの最後のキーから攻撃倍率を取得
+                  // ultra_super_attackがある_extremeキーから攻撃倍率を取得
                   const getAttackMultiplier = () => {
-                    if (!slot.character?.skills) return null
-
-                    const skills = slot.character.skills
+                    if (!slot.character) return null
+                    const skills = getCharacterSkills(slot.character)
+                    if (!skills) return null
                     const extremeKeys = Object.keys(skills).filter((key) =>
                       key.endsWith('_extreme')
                     )
 
                     if (extremeKeys.length === 0) return null
 
-                    // 最後の_extremeキーを取得
-                    const lastExtremeKey = extremeKeys[extremeKeys.length - 1]
-                    const skillSet =
-                      skills[lastExtremeKey as keyof typeof skills]
+                    // 後ろから順にultra_super_attackがあるキーを探す
+                    for (let i = extremeKeys.length - 1; i >= 0; i--) {
+                      const extremeKey = extremeKeys[i]
+                      const skillSet =
+                        skills[extremeKey as keyof typeof skills]
 
-                    if (!skillSet) return null
+                      if (
+                        skillSet &&
+                        skillSet.ultra_super_attack?.multiplier
+                      ) {
+                        return skillSet.ultra_super_attack.multiplier
+                      }
+                    }
 
-                    // ultra_super_attackのmultiplierを取得
-                    return skillSet.ultra_super_attack?.multiplier || null
+                    return null
                   }
 
                   const attackMultiplier = getAttackMultiplier()
@@ -653,7 +623,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
             <div className={styles.statRow}>
               <span className={styles.statLabel}>
                 {(() => {
-                  const skills = slot.character.skills
+                  const skills = getCharacterSkills(slot.character)
                   const superAttackCount = (() => {
                     if (skills?.super_extreme?.super_attack?.super_attack_count)
                       return skills.super_extreme.super_attack
@@ -670,34 +640,14 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               <span className={styles.statValues}>
                 {(() => {
                   // 100%のfinalATKを計算
-                  const leaderSkill = (() => {
-                    const leaderSlot = teamSlots.find((s) => s.position === 0)
-                    if (!leaderSlot?.character?.skills) return null
-                    const skills = leaderSlot.character.skills
-                    if (skills.super_extreme?.leader_skill?.conditions)
-                      return skills.super_extreme.leader_skill
-                    if (skills.post_extreme?.leader_skill?.conditions)
-                      return skills.post_extreme.leader_skill
-                    if (skills.pre_extreme?.leader_skill?.conditions)
-                      return skills.pre_extreme.leader_skill
-                    return null
-                  })()
+                  const leaderSkill = getLeaderSkillFromSlots(teamSlots)
+                  const friendSkill = getFriendSkillFromSlots(teamSlots)
 
-                  const friendSkill = (() => {
-                    const friendSlot = teamSlots.find((s) => s.position === 6)
-                    if (!friendSlot?.character?.skills) return null
-                    const skills = friendSlot.character.skills
-                    if (skills.super_extreme?.leader_skill?.conditions)
-                      return skills.super_extreme.leader_skill
-                    if (skills.post_extreme?.leader_skill?.conditions)
-                      return skills.post_extreme.leader_skill
-                    if (skills.pre_extreme?.leader_skill?.conditions)
-                      return skills.pre_extreme.leader_skill
-                    return null
-                  })()
-
-                  const baseATK = slot.character.stats.potential_100.ATK
-                  const baseDEF = slot.character.stats.potential_100.DEF
+                  const characterStats = getCharacterStats(slot.character)
+                  const stats100 = characterStats?.potential_100
+                  if (!stats100) return '0 / 0'
+                  const baseATK = parseInt(stats100.ATK)
+                  const baseDEF = parseInt(stats100.DEF)
 
                   let atkMultiplier = 0
                   let defMultiplier = 0
@@ -721,14 +671,15 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     }
                     if (condition.type === 'character') {
                       const target = condition.target
+                      const displayName = getDisplayName(character)
                       if (target.includes('または')) {
                         const names = target.split('または').map((n) => n.trim())
                         const firstMatchIndex = names.findIndex((name) =>
-                          character.name.includes(name)
+                          displayName.includes(name)
                         )
                         if (firstMatchIndex === -1) return false
                         for (let i = 0; i < names.length; i++) {
-                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                          if (i !== firstMatchIndex && displayName.includes(names[i])) {
                             return false
                           }
                         }
@@ -737,17 +688,17 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       if (target.includes('&')) {
                         const names = target.split('&').map((n) => n.trim())
                         const firstMatchIndex = names.findIndex((name) =>
-                          character.name.includes(name)
+                          displayName.includes(name)
                         )
                         if (firstMatchIndex === -1) return false
                         for (let i = 0; i < names.length; i++) {
-                          if (i !== firstMatchIndex && character.name.includes(names[i])) {
+                          if (i !== firstMatchIndex && displayName.includes(names[i])) {
                             return false
                           }
                         }
                         return true
                       }
-                      return character.name.includes(target)
+                      return displayName.includes(target)
                     }
                     if (condition.type === 'category') {
                       if (!character.categories) return false
@@ -794,17 +745,9 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   }
 
                   // パッシブスキルのstat_boosts計算
-                  const passiveSkill = (() => {
-                    if (!slot.character?.skills) return null
-                    const skills = slot.character.skills
-                    if (skills.super_extreme?.passive_skill?.stat_boosts)
-                      return skills.super_extreme.passive_skill
-                    if (skills.post_extreme?.passive_skill?.stat_boosts)
-                      return skills.post_extreme.passive_skill
-                    if (skills.pre_extreme?.passive_skill?.stat_boosts)
-                      return skills.pre_extreme.passive_skill
-                    return null
-                  })()
+                  const passiveSkill = slot.character
+                    ? getPassiveSkill(slot.character)
+                    : null
 
                   // basic以外の全ATK/DEF値を再帰的に検索して合計（conditions含む、defensiveは除外）
                   const collectStatValuesWithConditions = (
@@ -902,7 +845,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   }
 
                   // super_attack_countとstat_boostを取得
-                  const skills = slot.character.skills
+                  const skills = getCharacterSkills(slot.character)
                   const superAttackInfo = (() => {
                     if (skills?.super_extreme?.super_attack)
                       return skills.super_extreme.super_attack
@@ -999,11 +942,15 @@ const TeamLayout = memo<TeamLayoutProps>(
     const getLeaderSkill = () => {
       const leaderSlot = teamSlots.find((slot) => slot.position === 0)
 
-      if (!leaderSlot?.character?.skills) {
+      if (!leaderSlot?.character) {
         return { text: 'リーダーを設置してください', conditions: null }
       }
 
-      const skills = leaderSlot.character.skills
+      const skills = getCharacterSkills(leaderSlot.character)
+      if (!skills) {
+        return { text: 'リーダーを設置してください', conditions: null }
+      }
+
       let selectedSkill = null
 
       // 優先順位: super_extreme > post_extreme > pre_extreme
@@ -1029,11 +976,15 @@ const TeamLayout = memo<TeamLayoutProps>(
     const getFriendSkill = () => {
       const friendSlot = teamSlots.find((slot) => slot.position === 6)
 
-      if (!friendSlot?.character?.skills) {
+      if (!friendSlot?.character) {
         return { text: 'フレンドを設置してください', conditions: null }
       }
 
-      const skills = friendSlot.character.skills
+      const skills = getCharacterSkills(friendSlot.character)
+      if (!skills) {
+        return { text: 'フレンドを設置してください', conditions: null }
+      }
+
       let selectedSkill = null
 
       // 優先順位: super_extreme > post_extreme > pre_extreme
@@ -1337,8 +1288,8 @@ const TeamLayout = memo<TeamLayoutProps>(
       const offset = dragOffsetRef.current
 
       const dragImage = document.createElement('img')
-      dragImage.src = draggedCharacterRef.current.image_url || ''
-      dragImage.alt = draggedCharacterRef.current.name
+      dragImage.src = getImageUrl(draggedCharacterRef.current)
+      dragImage.alt = getDisplayName(draggedCharacterRef.current)
       dragImage.style.position = 'fixed'
       dragImage.style.pointerEvents = 'none'
       dragImage.style.zIndex = '9999'
@@ -1389,9 +1340,10 @@ const TeamLayout = memo<TeamLayoutProps>(
               const friendSkill = getFriendSkill()
 
               const totalHP = teamSlots
-                .filter((slot) => slot.character?.stats)
+                .filter((slot) => slot.character && getCharacterStats(slot.character))
                 .reduce((sum, slot) => {
-                  const baseHP = slot.character?.stats?.potential_55.HP || 0
+                  const stats = getCharacterStats(slot.character!)
+                  const baseHP = stats?.potential_55?.HP ? parseInt(stats.potential_55.HP) : 0
                   let totalMultiplier = 0
 
                   // リーダースキルのHP倍率を取得

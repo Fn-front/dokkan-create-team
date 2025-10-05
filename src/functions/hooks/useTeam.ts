@@ -22,7 +22,7 @@ export const useTeam = () => {
 
       // 同じキャラクターが既に配置されているスロットを検索
       const existingSlot = allSlots.find(
-        (slot) => slot.character && slot.character.name === character.name
+        (slot) => slot.character && slot.character.id === character.id
       )
 
       // 同じキャラクターが配置されていない場合は配置可能
@@ -131,7 +131,7 @@ export const useTeam = () => {
           (slot) =>
             slot.character &&
             fromSlot.character &&
-            slot.character.name === fromSlot.character.name
+            slot.character.id === fromSlot.character.id
         )
 
         // 移動先での制限チェック

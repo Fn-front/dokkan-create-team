@@ -5,6 +5,10 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { type Character } from '@/functions/types/team'
 import Tabs from '@/components/Tabs/Tabs'
 import styles from './styles.module.scss'
+import {
+  getDisplayName,
+  getCharacterSkills,
+} from '@/functions/utils/characterUtils'
 
 interface CharacterDetailDialogProps {
   character: Character
@@ -22,7 +26,8 @@ const EXTREME_LABELS: Record<ExtremeLevelKey, string> = {
 
 const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
   ({ character, open, onOpenChange }) => {
-    const { skills } = character
+    const displayName = getDisplayName(character)
+    const skills = getCharacterSkills(character)
 
     // 存在するタブを取得（少なくとも1つのスキルがnullでない場合のみ）
     const availableTabs: ExtremeLevelKey[] = useMemo(() => {
@@ -122,9 +127,7 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
         <Dialog.Portal>
           <Dialog.Overlay className={styles.overlay} />
           <Dialog.Content className={styles.content}>
-            <Dialog.Title className={styles.title}>
-              {character.name}
-            </Dialog.Title>
+            <Dialog.Title className={styles.title}>{displayName}</Dialog.Title>
 
             <Tabs
               tabs={tabsData}

@@ -1,5 +1,13 @@
 import { useMemo } from 'react'
-import type { Character, TeamSlot } from '@/functions/types/team'
+import type { Character, TeamSlot, CharacterSkills } from '@/functions/types/team'
+import {
+  getDisplayName,
+  getCharacterSkills,
+  getCharacterStats,
+  getLeaderSkillFromSlots,
+  getFriendSkillFromSlots,
+  getPassiveSkill as getPassiveSkillUtil,
+} from '@/functions/utils/characterUtils'
 
 type StatsResult = {
   atk: number
@@ -83,19 +91,20 @@ const matchesLeaderSkillCondition = (
   // キャラクター名判定
   if (condition.type === 'character') {
     const target = condition.target
+    const displayName = getDisplayName(character)
 
     // 「または」で分割してOR判定（最初に一致したもののみ）
     if (target.includes('または')) {
       const names = target.split('または').map((n) => n.trim())
       // 最初に見つかった名前だけに一致するか判定
       const firstMatchIndex = names.findIndex((name) =>
-        character.name.includes(name)
+        displayName.includes(name)
       )
       // 最初の条件のみ一致する場合のみtrue
       if (firstMatchIndex === -1) return false
       // 他の条件に一致しないことを確認
       for (let i = 0; i < names.length; i++) {
-        if (i !== firstMatchIndex && character.name.includes(names[i])) {
+        if (i !== firstMatchIndex && displayName.includes(names[i])) {
           return false
         }
       }
@@ -106,11 +115,11 @@ const matchesLeaderSkillCondition = (
     if (target.includes('&')) {
       const names = target.split('&').map((n) => n.trim())
       const firstMatchIndex = names.findIndex((name) =>
-        character.name.includes(name)
+        displayName.includes(name)
       )
       if (firstMatchIndex === -1) return false
       for (let i = 0; i < names.length; i++) {
-        if (i !== firstMatchIndex && character.name.includes(names[i])) {
+        if (i !== firstMatchIndex && displayName.includes(names[i])) {
           return false
         }
       }
@@ -118,7 +127,7 @@ const matchesLeaderSkillCondition = (
     }
 
     // 通常のキャラクター名判定
-    return character.name.includes(target)
+    return displayName.includes(target)
   }
 
   // カテゴリ判定
@@ -134,30 +143,16 @@ const matchesLeaderSkillCondition = (
  * リーダー・フレンドスキルを取得
  */
 const getLeaderAndFriendSkills = (teamSlots: TeamSlot[]) => {
-  const leaderSlot = teamSlots.find((s) => s.position === 0)
-  const friendSlot = teamSlots.find((s) => s.position === 6)
-
-  const getSkill = (skills: NonNullable<Character['skills']> | undefined) => {
-    if (!skills) return null
-    if (skills.super_extreme?.leader_skill !== null && skills.super_extreme?.leader_skill !== undefined && skills.super_extreme.leader_skill.conditions)
-      return skills.super_extreme.leader_skill
-    if (skills.post_extreme?.leader_skill !== null && skills.post_extreme?.leader_skill !== undefined && skills.post_extreme.leader_skill.conditions)
-      return skills.post_extreme.leader_skill
-    if (skills.pre_extreme?.leader_skill !== null && skills.pre_extreme?.leader_skill !== undefined && skills.pre_extreme.leader_skill.conditions)
-      return skills.pre_extreme.leader_skill
-    return null
-  }
-
   return {
-    leaderSkill: getSkill(leaderSlot?.character?.skills),
-    friendSkill: getSkill(friendSlot?.character?.skills),
+    leaderSkill: getLeaderSkillFromSlots(teamSlots),
+    friendSkill: getFriendSkillFromSlots(teamSlots),
   }
 }
 
 /**
  * パッシブスキルを取得
  */
-const getPassiveSkill = (skills: NonNullable<Character['skills']>) => {
+const getPassiveSkill = (skills: CharacterSkills) => {
   if (skills.super_extreme?.passive_skill !== null && skills.super_extreme?.passive_skill !== undefined && skills.super_extreme.passive_skill.stat_boosts)
     return skills.super_extreme.passive_skill
   if (skills.post_extreme?.passive_skill !== null && skills.post_extreme?.passive_skill !== undefined && skills.post_extreme.passive_skill.stat_boosts)
@@ -170,7 +165,7 @@ const getPassiveSkill = (skills: NonNullable<Character['skills']>) => {
 /**
  * 攻撃倍率を取得
  */
-const getAttackMultiplier = (skills: NonNullable<Character['skills']>) => {
+const getAttackMultiplier = (skills: CharacterSkills) => {
   if (skills.super_extreme?.ultra_super_attack !== null && skills.super_extreme?.ultra_super_attack !== undefined)
     return skills.super_extreme.ultra_super_attack.multiplier || null
   if (skills.post_extreme?.ultra_super_attack !== null && skills.post_extreme?.ultra_super_attack !== undefined)
@@ -183,7 +178,7 @@ const getAttackMultiplier = (skills: NonNullable<Character['skills']>) => {
 /**
  * super_attack情報を取得
  */
-const getSuperAttackInfo = (skills: NonNullable<Character['skills']>) => {
+const getSuperAttackInfo = (skills: CharacterSkills) => {
   if (skills.super_extreme?.super_attack !== null && skills.super_extreme?.super_attack !== undefined)
     return skills.super_extreme.super_attack
   if (skills.post_extreme?.super_attack !== null && skills.post_extreme?.super_attack !== undefined) return skills.post_extreme.super_attack
@@ -194,7 +189,7 @@ const getSuperAttackInfo = (skills: NonNullable<Character['skills']>) => {
 /**
  * ultra_super_attack情報を取得
  */
-const getUltraSuperAttackInfo = (skills: NonNullable<Character['skills']>) => {
+const getUltraSuperAttackInfo = (skills: CharacterSkills) => {
   if (skills.super_extreme?.ultra_super_attack !== null && skills.super_extreme?.ultra_super_attack !== undefined)
     return skills.super_extreme.ultra_super_attack
   if (skills.post_extreme?.ultra_super_attack !== null && skills.post_extreme?.ultra_super_attack !== undefined)
@@ -214,14 +209,23 @@ export const useCharacterStats = ({
   includeConditions = false,
 }: UseCharacterStatsProps): StatsResult => {
   return useMemo(() => {
-    if (!character.stats || !character.skills) {
+    const characterStats = getCharacterStats(character)
+    const characterSkills = getCharacterSkills(character)
+
+    if (!characterStats || !characterSkills) {
       return { atk: 0, def: 0 }
     }
 
     const { leaderSkill, friendSkill } = getLeaderAndFriendSkills(teamSlots)
 
-    const baseATK = character.stats[potential].ATK
-    const baseDEF = character.stats[potential].DEF
+    const stats = characterStats[potential]
+
+    if (!stats) {
+      return { atk: 0, def: 0 }
+    }
+
+    const baseATK = parseInt(stats.ATK)
+    const baseDEF = parseInt(stats.DEF)
 
     // リーダースキル適用後の基本ステータス計算（リーダー + フレンド の加算）
     let currentATK = baseATK
@@ -245,7 +249,7 @@ export const useCharacterStats = ({
     }
 
     // パッシブスキルのstat_boosts計算
-    const passiveSkill = getPassiveSkill(character.skills)
+    const passiveSkill = getPassiveSkillUtil(character)
 
     let finalATK = currentATK
     let finalDEF = currentDEF
@@ -323,9 +327,10 @@ export const useNormalCharacterFinalStats = ({
   })
 
   return useMemo(() => {
-    if (!character.skills) return baseStats
+    const characterSkills = getCharacterSkills(character)
+    if (!characterSkills) return baseStats
 
-    const attackMultiplier = getAttackMultiplier(character.skills)
+    const attackMultiplier = getAttackMultiplier(characterSkills)
     let finalATK = baseStats.atk
 
     if (attackMultiplier) {
@@ -333,7 +338,7 @@ export const useNormalCharacterFinalStats = ({
     }
 
     return { atk: finalATK, def: baseStats.def }
-  }, [character.skills, baseStats])
+  }, [character, baseStats])
 }
 
 /**
@@ -354,10 +359,12 @@ export const useLRActionStats = ({
   })
 
   return useMemo(() => {
-    if (!character.skills || !character.stats) return baseStats
+    const characterSkills = getCharacterSkills(character)
+    const characterStats = getCharacterStats(character)
+    if (!characterSkills || !characterStats) return baseStats
 
-    const superAttackInfo = getSuperAttackInfo(character.skills)
-    const ultraSuperAttackInfo = getUltraSuperAttackInfo(character.skills)
+    const superAttackInfo = getSuperAttackInfo(characterSkills)
+    const ultraSuperAttackInfo = getUltraSuperAttackInfo(characterSkills)
     const isLR = character.rarity === 'LR'
 
     if (!isLR || !superAttackInfo?.super_attack_count) {
@@ -377,8 +384,10 @@ export const useLRActionStats = ({
     const statBoost = superAttackInfo.stat_boost
     const superMultiplier = superAttackInfo.multiplier || 0
     const ultraMultiplier = ultraSuperAttackInfo?.multiplier || 0
-    const baseATK = character.stats.potential_100.ATK
-    const baseDEF = character.stats.potential_100.DEF
+    const stats100 = characterStats.potential_100
+    if (!stats100) return baseStats
+    const baseATK = parseInt(stats100.ATK)
+    const baseDEF = parseInt(stats100.DEF)
 
     const ultraATK = Math.floor(baseStats.atk * ultraMultiplier)
     const superATK = Math.floor(baseStats.atk * superMultiplier * count)
@@ -406,7 +415,7 @@ export const useLRActionStats = ({
  * super_attack_count を取得
  */
 export const useSuperAttackCount = (
-  skills: NonNullable<Character['skills']> | undefined
+  skills: CharacterSkills | undefined
 ): number => {
   return useMemo(() => {
     if (!skills) return 0
