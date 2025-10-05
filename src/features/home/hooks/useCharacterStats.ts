@@ -43,7 +43,7 @@ const collectStatValues = (
         sum += collectStatValues(
           value as Record<string, unknown>,
           statType,
-          false,
+          excludeBasic,
           includeConditions
         )
       }
@@ -139,11 +139,11 @@ const getLeaderAndFriendSkills = (teamSlots: TeamSlot[]) => {
 
   const getSkill = (skills: NonNullable<Character['skills']> | undefined) => {
     if (!skills) return null
-    if (skills.super_extreme?.leader_skill?.conditions)
+    if (skills.super_extreme?.leader_skill !== null && skills.super_extreme?.leader_skill !== undefined && skills.super_extreme.leader_skill.conditions)
       return skills.super_extreme.leader_skill
-    if (skills.post_extreme?.leader_skill?.conditions)
+    if (skills.post_extreme?.leader_skill !== null && skills.post_extreme?.leader_skill !== undefined && skills.post_extreme.leader_skill.conditions)
       return skills.post_extreme.leader_skill
-    if (skills.pre_extreme?.leader_skill?.conditions)
+    if (skills.pre_extreme?.leader_skill !== null && skills.pre_extreme?.leader_skill !== undefined && skills.pre_extreme.leader_skill.conditions)
       return skills.pre_extreme.leader_skill
     return null
   }
@@ -158,11 +158,11 @@ const getLeaderAndFriendSkills = (teamSlots: TeamSlot[]) => {
  * パッシブスキルを取得
  */
 const getPassiveSkill = (skills: NonNullable<Character['skills']>) => {
-  if (skills.super_extreme?.passive_skill?.stat_boosts)
+  if (skills.super_extreme?.passive_skill !== null && skills.super_extreme?.passive_skill !== undefined && skills.super_extreme.passive_skill.stat_boosts)
     return skills.super_extreme.passive_skill
-  if (skills.post_extreme?.passive_skill?.stat_boosts)
+  if (skills.post_extreme?.passive_skill !== null && skills.post_extreme?.passive_skill !== undefined && skills.post_extreme.passive_skill.stat_boosts)
     return skills.post_extreme.passive_skill
-  if (skills.pre_extreme?.passive_skill?.stat_boosts)
+  if (skills.pre_extreme?.passive_skill !== null && skills.pre_extreme?.passive_skill !== undefined && skills.pre_extreme.passive_skill.stat_boosts)
     return skills.pre_extreme.passive_skill
   return null
 }
@@ -171,28 +171,23 @@ const getPassiveSkill = (skills: NonNullable<Character['skills']>) => {
  * 攻撃倍率を取得
  */
 const getAttackMultiplier = (skills: NonNullable<Character['skills']>) => {
-  const extremeKeys = Object.keys(skills).filter((key) =>
-    key.endsWith('_extreme')
-  )
-
-  if (extremeKeys.length === 0) return null
-
-  const lastExtremeKey = extremeKeys[extremeKeys.length - 1]
-  const skillSet = skills[lastExtremeKey as keyof typeof skills]
-
-  if (!skillSet) return null
-
-  return skillSet.ultra_super_attack?.multiplier || null
+  if (skills.super_extreme?.ultra_super_attack !== null && skills.super_extreme?.ultra_super_attack !== undefined)
+    return skills.super_extreme.ultra_super_attack.multiplier || null
+  if (skills.post_extreme?.ultra_super_attack !== null && skills.post_extreme?.ultra_super_attack !== undefined)
+    return skills.post_extreme.ultra_super_attack.multiplier || null
+  if (skills.pre_extreme?.ultra_super_attack !== null && skills.pre_extreme?.ultra_super_attack !== undefined)
+    return skills.pre_extreme.ultra_super_attack.multiplier || null
+  return null
 }
 
 /**
  * super_attack情報を取得
  */
 const getSuperAttackInfo = (skills: NonNullable<Character['skills']>) => {
-  if (skills.super_extreme?.super_attack)
+  if (skills.super_extreme?.super_attack !== null && skills.super_extreme?.super_attack !== undefined)
     return skills.super_extreme.super_attack
-  if (skills.post_extreme?.super_attack) return skills.post_extreme.super_attack
-  if (skills.pre_extreme?.super_attack) return skills.pre_extreme.super_attack
+  if (skills.post_extreme?.super_attack !== null && skills.post_extreme?.super_attack !== undefined) return skills.post_extreme.super_attack
+  if (skills.pre_extreme?.super_attack !== null && skills.pre_extreme?.super_attack !== undefined) return skills.pre_extreme.super_attack
   return null
 }
 
@@ -200,11 +195,11 @@ const getSuperAttackInfo = (skills: NonNullable<Character['skills']>) => {
  * ultra_super_attack情報を取得
  */
 const getUltraSuperAttackInfo = (skills: NonNullable<Character['skills']>) => {
-  if (skills.super_extreme?.ultra_super_attack)
+  if (skills.super_extreme?.ultra_super_attack !== null && skills.super_extreme?.ultra_super_attack !== undefined)
     return skills.super_extreme.ultra_super_attack
-  if (skills.post_extreme?.ultra_super_attack)
+  if (skills.post_extreme?.ultra_super_attack !== null && skills.post_extreme?.ultra_super_attack !== undefined)
     return skills.post_extreme.ultra_super_attack
-  if (skills.pre_extreme?.ultra_super_attack)
+  if (skills.pre_extreme?.ultra_super_attack !== null && skills.pre_extreme?.ultra_super_attack !== undefined)
     return skills.pre_extreme.ultra_super_attack
   return null
 }
@@ -228,42 +223,25 @@ export const useCharacterStats = ({
     const baseATK = character.stats[potential].ATK
     const baseDEF = character.stats[potential].DEF
 
-    let atkMultiplier = 0
-    let defMultiplier = 0
-
-    // リーダースキルの倍率取得（最初に一致した条件のみ適用）
-    if (leaderSkill?.conditions) {
-      for (const condition of leaderSkill.conditions) {
-        const matches = matchesLeaderSkillCondition(character, condition)
-        if (matches) {
-          if (condition.atk !== undefined) atkMultiplier += condition.atk
-          if (condition.def !== undefined) defMultiplier += condition.def
-          break // 最初に一致した条件のみ適用
-        }
-      }
-    }
-
-    // フレンドスキルの倍率取得（最初に一致した条件のみ適用）
-    if (friendSkill?.conditions) {
-      for (const condition of friendSkill.conditions) {
-        const matches = matchesLeaderSkillCondition(character, condition)
-        if (matches) {
-          if (condition.atk !== undefined) atkMultiplier += condition.atk
-          if (condition.def !== undefined) defMultiplier += condition.def
-          break // 最初に一致した条件のみ適用
-        }
-      }
-    }
-
-    // リーダースキル適用後の基本ステータス計算
+    // リーダースキル適用後の基本ステータス計算（リーダー + フレンド の加算）
     let currentATK = baseATK
     let currentDEF = baseDEF
 
-    if (atkMultiplier > 0) {
-      currentATK = Math.floor(baseATK * atkMultiplier)
+    // リーダースキルの倍率を加算で適用
+    const leaderAtkMultiplier = leaderSkill?.conditions?.find(c => matchesLeaderSkillCondition(character, c))?.atk || 0
+    const friendAtkMultiplier = friendSkill?.conditions?.find(c => matchesLeaderSkillCondition(character, c))?.atk || 0
+    const leaderDefMultiplier = leaderSkill?.conditions?.find(c => matchesLeaderSkillCondition(character, c))?.def || 0
+    const friendDefMultiplier = friendSkill?.conditions?.find(c => matchesLeaderSkillCondition(character, c))?.def || 0
+
+    const totalAtkMultiplier = leaderAtkMultiplier + friendAtkMultiplier
+    const totalDefMultiplier = leaderDefMultiplier + friendDefMultiplier
+
+    if (totalAtkMultiplier > 0) {
+      currentATK = Math.floor(baseATK * totalAtkMultiplier)
     }
-    if (defMultiplier > 0) {
-      currentDEF = Math.floor(baseDEF * defMultiplier)
+
+    if (totalDefMultiplier > 0) {
+      currentDEF = Math.floor(baseDEF * totalDefMultiplier)
     }
 
     // パッシブスキルのstat_boosts計算
@@ -286,12 +264,12 @@ export const useCharacterStats = ({
       if (boosts.basic?.atk) {
         const basicATK = Math.floor(currentATK * boosts.basic.atk)
         if (atkBoostSum > 0) {
-          finalATK = Math.floor(basicATK * (atkBoostSum - 1))
+          finalATK = basicATK + Math.floor(basicATK * (atkBoostSum - 1))
         } else {
           finalATK = basicATK
         }
       } else if (atkBoostSum > 0) {
-        finalATK = Math.floor(currentATK * (atkBoostSum - 1))
+        finalATK = Math.floor(currentATK * atkBoostSum)
       }
 
       // DEF計算: basic掛け算 → 他の値を足して掛け算
@@ -305,12 +283,12 @@ export const useCharacterStats = ({
       if (boosts.basic?.def) {
         const basicDEF = Math.floor(currentDEF * boosts.basic.def)
         if (defBoostSum > 0) {
-          finalDEF = Math.floor(basicDEF * (defBoostSum - 1))
+          finalDEF = basicDEF + Math.floor(basicDEF * (defBoostSum - 1))
         } else {
           finalDEF = basicDEF
         }
       } else if (defBoostSum > 0) {
-        finalDEF = Math.floor(currentDEF * (defBoostSum - 1))
+        finalDEF = Math.floor(currentDEF * defBoostSum)
       }
 
       // DEF down効果

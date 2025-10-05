@@ -328,13 +328,12 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       const basicATK = Math.floor(currentATK * boosts.basic.atk)
                       // 他の値の合計で掛け算（-1処理）
                       if (atkBoostSum > 0) {
-                        finalATK = Math.floor(basicATK * (atkBoostSum - 1))
+                        finalATK = basicATK + Math.floor(basicATK * (atkBoostSum - 1))
                       } else {
                         finalATK = basicATK
                       }
                     } else if (atkBoostSum > 0) {
-                      // basicがない場合は他の値の合計で掛け算（-1処理）
-                      finalATK = Math.floor(currentATK * (atkBoostSum - 1))
+                      finalATK = Math.floor(currentATK * atkBoostSum)
                     }
 
                     // DEF計算: basic掛け算 → 他の値を足して掛け算
@@ -345,13 +344,12 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       const basicDEF = Math.floor(currentDEF * boosts.basic.def)
                       // 他の値の合計で掛け算（-1処理）
                       if (defBoostSum > 0) {
-                        finalDEF = Math.floor(basicDEF * (defBoostSum - 1))
+                        finalDEF = basicDEF + Math.floor(basicDEF * (defBoostSum - 1))
                       } else {
                         finalDEF = basicDEF
                       }
                     } else if (defBoostSum > 0) {
-                      // basicがない場合は他の値の合計で掛け算（-1処理）
-                      finalDEF = Math.floor(currentDEF * (defBoostSum - 1))
+                      finalDEF = Math.floor(currentDEF * defBoostSum)
                     }
 
                     // DEF down効果
@@ -586,13 +584,12 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       const basicATK = Math.floor(currentATK * boosts.basic.atk)
                       // 他の値の合計で掛け算（-1処理）
                       if (atkBoostSum > 0) {
-                        finalATK = Math.floor(basicATK * (atkBoostSum - 1))
+                        finalATK = basicATK + Math.floor(basicATK * (atkBoostSum - 1))
                       } else {
                         finalATK = basicATK
                       }
                     } else if (atkBoostSum > 0) {
-                      // basicがない場合は他の値の合計で掛け算（-1処理）
-                      finalATK = Math.floor(currentATK * (atkBoostSum - 1))
+                      finalATK = Math.floor(currentATK * atkBoostSum)
                     }
 
                     // DEF計算: basic掛け算 → 他の値を足して掛け算
@@ -603,13 +600,12 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       const basicDEF = Math.floor(currentDEF * boosts.basic.def)
                       // 他の値の合計で掛け算（-1処理）
                       if (defBoostSum > 0) {
-                        finalDEF = Math.floor(basicDEF * (defBoostSum - 1))
+                        finalDEF = basicDEF + Math.floor(basicDEF * (defBoostSum - 1))
                       } else {
                         finalDEF = basicDEF
                       }
                     } else if (defBoostSum > 0) {
-                      // basicがない場合は他の値の合計で掛け算（-1処理）
-                      finalDEF = Math.floor(currentDEF * (defBoostSum - 1))
+                      finalDEF = Math.floor(currentDEF * defBoostSum)
                     }
 
                     // DEF down効果
