@@ -85,11 +85,18 @@ src/
 │       ├── index.tsx      # メインコンポーネント（直接書く）
 │       ├── styles.module.scss # CSS Modules
 │       ├── components/    # 機能専用コンポーネント
+│       │   └── [ComponentName]/
+│       │       ├── index.tsx
+│       │       └── style.module.scss
 │       └── hooks/         # 機能専用hooks
 ├── components/            # 共通コンポーネント
+│   └── [ComponentName]/
+│       ├── index.tsx
+│       └── style.module.scss
 ├── functions/
 │   ├── hooks/            # 共通hooks
 │   ├── types/            # 共通型定義
+│   ├── utils/            # ユーティリティ関数
 │   └── data/             # 静的データ
 ├── lib/                  # 共通ライブラリ
 └── styles/               # 共通スタイル
@@ -98,9 +105,12 @@ src/
 ### 設計原則
 
 1. **Feature First**: 機能ごとにディレクトリを分割、関連するコードを近くに配置
-2. **Simple Structure**: featuresではindex.tsxに直接コンポーネントを記述、必要な場合のみcomponents/に分割
-3. **CSS Modules**: `styles.module.scss`の命名規則、SCSSで`@use`を使用
+2. **Component Folder Structure**: 各コンポーネントは独自のフォルダを持ち、`index.tsx`と`style.module.scss`を含む
+   - 例: `TeamLayout/index.tsx`, `TeamLayout/style.module.scss`
+   - 例: `CharacterList/index.tsx`, `CharacterList/style.module.scss`
+3. **CSS Modules**: `style.module.scss`の命名規則（複数形ではなく単数形）、SCSSで`@use`を使用
 4. **Type Safety**: TypeScript、共通型はfunctions/types/に配置
+5. **Hooks分離**: 複雑なロジックはカスタムhooksに分離（例: `useCharacterStats`）
 
 ### フォント・スタイリング
 
@@ -223,7 +233,14 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
   - `open`, `openDialog()`, `closeDialog()`, `toggleDialog()`, `setOpen()`を提供
   - 複数のダイアログで再利用可能な汎用hooks
 
-### キャラクター詳細ダイアログ
+- **useCharacterStats** (`features/home/hooks/useCharacterStats.ts`): キャラクターステータス計算
+  - `useCharacterStats`: 基本ステータス計算（リーダー・フレンド・パッシブスキル適用）
+  - `useNormalCharacterFinalStats`: 通常キャラクター最終ステータス（multiplier適用）
+  - `useLRActionStats`: LRキャラクター行動後ステータス（条件含む計算）
+  - `useSuperAttackCount`: super_attack_count取得
+  - **使用例**: `TeamSlotStats`コンポーネントで55%/100%/行動後の表示に使用
+
+### 主要コンポーネント構成
 
 - **CharacterDetailDialog** (`components/CharacterDetailDialog/`): キャラクター詳細表示
   - 通常/極限/超極限のタブ切り替え（存在するタブのみ表示）
@@ -231,6 +248,20 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
   - `\n`改行表示のため`white-space: pre-line`を使用
   - 固定幅600px、タブはセンター寄せ
   - 詳細ボタン: 左上に配置、クリック領域3rem×3remで視認性とアクセシビリティ向上
+
+- **TeamSlotStats** (`features/home/components/TeamSlotStats/`): ステータス表示専用コンポーネント
+  - 55%、100%、行動後（LR）の3行を表示
+  - `useCharacterStats`等のhooksを使用してロジックを分離
+  - TeamLayoutから分離してコードを簡潔化
+
+- **CharacterList** (`features/home/components/CharacterList/`): キャラクター一覧表示
+  - ドラッグ開始、禁止アイコン表示、詳細ダイアログ表示
+  - マウスイベントベースのドラッグ&ドロップ実装
+
+- **TeamLayout** (`features/home/components/TeamLayout/`): チーム編成レイアウト
+  - TeamSlotComponent: 各スロットの表示とドラッグ&ドロップ
+  - リーダー・フレンドスキル表示、HP合計表示
+  - チーム内移動、キャラクター削除機能
 
 ## テスト
 
@@ -291,64 +322,204 @@ if (skills.pre_extreme?.leader_skill?.original_effect) {
 
 ## ステータス計算システム
 
-### ATK/DEF計算ロジック
+### ATK/DEF/HP計算ロジック（55%/100%）
 
 キャラクターの最終ステータス計算は以下の順序で実行：
 
 1. **基本ステータス**: `potential_55` または `potential_100` の値を使用
-2. **リーダー・フレンドスキル適用**: 条件に応じた倍率を累積乗算
+2. **リーダー・フレンドスキル適用**:
+   - **HP**: 倍率を加算後、`-1処理`を適用 → `floor(baseHP × (leader + friend - 1))`
+   - **ATK/DEF**: 倍率を加算（-1処理なし） → `floor(baseATK × (leader + friend))`
 3. **パッシブスキル stat_boosts 計算**:
    - `basic` 値で乗算（`basic.atk`, `basic.def`）
-   - `basic` 以外の全ATK/DEF値を再帰的に収集・合計
-   - **合計値から-1して乗算**（basic以外の値のみ）
+   - `basic` 以外の全ATK/DEF値を再帰的に収集・合計（**`conditions`と`defensive`を除外**）
+   - **最終値 = basic適用後 + floor(basic適用後 × (その他ブースト合計 - 1))**
 4. **DEF down効果**: `def_down`値を基本DEFから減算
 5. **攻撃倍率適用**（ATKのみ）: 最後の`_extreme`キーの`ultra_super_attack.multiplier`
+
+### 行動後計算ロジック（LRのみ）
+
+LRキャラクターの行動後ATK/DEF計算：
+
+1. **パッシブスキル計算**: `conditions`を含み、`defensive`のみ除外して計算
+2. **LR専用計算式**:
+   ```
+   finalATK = (パッシブ適用後ATK × ultra_super_attack.multiplier) +
+              (パッシブ適用後ATK × super_attack.multiplier × super_attack_count) +
+              ((基本ATK × stat_boost.atk) × stat_boost.atk × super_attack_count)
+   ```
 
 ### 再帰的ステータス収集
 
 ```typescript
+// 55%/100%用（conditions, defensive除外）
 const collectStatValues = (
   obj: Record<string, unknown>,
   statType: 'atk' | 'def' | 'def_down',
   excludeBasic = false
 ): number => {
-  // キー名に依存しない再帰的な値収集
-  // `ki_meter`, `conditional`, `turn_limited` など任意の構造に対応
+  // `conditions`と`defensive`を除外
+  // `ki_meter`, `conditional`, `turn_limited` など収集
+}
+
+// 行動後用（defensive除外、conditions含む）
+const collectStatValuesWithConditions = (
+  obj: Record<string, unknown>,
+  statType: 'atk' | 'def' | 'def_down',
+  excludeBasic = false
+): number => {
+  // `defensive`のみ除外、`conditions`を含む
 }
 ```
 
-### 計算式例（ブロリー、super_extreme、potential_55、フレンドあり）
+### 計算式例
 
-**条件**: リーダー倍率2.2倍、フレンド倍率2.2倍、conditions除外
+**ベジータ（post_extreme、potential_100、リーダー・フレンド）:**
 
 ```
-1. 基本ATK: 20,080
+【HP計算】
+1. 基本HP: 22,538
+2. リーダー・フレンド（加算 + -1処理）:
+   totalMultiplier = 2.8 + 2.8 = 5.6
+   finalHP = floor(22,538 × (5.6 - 1))
+          = floor(22,538 × 4.6)
+          = 103,674
 
-2. リーダー・フレンド適用:
-   currentATK = floor(20,080 × 2.2 × 2.2) = floor(97,190.4) = 97,190
+【ATK計算】
+1. 基本ATK: 21,780
+2. リーダー・フレンド（加算、-1処理なし）:
+   currentATK = floor(21,780 × (2.8 + 2.8))
+              = floor(21,780 × 5.6)
+              = 121,967
+3. パッシブbasic適用:
+   basicATK = floor(121,967 × 2.4) = 292,720
+4. パッシブturn_start適用:
+   その他ブースト = 1.3
+   finalATK = 292,720 + floor(292,720 × (1.3 - 1))
+           = 292,720 + 87,816
+           = 380,536
 
-3. Basic適用:
-   basic.atk = 2.8 + 0.8 = 3.6
-   basicATK = floor(97,190 × 3.6) = floor(349,884) = 349,884
+【DEF計算】
+1. 基本DEF: 12,981
+2. リーダー・フレンド: floor(12,981 × 5.6) = 72,693
+3. パッシブbasic: floor(72,693 × 2.4) = 174,463
+4. パッシブturn_start: 174,463 + floor(174,463 × (1.6 - 1)) = 279,140
+```
 
-4. その他ブースト収集（basic以外、conditions除外）:
-   - ki_meter["12_or_more"].atk = 3.0
-   - turn_start.atk = 3.6
-   - after_hit.atk = 1.26
-   合計 = 3.0 + 3.6 + 1.26 = 7.86
+**ブロリー（super_extreme、potential_100）:**
 
-5. -1処理適用:
-   finalATK = floor(349,884 × (7.86 - 1)) = floor(349,884 × 6.86) = 2,400,224
-
-6. 攻撃倍率適用:
-   multiplier = ultra_super_attack.multiplier = 5.9
-   最終ATK = floor(2,400,224 × 5.9) = 14,161,321
+```
+1. 基本ATK: 23,480
+2. リーダー・フレンド: floor(23,480 × (2.8 + 2.8)) = 131,488
+3. Basic適用: floor(131,488 × 3.6) = 473,356
+4. その他ブースト（conditions除外）: 3.0 + 3.6 + 1.26 = 7.86
+5. 最終ATK: 473,356 + floor(473,356 × (7.86 - 1)) = 3,720,578
 ```
 
 ### -1処理の適用範囲
 
-- **適用**: passive_skillのstat_boosts（basic以外の値のみ）
-- **非適用**: リーダースキル、フレンドスキル、basic値、攻撃倍率(multiplier)
+- **HP**: リーダー・フレンドスキルの加算後に`-1処理`を適用
+- **ATK/DEF**: リーダー・フレンドスキルは`-1処理なし`、パッシブスキルのbasic以外のみ`-1処理`を適用
+- **非適用**: basic値、攻撃倍率(multiplier)
+
+### 条件分岐
+
+- **55%/100%表示**: `conditions`と`defensive`を除外
+- **行動後表示（LRのみ）**: `conditions`を含み、`defensive`を除外
+
+## リーダースキル条件判定システム
+
+### 条件マッチングロジック
+
+リーダー・フレンドスキルの適用には**必ず条件判定が必要**です。`matchesLeaderSkillCondition`関数を使用：
+
+```typescript
+const matchesLeaderSkillCondition = (
+  character: Character,
+  condition: { type: string; target: string }
+): boolean => {
+  // 属性判定
+  if (condition.type === 'attribute') {
+    const target = condition.target
+    // 「〜属性」（超/極なし）: 超〜 or 極〜 の両方が対象
+    if (!target.startsWith('超') && !target.startsWith('極')) {
+      const baseAttr = target.replace('属性', '')
+      return (
+        character.attribute === `超${baseAttr}` ||
+        character.attribute === `極${baseAttr}`
+      )
+    }
+    // 「超〜属性」「極〜属性」: 完全一致
+    const targetAttr = target.replace('属性', '')
+    return character.attribute === targetAttr
+  }
+  // キャラクター名判定（「または」「&」はOR、最初の一致のみ）
+  if (condition.type === 'character') {
+    // ... 名前マッチング処理
+  }
+  // カテゴリ判定
+  if (condition.type === 'category') {
+    if (!character.categories) return false
+    return character.categories.includes(condition.target)
+  }
+  return false
+}
+```
+
+### 重要な実装ルール
+
+1. **条件チェック必須**: リーダー・フレンドスキルの倍率を加算する前に、必ず`matchesLeaderSkillCondition`で条件チェック
+2. **最初の一致のみ適用**: 複数条件がある場合、最初にマッチした条件のみを適用して`break`
+3. **属性判定の違い**:
+   - `力属性` → `超力` OR `極力` にマッチ
+   - `超力属性` → `超力` のみにマッチ
+   - `極力属性` → `極力` のみにマッチ
+
+### 実装例
+
+```typescript
+// リーダースキルの倍率取得（条件チェック付き）
+if (leaderSkill?.conditions) {
+  for (const condition of leaderSkill.conditions) {
+    if (matchesLeaderSkillCondition(character, condition)) {
+      if (condition.atk !== undefined) atkMultiplier += condition.atk
+      if (condition.def !== undefined) defMultiplier += condition.def
+      break // 最初に一致した条件のみ適用
+    }
+  }
+}
+```
+
+### よくあるバグ
+
+❌ **間違い**: 条件チェックなしで全条件を加算
+```typescript
+// これはバグ！条件に関係なく全て加算される
+if (leaderSkill?.conditions) {
+  for (const condition of leaderSkill.conditions) {
+    if (condition.atk !== undefined) atkMultiplier += condition.atk
+  }
+}
+```
+
+✅ **正しい**: 条件チェックして最初の一致のみ適用
+```typescript
+if (leaderSkill?.conditions) {
+  for (const condition of leaderSkill.conditions) {
+    if (matchesLeaderSkillCondition(character, condition)) {
+      if (condition.atk !== undefined) atkMultiplier += condition.atk
+      break
+    }
+  }
+}
+```
+
+### 実装箇所
+
+- `src/features/home/hooks/useCharacterStats.ts`: hooks内の計算ロジック
+- `src/features/home/components/TeamLayout/index.tsx`: 55%/100%/行動後の3箇所で同じロジックを使用
+
+**注意**: TeamLayoutとuseCharacterStatsの両方に同じ条件判定ロジックがあります。将来的には共通化を検討してください。
 
 ## 重要な技術的制約
 
@@ -358,3 +529,4 @@ const collectStatValues = (
 - **`any`型の使用禁止**: 型安全性を保つため、常に適切な型定義または型安全なAPIを使用
 - **コードフォーマット**: 変更後は必ず`npm run format`でPrettierを実行
 - **ステータス計算**: 計算順序の厳守、Math.floor()による切り捨て処理、multiplier適用時の-1処理の有無に注意
+- **リーダースキル条件判定**: 必ず`matchesLeaderSkillCondition`を使用し、条件チェックなしで倍率を加算しない
