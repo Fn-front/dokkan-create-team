@@ -188,9 +188,21 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
 
 ### コア型定義 (`functions/types/team.ts`)
 
-- `Character`: id, name, imagePath, rarity, type, cost, skills?
+- `Character`: id, base_name, rarity, attribute, cost, forms[], link_skills[], categories[]
+- `CharacterForm`: form_id, form_name, display_name, form_order, is_base_form, is_only_form, stats, skills, image_urls[]
 - `TeamSlot`: character, position (0=leader, 1-5=members, 6=friend)
 - `Team`: leader, members[], friend
+
+#### キャラクターデータ構造の重要なポイント
+
+- **forms配列**: 各キャラクターは複数のフォーム（通常/極限/超極限）を持つ
+- **データアクセス**: 常に`character.forms[0]`で最初のフォームを参照
+  - 表示名: `character.forms[0].display_name`
+  - 画像: `character.forms[0].image_urls[0]`
+  - スキル: `character.forms[0].skills`
+  - ステータス: `character.forms[0].stats.potential_55` or `potential_100`
+- **画像パス**: `/images/character/`配下のローカル画像（ローマ字ファイル名）
+- **キャラクター一意性**: `character.id`を使用（`name`ではない）
 
 #### キャラクタースキル型定義
 
@@ -302,7 +314,8 @@ TeamSlot → TeamLayout → HomePage → useTeam → TeamLayout
 ### スキル取得ロジック
 
 ```typescript
-// 優先順位に基づくスキル取得
+// 優先順位に基づくスキル取得（forms[0]から取得）
+const skills = character.forms[0].skills
 if (skills.super_extreme?.leader_skill?.original_effect) {
   return skills.super_extreme.leader_skill.original_effect
 }
@@ -313,6 +326,8 @@ if (skills.pre_extreme?.leader_skill?.original_effect) {
   return skills.pre_extreme.leader_skill.original_effect
 }
 ```
+
+**重要**: スキル参照時は必ず`character.forms[0].skills`からアクセスすること。`character.skills`は存在しません。
 
 ### テスト
 
@@ -426,6 +441,41 @@ const collectStatValuesWithConditions = (
 
 - **55%/100%表示**: `conditions`と`defensive`を除外
 - **行動後表示（LRのみ）**: `conditions`を含み、`defensive`を除外
+
+### multiplier適用ロジック（55%/100%）
+
+**重要**: 55%/100%のATK計算では、`ultra_super_attack.multiplier`が存在する場合に適用されます。
+
+```typescript
+// ultra_super_attackがある_extremeキーから攻撃倍率を取得
+const getAttackMultiplier = () => {
+  if (!slot.character?.forms[0]?.skills) return null
+
+  const skills = slot.character.forms[0].skills
+  const extremeKeys = Object.keys(skills).filter((key) =>
+    key.endsWith('_extreme')
+  )
+
+  if (extremeKeys.length === 0) return null
+
+  // 後ろから順にultra_super_attackがあるキーを探す
+  for (let i = extremeKeys.length - 1; i >= 0; i--) {
+    const extremeKey = extremeKeys[i]
+    const skillSet = skills[extremeKey as keyof typeof skills]
+
+    if (skillSet && skillSet.ultra_super_attack?.multiplier) {
+      return skillSet.ultra_super_attack.multiplier
+    }
+  }
+
+  return null
+}
+```
+
+**ポイント**:
+- 最後の`_extreme`キーから順に遡り、`ultra_super_attack.multiplier`が存在する最初のキーを使用
+- `super_extreme`が全てnullの場合は、`post_extreme`のmultiplierを使用
+- multiplierが見つからない場合は適用しない（DEFには常に適用しない）
 
 ## リーダースキル条件判定システム
 
