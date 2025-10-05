@@ -36,6 +36,13 @@
                   "hp": 3.0,
                   "atk": 2.7,
                   "def": 2.7
+                },
+                {
+                  "type": "additional_category",
+                  "target": ["親子の絆", "最後の切り札"],
+                  "hp": 1.5,
+                  "atk": 1.5,
+                  "def": 1.5
                 }
               ],
               "original_effect": "「未来編」または「融合/合体戦士」カテゴリの気力+3、HP200%UP、ATKとDEF170%UP、「親子の絆」または「最後の切り札」カテゴリを含む場合は更にHPとATKとDEF50%UP"
@@ -131,6 +138,13 @@
                   "hp": 3.0,
                   "atk": 2.7,
                   "def": 2.7
+                },
+                {
+                  "type": "additional_category",
+                  "target": ["親子の絆", "最後の切り札"],
+                  "hp": 1.5,
+                  "atk": 1.5,
+                  "def": 1.5
                 }
               ],
               "original_effect": "「未来編」または「融合/合体戦士」カテゴリの気力+3、HP200%UP、ATKとDEF170%UP、「親子の絆」または「最後の切り札」カテゴリを含む場合は更にHPとATKとDEF50%UP"

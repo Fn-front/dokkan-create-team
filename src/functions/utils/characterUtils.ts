@@ -1,4 +1,8 @@
-import type { Character, CharacterForm, CharacterSkills } from '@/functions/types/team'
+import type {
+  Character,
+  CharacterForm,
+  CharacterSkills,
+} from '@/functions/types/team'
 
 /**
  * キャラクターの最初のフォーム（CharacterForm）を取得
@@ -20,10 +24,7 @@ export const getCharacterSkills = (
   formIndex: number = 0
 ): CharacterSkills | null => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
-    const index = Math.min(
-      formIndex,
-      character.reversible_forms.length - 1
-    )
+    const index = Math.min(formIndex, character.reversible_forms.length - 1)
     return character.reversible_forms[index].skills
   }
   if (character.forms && character.forms.length > 0) {
@@ -62,10 +63,7 @@ export const getImageUrl = (
   formIndex: number = 0
 ): string => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
-    const index = Math.min(
-      formIndex,
-      character.reversible_forms.length - 1
-    )
+    const index = Math.min(formIndex, character.reversible_forms.length - 1)
     return character.reversible_forms[index].image_url || ''
   }
   if (character.forms && character.forms.length > 0) {
@@ -95,7 +93,9 @@ export const getCharacterStats = (
 /**
  * TeamSlot配列からリーダーのスキルを取得
  */
-export const getLeaderSkillFromSlots = (teamSlots: { character: Character | null; position: number }[]) => {
+export const getLeaderSkillFromSlots = (
+  teamSlots: { character: Character | null; position: number }[]
+) => {
   const leaderSlot = teamSlots.find((s) => s.position === 0)
   if (!leaderSlot?.character) return null
 
@@ -117,7 +117,9 @@ export const getLeaderSkillFromSlots = (teamSlots: { character: Character | null
 /**
  * TeamSlot配列からフレンドのスキルを取得
  */
-export const getFriendSkillFromSlots = (teamSlots: { character: Character | null; position: number }[]) => {
+export const getFriendSkillFromSlots = (
+  teamSlots: { character: Character | null; position: number }[]
+) => {
   const friendSlot = teamSlots.find((s) => s.position === 6)
   if (!friendSlot?.character) return null
 
