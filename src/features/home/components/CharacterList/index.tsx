@@ -362,7 +362,7 @@ const CharacterList = memo<CharacterListProps>(
               ? getReversibleFormIndex(character.id)
               : 0
             const imageUrl = getImageUrl(character, formIndex)
-            const skills = getCharacterSkills(character)
+            const skills = getCharacterSkills(character, formIndex)
             return (
               <div
                 key={character.id}
@@ -416,6 +416,11 @@ const CharacterList = memo<CharacterListProps>(
         {selectedCharacter && (
           <CharacterDetailDialog
             character={selectedCharacter}
+            formIndex={
+              isReversibleCharacter(selectedCharacter)
+                ? getReversibleFormIndex(selectedCharacter.id)
+                : 0
+            }
             open={dialogOpen}
             onOpenChange={setDialogOpen}
           />

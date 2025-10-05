@@ -13,11 +13,18 @@ export const getFirstForm = (character: Character): CharacterForm | null => {
 
 /**
  * キャラクターのスキル情報を取得
- * reversible_forms[0]のskillsまたはforms[0]のskillsを返す
+ * reversible_forms[formIndex]のskillsまたはforms[0]のskillsを返す
  */
-export const getCharacterSkills = (character: Character): CharacterSkills | null => {
+export const getCharacterSkills = (
+  character: Character,
+  formIndex: number = 0
+): CharacterSkills | null => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
-    return character.reversible_forms[0].skills
+    const index = Math.min(
+      formIndex,
+      character.reversible_forms.length - 1
+    )
+    return character.reversible_forms[index].skills
   }
   if (character.forms && character.forms.length > 0) {
     return character.forms[0].skills

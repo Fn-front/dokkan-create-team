@@ -12,6 +12,7 @@ import {
 
 interface CharacterDetailDialogProps {
   character: Character
+  formIndex?: number
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -25,9 +26,9 @@ const EXTREME_LABELS: Record<ExtremeLevelKey, string> = {
 }
 
 const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
-  ({ character, open, onOpenChange }) => {
+  ({ character, formIndex = 0, open, onOpenChange }) => {
     const displayName = getDisplayName(character)
-    const skills = getCharacterSkills(character)
+    const skills = getCharacterSkills(character, formIndex)
 
     // 存在するタブを取得（少なくとも1つのスキルがnullでない場合のみ）
     const availableTabs: ExtremeLevelKey[] = useMemo(() => {
@@ -50,7 +51,7 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
       if (hasAnySkill('post_extreme')) tabs.push('post_extreme')
       if (hasAnySkill('super_extreme')) tabs.push('super_extreme')
       return tabs
-    }, [skills])
+    }, [skills, formIndex])
 
     // タブのデータを作成
     const tabsData = useMemo(
