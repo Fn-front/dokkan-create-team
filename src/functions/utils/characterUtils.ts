@@ -76,10 +76,7 @@ export const getImageUrl = (
  * キャラクターのステータスを取得
  * reversible_forms使用時はcharacter.stats、forms使用時はforms[0].stats
  */
-export const getCharacterStats = (
-  character: Character,
-  formIndex: number = 0
-) => {
+export const getCharacterStats = (character: Character) => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
     // reversible_formsの場合、statsはキャラクターレベルに存在
     return character.stats || null

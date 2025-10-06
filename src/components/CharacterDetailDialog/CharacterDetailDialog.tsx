@@ -51,7 +51,7 @@ const CharacterDetailDialog = memo<CharacterDetailDialogProps>(
       if (hasAnySkill('post_extreme')) tabs.push('post_extreme')
       if (hasAnySkill('super_extreme')) tabs.push('super_extreme')
       return tabs
-    }, [skills, formIndex])
+    }, [skills])
 
     // タブのデータを作成
     const tabsData = useMemo(

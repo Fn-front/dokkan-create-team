@@ -1,6 +1,6 @@
 type SkillCondition = {
   type: string
-  target: string
+  target: string[]
   ki?: number
   hp?: number
   atk?: number
@@ -94,7 +94,7 @@ type SkillSet = {
   super_attack: Skill | null
   ultra_super_attack?: Skill | null
   passive_skill: Skill | null
-  active_skill: Skill | null
+  active_skill?: Skill | null
 }
 
 export type CharacterSkills = {

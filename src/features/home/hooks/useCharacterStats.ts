@@ -5,13 +5,14 @@ import type {
   CharacterSkills,
 } from '@/functions/types/team'
 import {
-  getDisplayName,
   getCharacterSkills,
   getCharacterStats,
   getLeaderSkillFromSlots,
   getFriendSkillFromSlots,
   getPassiveSkill as getPassiveSkillUtil,
 } from '@/functions/utils/characterUtils'
+import { matchesLeaderSkillCondition } from '@/functions/utils/leaderSkillUtils'
+import { collectStatValues } from '@/functions/utils/statBoostUtils'
 
 type StatsResult = {
   hp: number
@@ -27,133 +28,6 @@ type UseCharacterStatsProps = {
 }
 
 /**
- * basic以外の全ATK/DEF値を再帰的に検索して合計
- */
-const collectStatValues = (
-  obj: Record<string, unknown>,
-  statType: 'atk' | 'def' | 'def_down',
-  excludeBasic = false,
-  includeConditions = false
-): number => {
-  let sum = 0
-
-  if (typeof obj === 'object' && obj !== null) {
-    for (const [key, value] of Object.entries(obj)) {
-      if (excludeBasic && key === 'basic') {
-        continue
-      }
-      // defensiveは常に除外、conditionsはオプションで除外
-      if (key === 'defensive') {
-        continue
-      }
-      if (!includeConditions && key === 'conditions') {
-        continue
-      }
-
-      if (key === statType && typeof value === 'number') {
-        sum += value
-      } else if (typeof value === 'object' && value !== null) {
-        sum += collectStatValues(
-          value as Record<string, unknown>,
-          statType,
-          excludeBasic,
-          includeConditions
-        )
-      }
-    }
-  }
-
-  return sum
-}
-
-/**
- * リーダースキル条件に一致するか判定
- */
-const matchesLeaderSkillCondition = (
-  character: Character,
-  condition: { type: string; target: string }
-): boolean => {
-  // 属性判定
-  if (condition.type === 'attribute') {
-    const target = condition.target
-
-    // 「〜属性」パターン（超/極なし）: 超〜 or 極〜 の両方が対象
-    // 例: 「力属性」→ 「超力」or「極力」
-    if (!target.startsWith('超') && !target.startsWith('極')) {
-      const baseAttr = target.replace('属性', '')
-      return (
-        character.attribute === `超${baseAttr}` ||
-        character.attribute === `極${baseAttr}`
-      )
-    }
-
-    // 「超〜属性」「極〜属性」パターン: 完全一致
-    // 例: 「超力属性」→ 「超力」のみ
-    const targetAttr = target.replace('属性', '')
-    return character.attribute === targetAttr
-  }
-
-  // キャラクター名判定
-  if (condition.type === 'character') {
-    const target = condition.target
-    const displayName = getDisplayName(character)
-
-    // 「または」で分割してOR判定（最初に一致したもののみ）
-    if (target.includes('または')) {
-      const names = target.split('または').map((n) => n.trim())
-      // 最初に見つかった名前だけに一致するか判定
-      const firstMatchIndex = names.findIndex((name) =>
-        displayName.includes(name)
-      )
-      // 最初の条件のみ一致する場合のみtrue
-      if (firstMatchIndex === -1) return false
-      // 他の条件に一致しないことを確認
-      for (let i = 0; i < names.length; i++) {
-        if (i !== firstMatchIndex && displayName.includes(names[i])) {
-          return false
-        }
-      }
-      return true
-    }
-
-    // 「&」で分割してOR判定（最初に一致したもののみ）
-    if (target.includes('&')) {
-      const names = target.split('&').map((n) => n.trim())
-      const firstMatchIndex = names.findIndex((name) =>
-        displayName.includes(name)
-      )
-      if (firstMatchIndex === -1) return false
-      for (let i = 0; i < names.length; i++) {
-        if (i !== firstMatchIndex && displayName.includes(names[i])) {
-          return false
-        }
-      }
-      return true
-    }
-
-    // 通常のキャラクター名判定
-    return displayName.includes(target)
-  }
-
-  // カテゴリ判定
-  if (condition.type === 'category') {
-    if (!character.categories) return false
-    return character.categories.includes(condition.target)
-  }
-
-  // 追加カテゴリ判定（配列のいずれかに一致すればtrue）
-  if (condition.type === 'additional_category') {
-    if (!character.categories) return false
-    const targets = Array.isArray(condition.target)
-      ? condition.target
-      : [condition.target]
-    return targets.some((target) => character.categories?.includes(target))
-  }
-
-  return false
-}
-
-/**
  * リーダー・フレンドスキルを取得
  */
 const getLeaderAndFriendSkills = (teamSlots: TeamSlot[]) => {
@@ -161,31 +35,6 @@ const getLeaderAndFriendSkills = (teamSlots: TeamSlot[]) => {
     leaderSkill: getLeaderSkillFromSlots(teamSlots),
     friendSkill: getFriendSkillFromSlots(teamSlots),
   }
-}
-
-/**
- * パッシブスキルを取得
- */
-const getPassiveSkill = (skills: CharacterSkills) => {
-  if (
-    skills.super_extreme?.passive_skill !== null &&
-    skills.super_extreme?.passive_skill !== undefined &&
-    skills.super_extreme.passive_skill.stat_boosts
-  )
-    return skills.super_extreme.passive_skill
-  if (
-    skills.post_extreme?.passive_skill !== null &&
-    skills.post_extreme?.passive_skill !== undefined &&
-    skills.post_extreme.passive_skill.stat_boosts
-  )
-    return skills.post_extreme.passive_skill
-  if (
-    skills.pre_extreme?.passive_skill !== null &&
-    skills.pre_extreme?.passive_skill !== undefined &&
-    skills.pre_extreme.passive_skill.stat_boosts
-  )
-    return skills.pre_extreme.passive_skill
-  return null
 }
 
 /**

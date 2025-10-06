@@ -31,7 +31,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "融合/合体戦士",
+                  "target": ["未来編", "融合/合体戦士"],
                   "ki": 3,
                   "hp": 3.0,
                   "atk": 2.7,
@@ -84,11 +84,7 @@
                   }
                 },
                 "ally_count": {
-                  "condition": {
-                    "type": "attribute_or_category",
-                    "targets": ["超", "未来編"],
-                    "select": "most"
-                  },
+                  "target": ["超", "未来編"],
                   "atk": {
                     "per_ally": 0.5,
                     "max": 2.5
@@ -133,7 +129,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "融合/合体戦士",
+                  "target": ["未来編", "融合/合体戦士"],
                   "ki": 3,
                   "hp": 3.0,
                   "atk": 2.7,
@@ -291,7 +287,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "フュージョン",
+                  "target": ["フュージョン"],
                   "ki": 3,
                   "hp": 2.5,
                   "atk": 2.5,
@@ -340,7 +336,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "フュージョン",
+                  "target": ["フュージョン"],
                   "ki": 3,
                   "hp": 2.7,
                   "atk": 2.7,
@@ -424,7 +420,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "フュージョン",
+                  "target": ["フュージョン"],
                   "ki": 3,
                   "hp": 2.5,
                   "atk": 2.5,
@@ -474,7 +470,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "フュージョン",
+                  "target": ["フュージョン"],
                   "ki": 3,
                   "hp": 2.7,
                   "atk": 2.7,
@@ -591,7 +587,7 @@
               "conditions": [
                 {
                   "type": "attribute",
-                  "target": "力属性",
+                  "target": ["力属性"],
                   "ki": 3,
                   "hp": 1.9,
                   "atk": 1.9,
@@ -629,7 +625,7 @@
               "conditions": [
                 {
                   "type": "attribute",
-                  "target": "力属性",
+                  "target": ["力属性"],
                   "ki": 4,
                   "hp": 2.2,
                   "atk": 2.2,
@@ -680,7 +676,7 @@
               "conditions": [
                 {
                   "type": "attribute",
-                  "target": "力属性",
+                  "target": ["力属性"],
                   "ki": 4,
                   "hp": 2.2,
                   "atk": 2.2,
@@ -826,7 +822,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "ベジータの系譜",
+                  "target": ["ベジータの系譜"],
                   "ki": 3,
                   "hp": 2.3,
                   "atk": 2.7,
@@ -834,7 +830,7 @@
                 },
                 {
                   "type": "attribute",
-                  "target": "超力属性",
+                  "target": ["超力属性"],
                   "ki": 3,
                   "hp": 2.2,
                   "atk": 2.2,
@@ -885,7 +881,7 @@
               "conditions": [
                 {
                   "type": "category",
-                  "target": "ベジータの系譜",
+                  "target": ["ベジータの系譜"],
                   "ki": 3,
                   "hp": 2.8,
                   "atk": 2.8,
@@ -893,7 +889,7 @@
                 },
                 {
                   "type": "attribute",
-                  "target": "超力属性",
+                  "target": ["超力属性"],
                   "ki": 3,
                   "hp": 2.3,
                   "atk": 2.3,
@@ -1015,7 +1011,7 @@
               "conditions": [
                 {
                   "type": "attribute",
-                  "target": "超力属性",
+                  "target": ["超力属性"],
                   "ki": 4,
                   "hp": 2.2,
                   "atk": 2.2,
@@ -1023,7 +1019,7 @@
                 },
                 {
                   "type": "attribute",
-                  "target": "極力属性",
+                  "target": ["極力属性"],
                   "ki": 3,
                   "hp": 1.9,
                   "atk": 1.9,
@@ -1070,7 +1066,7 @@
               "conditions": [
                 {
                   "type": "attribute",
-                  "target": "超力属性",
+                  "target": ["超力属性"],
                   "ki": 4,
                   "hp": 2.0,
                   "atk": 2.0,
@@ -1078,7 +1074,7 @@
                 },
                 {
                   "type": "attribute",
-                  "target": "極力属性",
+                  "target": ["極力属性"],
                   "ki": 2,
                   "hp": 1.7,
                   "atk": 1.7,
@@ -1114,7 +1110,7 @@
               "conditions": [
                 {
                   "type": "attribute",
-                  "target": "超力属性",
+                  "target": ["超力属性"],
                   "ki": 4,
                   "hp": 2.2,
                   "atk": 2.2,
@@ -1122,7 +1118,7 @@
                 },
                 {
                   "type": "attribute",
-                  "target": "極力属性",
+                  "target": ["極力属性"],
                   "ki": 3,
                   "hp": 1.9,
                   "atk": 1.9,
