@@ -487,7 +487,7 @@ if (key === 'conditions' || key === 'defensive' || key.endsWith('_support')) {
    - `targets`配列の各要素に対してマッチするキャラクターをカウント
    - 属性（"超"/"極"）: `character.attribute.startsWith(target)`でチェック
    - カテゴリ（"未来編"等）: `character.categories?.includes(target)`でチェック
-   - 自分自身は除外（`ts.position === slot.position`）
+   - **自分自身も含む**（`ts.position === slot.position`でフィルタしない）
 
 2. **最終値の選択**:
    - `select: "most"`: 属性カウントとカテゴリカウントの大きい方を使用
@@ -512,7 +512,7 @@ const countAlliesForAllyCount = (condition: {
     let categoryCount = 0
 
     teamSlots.forEach((ts) => {
-      if (!ts.character || ts.position === slot.position) return
+      if (!ts.character) return
 
       condition.targets.forEach((target) => {
         if (target === '超' || target === '極') {
@@ -610,31 +610,39 @@ const getAttackMultiplier = () => {
 ```typescript
 const matchesLeaderSkillCondition = (
   character: Character,
-  condition: { type: string; target: string }
+  condition: { type: string; target: string[] }
 ): boolean => {
+  const targets = condition.target
+
   // 属性判定
   if (condition.type === 'attribute') {
-    const target = condition.target
-    // 「〜属性」（超/極なし）: 超〜 or 極〜 の両方が対象
-    if (!target.startsWith('超') && !target.startsWith('極')) {
-      const baseAttr = target.replace('属性', '')
-      return (
-        character.attribute === `超${baseAttr}` ||
-        character.attribute === `極${baseAttr}`
-      )
-    }
-    // 「超〜属性」「極〜属性」: 完全一致
-    const targetAttr = target.replace('属性', '')
-    return character.attribute === targetAttr
+    return targets.some((target) => {
+      // 「〜属性」（超/極なし）: 超〜 or 極〜 の両方が対象
+      if (!target.startsWith('超') && !target.startsWith('極')) {
+        const baseAttr = target.replace('属性', '')
+        return (
+          character.attribute === `超${baseAttr}` ||
+          character.attribute === `極${baseAttr}`
+        )
+      }
+      // 「超〜属性」「極〜属性」: 完全一致
+      const targetAttr = target.replace('属性', '')
+      return character.attribute === targetAttr
+    })
   }
   // キャラクター名判定（「または」「&」はOR、最初の一致のみ）
   if (condition.type === 'character') {
     // ... 名前マッチング処理
   }
-  // カテゴリ判定
+  // カテゴリ判定（配列のいずれかに一致すればtrue）
   if (condition.type === 'category') {
     if (!character.categories) return false
-    return character.categories.includes(condition.target)
+    return targets.some((target) => character.categories?.includes(target))
+  }
+  // 追加カテゴリ判定（配列のいずれかに一致すればtrue）
+  if (condition.type === 'additional_category') {
+    if (!character.categories) return false
+    return targets.some((target) => character.categories?.includes(target))
   }
   return false
 }
@@ -643,8 +651,9 @@ const matchesLeaderSkillCondition = (
 ### 重要な実装ルール
 
 1. **条件チェック必須**: リーダー・フレンドスキルの倍率を加算する前に、必ず`matchesLeaderSkillCondition`で条件チェック
-2. **最初の一致のみ適用**: 複数条件がある場合、最初にマッチした条件のみを適用して`break`
-3. **属性判定の違い**:
+2. **全ての一致条件を適用**: 複数条件がある場合、**マッチした全ての条件を加算**（`break`は使用しない）
+3. **target配列**: `SkillCondition.target`は`string[]`型（配列形式）
+4. **属性判定の違い**:
    - `力属性` → `超力` OR `極力` にマッチ
    - `超力属性` → `超力` のみにマッチ
    - `極力属性` → `極力` のみにマッチ
@@ -658,7 +667,7 @@ if (leaderSkill?.conditions) {
     if (matchesLeaderSkillCondition(character, condition)) {
       if (condition.atk !== undefined) atkMultiplier += condition.atk
       if (condition.def !== undefined) defMultiplier += condition.def
-      break // 最初に一致した条件のみ適用
+      // breakは使用しない - 全ての一致条件を適用
     }
   }
 }
@@ -677,14 +686,29 @@ if (leaderSkill?.conditions) {
 }
 ```
 
-✅ **正しい**: 条件チェックして最初の一致のみ適用
+❌ **間違い**: breakを使用して最初の一致のみ適用
+
+```typescript
+// これはバグ！additional_category等の追加条件が適用されない
+if (leaderSkill?.conditions) {
+  for (const condition of leaderSkill.conditions) {
+    if (matchesLeaderSkillCondition(character, condition)) {
+      if (condition.atk !== undefined) atkMultiplier += condition.atk
+      break // 間違い！
+    }
+  }
+}
+```
+
+✅ **正しい**: 条件チェックして全ての一致条件を適用
 
 ```typescript
 if (leaderSkill?.conditions) {
   for (const condition of leaderSkill.conditions) {
     if (matchesLeaderSkillCondition(character, condition)) {
       if (condition.atk !== undefined) atkMultiplier += condition.atk
-      break
+      if (condition.def !== undefined) defMultiplier += condition.def
+      // breakなし - 全条件をチェック
     }
   }
 }
