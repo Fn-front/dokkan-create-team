@@ -111,19 +111,16 @@ export const getCharacterSkills = (
 const [formIndexes, setFormIndexes] = useState<Record<string, number>>({})
 
 // フォーム切り替え（循環）
-const toggleForm = useCallback(
-  (characterId: string, maxFormIndex: number) => {
-    setFormIndexes((prev) => {
-      const currentIndex = prev[characterId] || 0
-      const nextIndex = (currentIndex + 1) % (maxFormIndex + 1)
-      return {
-        ...prev,
-        [characterId]: nextIndex,
-      }
-    })
-  },
-  []
-)
+const toggleForm = useCallback((characterId: string, maxFormIndex: number) => {
+  setFormIndexes((prev) => {
+    const currentIndex = prev[characterId] || 0
+    const nextIndex = (currentIndex + 1) % (maxFormIndex + 1)
+    return {
+      ...prev,
+      [characterId]: nextIndex,
+    }
+  })
+}, [])
 
 // インデックス取得
 const getFormIndex = useCallback(
@@ -179,7 +176,8 @@ const formIndex = isReversible ? getReversibleFormIndex(character.id) :
   position: absolute;
   top: 0;
   right: 0; // switchButton
-  left: 50%; transform: translateX(-50%); // transformButton
+  left: 50%;
+  transform: translateX(-50%); // transformButton
   z-index: 100; // 他のボタンより上位
   pointer-events: auto; // 親のpointer-eventsに関係なく有効
 

@@ -11,6 +11,7 @@
 ### 2. リーダー・フレンドスキル適用
 
 - **HP**: 倍率を加算後、`-1処理`を適用
+
   ```
   floor(baseHP × (leader + friend - 1))
   ```
@@ -52,7 +53,7 @@ finalATK = (パッシブ適用後ATK × ultra_super_attack.multiplier) +
 
 ## 再帰的ステータス収集
 
-### 55%/100%用（conditions, defensive, _support除外）
+### 55%/100%用（conditions, defensive, \_support除外）
 
 ```typescript
 const collectStatValues = (
@@ -96,7 +97,12 @@ const collectStatValues = (
 
     // オブジェクトの場合は再帰
     if (typeof value === 'object' && value !== null) {
-      total += collectStatValues(value as Record<string, unknown>, statType, excludeBasic, key)
+      total += collectStatValues(
+        value as Record<string, unknown>,
+        statType,
+        excludeBasic,
+        key
+      )
     }
   }
 
@@ -104,7 +110,7 @@ const collectStatValues = (
 }
 ```
 
-### 行動後用（defensive, _support除外、conditions含む）
+### 行動後用（defensive, \_support除外、conditions含む）
 
 ```typescript
 const collectStatValuesWithConditions = (
@@ -279,6 +285,7 @@ const getAttackMultiplier = () => {
 ```
 
 **ポイント**:
+
 - 最後の`_extreme`キーから順に遡り、`ultra_super_attack.multiplier`が存在する最初のキーを使用
 - `super_extreme`が全てnullの場合は、`post_extreme`のmultiplierを使用
 - multiplierが見つからない場合は適用しない（DEFには常に適用しない）

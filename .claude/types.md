@@ -39,7 +39,7 @@ type CharacterForm = {
 ```typescript
 type TeamSlot = {
   character: Character | null
-  position: number  // 0=leader, 1-5=members, 6=friend
+  position: number // 0=leader, 1-5=members, 6=friend
 }
 
 type Team = {

@@ -77,26 +77,31 @@ features/home/
 ## コンポーネント責任
 
 ### TeamLayout
+
 - チーム全体のレイアウト管理
 - TeamSkillDisplayとTeamSlotComponentの配置
 - ドラッグ&ドロップのイベントハンドラー管理
 
 ### TeamSlot
+
 - 各スロットの表示（キャラクター画像、バッジ、ボタン）
 - 気力メーターの表示
 - ステータス表示（useTeamSlotStats使用）
 - フォーム切り替えボタンのイベント処理
 
 ### TeamSkillDisplay
+
 - リーダースキル・フレンドスキルの表示
 - チーム全体のHP合計表示
 
 ### CharacterList
+
 - キャラクター一覧のレイアウト管理
 - 配置可否判定とフィルタリング
 - 詳細ダイアログの表示制御
 
 ### CharacterCard
+
 - キャラクターカードの表示
 - 詳細・切り替え・変身ボタンの配置
 - ドラッグ開始のイベント処理

@@ -101,7 +101,9 @@ export const useTeamDragDrop = ({
   onCharacterRemove,
   canMoveCharacter,
 }: UseTeamDragDropProps) => {
-  const [draggedFromPosition, setDraggedFromPosition] = useState<number | null>(null)
+  const [draggedFromPosition, setDraggedFromPosition] = useState<number | null>(
+    null
+  )
   const [isDragging, setIsDragging] = useState<boolean>(false)
   const draggedSlotRef = useRef<TeamSlot | null>(null)
   const isDraggingRef = useRef<boolean>(false)

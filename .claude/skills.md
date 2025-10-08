@@ -63,9 +63,7 @@ const matchesLeaderSkillCondition = (
     const displayName = getDisplayName(character)
     return targets.some((target) => {
       // 「または」「&」区切りの名前処理
-      const nameVariations = target
-        .split(/または|&/)
-        .map((name) => name.trim())
+      const nameVariations = target.split(/または|&/).map((name) => name.trim())
       return nameVariations.some((name) => displayName.includes(name))
     })
   }
