@@ -4,7 +4,7 @@ import Image from 'next/image'
 import styles from './style.module.scss'
 import type { Character, TeamSlot } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
-import { ProhibitIcon, SwitchIcon } from '@/components/icons'
+import { ProhibitIcon, SwitchIcon, TransformIcon } from '@/components/icons'
 import KiMeter from '@/components/KiMeter'
 import {
   getLeaderSkillKiValue,
@@ -19,6 +19,7 @@ import {
   getFriendSkillFromSlots,
   getPassiveSkill,
   isReversibleCharacter,
+  hasMultipleForms,
 } from '@/functions/utils/characterUtils'
 import { matchesLeaderSkillCondition } from '@/functions/utils/leaderSkillUtils'
 import { countAlliesForAllyCount } from '@/functions/utils/allyCountUtils'
@@ -35,6 +36,8 @@ type TeamSlotComponentProps = {
   onMouseDown: (e: React.MouseEvent, slot: TeamSlot) => void
   toggleReversibleForm: (characterId: string) => void
   getReversibleFormIndex: (characterId: string) => number
+  toggleForm: (characterId: string, maxFormIndex: number) => void
+  getFormIndex: (characterId: string) => number
 }
 
 const TeamSlotComponent = memo<TeamSlotComponentProps>(
@@ -49,6 +52,8 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
     onMouseDown,
     toggleReversibleForm,
     getReversibleFormIndex,
+    toggleForm,
+    getFormIndex,
   }) => {
     const switchButtonClickedRef = useRef(false)
     const isLeader = index === 0
@@ -121,9 +126,16 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               <>
                 {(() => {
                   const isReversible = isReversibleCharacter(slot.character)
-                  const formIndex = isReversible
-                    ? getReversibleFormIndex(slot.character.id)
-                    : 0
+                  const hasMultiple = hasMultipleForms(slot.character)
+
+                  // フォームインデックスを取得
+                  let formIndex = 0
+                  if (isReversible) {
+                    formIndex = getReversibleFormIndex(slot.character.id)
+                  } else if (hasMultiple) {
+                    formIndex = getFormIndex(slot.character.id)
+                  }
+
                   return (
                     <>
                       <Image
@@ -161,11 +173,51 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                           <SwitchIcon className={styles.switchIcon} />
                         </button>
                       )}
+                      {hasMultiple && (
+                        <button
+                          className={styles.transformButton}
+                          onClickCapture={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            switchButtonClickedRef.current = true
+                            toggleForm(
+                              slot.character!.id,
+                              slot.character!.forms!.length - 1
+                            )
+                            // 次のイベントループでフラグをリセット
+                            setTimeout(() => {
+                              switchButtonClickedRef.current = false
+                            }, 0)
+                          }}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          onMouseUp={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          data-transform-button="true"
+                          aria-label="変身"
+                        >
+                          <TransformIcon className={styles.transformIcon} />
+                        </button>
+                      )}
                     </>
                   )
                 })()}
                 {(() => {
-                  const skills = getCharacterSkills(slot.character)
+                  // フォームインデックスを取得
+                  const isReversible = isReversibleCharacter(slot.character)
+                  const hasMultiple = hasMultipleForms(slot.character)
+                  let formIndex = 0
+                  if (isReversible) {
+                    formIndex = getReversibleFormIndex(slot.character.id)
+                  } else if (hasMultiple) {
+                    formIndex = getFormIndex(slot.character.id)
+                  }
+
+                  const skills = getCharacterSkills(slot.character, formIndex)
                   if (!skills) return null
 
                   // 自分のパッシブスキルからのki値を取得
@@ -178,11 +230,48 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                     const friendSlot = teamSlots.find(
                       (s: TeamSlot) => s.position === 6
                     )
+
+                    // リーダーのフォームインデックス取得
+                    let leaderFormIndex = 0
+                    if (leaderSlot?.character) {
+                      const isLeaderReversible = isReversibleCharacter(
+                        leaderSlot.character
+                      )
+                      const isLeaderMultiple = hasMultipleForms(
+                        leaderSlot.character
+                      )
+                      if (isLeaderReversible) {
+                        leaderFormIndex = getReversibleFormIndex(
+                          leaderSlot.character.id
+                        )
+                      } else if (isLeaderMultiple) {
+                        leaderFormIndex = getFormIndex(leaderSlot.character.id)
+                      }
+                    }
+
+                    // フレンドのフォームインデックス取得
+                    let friendFormIndex = 0
+                    if (friendSlot?.character) {
+                      const isFriendReversible = isReversibleCharacter(
+                        friendSlot.character
+                      )
+                      const isFriendMultiple = hasMultipleForms(
+                        friendSlot.character
+                      )
+                      if (isFriendReversible) {
+                        friendFormIndex = getReversibleFormIndex(
+                          friendSlot.character.id
+                        )
+                      } else if (isFriendMultiple) {
+                        friendFormIndex = getFormIndex(friendSlot.character.id)
+                      }
+                    }
+
                     const leaderSkills = leaderSlot?.character
-                      ? getCharacterSkills(leaderSlot.character)
+                      ? getCharacterSkills(leaderSlot.character, leaderFormIndex)
                       : null
                     const friendSkills = friendSlot?.character
-                      ? getCharacterSkills(friendSlot.character)
+                      ? getCharacterSkills(friendSlot.character, friendFormIndex)
                       : null
                     const leaderKi = leaderSkills
                       ? getLeaderSkillKiValue(leaderSkills)
@@ -210,11 +299,20 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   const leaderSkill = getLeaderSkillFromSlots(teamSlots)
                   const friendSkill = getFriendSkillFromSlots(teamSlots)
 
+                  // フォームインデックスを取得
                   const isReversible = isReversibleCharacter(slot.character)
-                  const formIndex = isReversible
-                    ? getReversibleFormIndex(slot.character.id)
-                    : 0
-                  const characterStats = getCharacterStats(slot.character)
+                  const hasMultiple = hasMultipleForms(slot.character)
+                  let formIndex = 0
+                  if (isReversible) {
+                    formIndex = getReversibleFormIndex(slot.character.id)
+                  } else if (hasMultiple) {
+                    formIndex = getFormIndex(slot.character.id)
+                  }
+
+                  const characterStats = getCharacterStats(
+                    slot.character,
+                    formIndex
+                  )
                   const stats55 = characterStats?.potential_55
                   if (!stats55) return '0 / 0'
                   const baseATK = parseInt(stats55.ATK)
@@ -278,12 +376,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       type: string
                       targets: string[]
                       select: string
-                    }) =>
-                      countAlliesForAllyCount(
-                        condition,
-                        teamSlots,
-                        slot.position
-                      )
+                    }) => countAlliesForAllyCount(condition, teamSlots)
 
                     // ATK計算: basic掛け算 → 他の値を足して掛け算
                     const atkBoostSum = collectStatValues(
@@ -387,11 +480,20 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   const leaderSkill = getLeaderSkillFromSlots(teamSlots)
                   const friendSkill = getFriendSkillFromSlots(teamSlots)
 
+                  // フォームインデックスを取得
                   const isReversible = isReversibleCharacter(slot.character)
-                  const formIndex = isReversible
-                    ? getReversibleFormIndex(slot.character.id)
-                    : 0
-                  const characterStats = getCharacterStats(slot.character)
+                  const hasMultiple = hasMultipleForms(slot.character)
+                  let formIndex = 0
+                  if (isReversible) {
+                    formIndex = getReversibleFormIndex(slot.character.id)
+                  } else if (hasMultiple) {
+                    formIndex = getFormIndex(slot.character.id)
+                  }
+
+                  const characterStats = getCharacterStats(
+                    slot.character,
+                    formIndex
+                  )
                   const stats100 = characterStats?.potential_100
                   if (!stats100) return '0 / 0'
                   const baseATK = parseInt(stats100.ATK)
@@ -455,12 +557,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       type: string
                       targets: string[]
                       select: string
-                    }) =>
-                      countAlliesForAllyCount(
-                        condition,
-                        teamSlots,
-                        slot.position
-                      )
+                    }) => countAlliesForAllyCount(condition, teamSlots)
 
                     // ATK計算: basic掛け算 → 他の値を足して掛け算
                     const atkBoostSum = collectStatValues(
@@ -561,9 +658,13 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
               <span className={styles.statLabel}>
                 {(() => {
                   const isReversible = isReversibleCharacter(slot.character)
-                  const formIndex = isReversible
-                    ? getReversibleFormIndex(slot.character.id)
-                    : 0
+                  const hasMultiple = hasMultipleForms(slot.character)
+                  let formIndex = 0
+                  if (isReversible) {
+                    formIndex = getReversibleFormIndex(slot.character.id)
+                  } else if (hasMultiple) {
+                    formIndex = getFormIndex(slot.character.id)
+                  }
                   const skills = getCharacterSkills(slot.character, formIndex)
                   const superAttackCount = (() => {
                     if (skills?.super_extreme?.super_attack?.super_attack_count)
@@ -585,10 +686,17 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   const friendSkill = getFriendSkillFromSlots(teamSlots)
 
                   const isReversible = isReversibleCharacter(slot.character)
-                  const formIndex = isReversible
-                    ? getReversibleFormIndex(slot.character.id)
-                    : 0
-                  const characterStats = getCharacterStats(slot.character)
+                  const hasMultiple = hasMultipleForms(slot.character)
+                  let formIndex = 0
+                  if (isReversible) {
+                    formIndex = getReversibleFormIndex(slot.character.id)
+                  } else if (hasMultiple) {
+                    formIndex = getFormIndex(slot.character.id)
+                  }
+                  const characterStats = getCharacterStats(
+                    slot.character,
+                    formIndex
+                  )
                   const stats100 = characterStats?.potential_100
                   if (!stats100) return '0 / 0'
                   const baseATK = parseInt(stats100.ATK)
@@ -652,12 +760,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       type: string
                       targets: string[]
                       select: string
-                    }) =>
-                      countAlliesForAllyCount(
-                        condition,
-                        teamSlots,
-                        slot.position
-                      )
+                    }) => countAlliesForAllyCount(condition, teamSlots)
 
                     // ATK計算: basic掛け算 → 他の値を足して掛け算（conditions含む）
                     const atkBoostSum = collectStatValues(
@@ -674,7 +777,8 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       const basicATK = Math.floor(currentATK * boosts.basic.atk)
                       // 他の値の合計で掛け算（-1処理）
                       if (atkBoostSum > 0) {
-                        finalATK = basicATK + Math.floor(basicATK * (atkBoostSum - 1))
+                        finalATK =
+                          basicATK + Math.floor(basicATK * (atkBoostSum - 1))
                       } else {
                         finalATK = basicATK
                       }
@@ -698,7 +802,8 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                       const basicDEF = Math.floor(currentDEF * boosts.basic.def)
                       // 他の値の合計で掛け算（-1処理）
                       if (defBoostSum > 0) {
-                        finalDEF = basicDEF + Math.floor(basicDEF * (defBoostSum - 1))
+                        finalDEF =
+                          basicDEF + Math.floor(basicDEF * (defBoostSum - 1))
                       } else {
                         finalDEF = basicDEF
                       }
@@ -722,7 +827,7 @@ const TeamSlotComponent = memo<TeamSlotComponentProps>(
                   }
 
                   // super_attack_countとstat_boostを取得
-                  const skills = getCharacterSkills(slot.character)
+                  const skills = getCharacterSkills(slot.character, formIndex)
                   const superAttackInfo = (() => {
                     if (skills?.super_extreme?.super_attack)
                       return skills.super_extreme.super_attack
@@ -806,6 +911,8 @@ type TeamLayoutProps = {
   canMoveCharacter?: (fromPosition: number, toPosition: number) => boolean
   toggleReversibleForm: (characterId: string) => void
   getReversibleFormIndex: (characterId: string) => number
+  toggleForm: (characterId: string, maxFormIndex: number) => void
+  getFormIndex: (characterId: string) => number
 }
 
 const TeamLayout = memo<TeamLayoutProps>(
@@ -818,6 +925,8 @@ const TeamLayout = memo<TeamLayoutProps>(
     canMoveCharacter,
     toggleReversibleForm,
     getReversibleFormIndex,
+    toggleForm,
+    getFormIndex,
   }) => {
     // リーダースキルを取得する関数
     const getLeaderSkill = () => {
@@ -1280,6 +1389,8 @@ const TeamLayout = memo<TeamLayoutProps>(
               onMouseDown={handleSlotMouseDown}
               toggleReversibleForm={toggleReversibleForm}
               getReversibleFormIndex={getReversibleFormIndex}
+              toggleForm={toggleForm}
+              getFormIndex={getFormIndex}
             />
           ))}
         </div>

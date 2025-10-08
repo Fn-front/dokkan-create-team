@@ -9,8 +9,7 @@ export const countAlliesForAllyCount = (
     targets: string[]
     select: string
   },
-  teamSlots: TeamSlot[],
-  currentPosition: number
+  teamSlots: TeamSlot[]
 ): number => {
   if (condition.type === 'attribute_or_category') {
     let attributeCount = 0

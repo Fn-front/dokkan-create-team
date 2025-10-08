@@ -5,7 +5,12 @@ import styles from './style.module.scss'
 import { sampleCharacters } from '@/functions/data/characters'
 import type { Character } from '@/functions/types/team'
 import { cn } from '@/lib/utils'
-import { ProhibitIcon, DetailIcon, SwitchIcon } from '@/components/icons'
+import {
+  ProhibitIcon,
+  DetailIcon,
+  SwitchIcon,
+  TransformIcon,
+} from '@/components/icons'
 import CharacterDetailDialog from '@/components/CharacterDetailDialog/CharacterDetailDialog'
 import { useDialog } from '@/functions/hooks/useDialog'
 import {
@@ -13,6 +18,7 @@ import {
   getImageUrl,
   getCharacterSkills,
   isReversibleCharacter,
+  hasMultipleForms,
 } from '@/functions/utils/characterUtils'
 
 type CharacterListProps = {
@@ -20,6 +26,8 @@ type CharacterListProps = {
   canPlaceCharacter: (character: Character, position: number) => boolean
   toggleReversibleForm: (characterId: string) => void
   getReversibleFormIndex: (characterId: string) => number
+  toggleForm: (characterId: string, maxFormIndex: number) => void
+  getFormIndex: (characterId: string) => number
 }
 
 const CharacterList = memo<CharacterListProps>(
@@ -28,6 +36,8 @@ const CharacterList = memo<CharacterListProps>(
     canPlaceCharacter,
     toggleReversibleForm,
     getReversibleFormIndex,
+    toggleForm,
+    getFormIndex,
   }) => {
     const [isDragging, setIsDragging] = useState(false)
     const [selectedCharacter, setSelectedCharacter] =
@@ -341,13 +351,24 @@ const CharacterList = memo<CharacterListProps>(
       setDialogOpen(true)
     }
 
-    // 回転アイコンクリック時の処理
+    // 回転アイコンクリック時の処理（reversible用）
     const handleSwitchClick = (
       e: React.MouseEvent,
       character: Character
     ): void => {
       e.stopPropagation() // ドラッグ開始を防ぐ
       toggleReversibleForm(character.id)
+    }
+
+    // 変身アイコンクリック時の処理（forms用）
+    const handleTransformClick = (
+      e: React.MouseEvent,
+      character: Character
+    ): void => {
+      e.stopPropagation() // ドラッグ開始を防ぐ
+      if (character.forms) {
+        toggleForm(character.id, character.forms.length - 1)
+      }
     }
 
     return (
@@ -358,9 +379,16 @@ const CharacterList = memo<CharacterListProps>(
             const isPlaceable = canPlaceAnywhere(character)
             const displayName = getDisplayName(character)
             const isReversible = isReversibleCharacter(character)
-            const formIndex = isReversible
-              ? getReversibleFormIndex(character.id)
-              : 0
+            const hasMultiple = hasMultipleForms(character)
+
+            // フォームインデックスを取得
+            let formIndex = 0
+            if (isReversible) {
+              formIndex = getReversibleFormIndex(character.id)
+            } else if (hasMultiple) {
+              formIndex = getFormIndex(character.id)
+            }
+
             const imageUrl = getImageUrl(character, formIndex)
             const skills = getCharacterSkills(character, formIndex)
             return (
@@ -397,6 +425,16 @@ const CharacterList = memo<CharacterListProps>(
                     <SwitchIcon className={styles.switchIcon} />
                   </button>
                 )}
+                {hasMultiple && (
+                  <button
+                    className={styles.transformButton}
+                    onClick={(e) => handleTransformClick(e, character)}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    aria-label="変身"
+                  >
+                    <TransformIcon className={styles.transformIcon} />
+                  </button>
+                )}
                 {imageUrl ? (
                   <Image
                     className={styles.characterImage}
@@ -419,7 +457,9 @@ const CharacterList = memo<CharacterListProps>(
             formIndex={
               isReversibleCharacter(selectedCharacter)
                 ? getReversibleFormIndex(selectedCharacter.id)
-                : 0
+                : hasMultipleForms(selectedCharacter)
+                  ? getFormIndex(selectedCharacter.id)
+                  : 0
             }
             open={dialogOpen}
             onOpenChange={setDialogOpen}

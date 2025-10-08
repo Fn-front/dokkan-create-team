@@ -17,7 +17,7 @@ export const getFirstForm = (character: Character): CharacterForm | null => {
 
 /**
  * キャラクターのスキル情報を取得
- * reversible_forms[formIndex]のskillsまたはforms[0]のskillsを返す
+ * reversible_forms[formIndex]のskillsまたはforms[formIndex]のskillsを返す
  */
 export const getCharacterSkills = (
   character: Character,
@@ -28,7 +28,8 @@ export const getCharacterSkills = (
     return character.reversible_forms[index].skills
   }
   if (character.forms && character.forms.length > 0) {
-    return character.forms[0].skills
+    const index = Math.min(formIndex, character.forms.length - 1)
+    return character.forms[index].skills
   }
   return null
 }
@@ -38,6 +39,13 @@ export const getCharacterSkills = (
  */
 export const isReversibleCharacter = (character: Character): boolean => {
   return !!(character.reversible_forms && character.reversible_forms.length > 1)
+}
+
+/**
+ * 複数のformsを持つキャラクターかどうか判定
+ */
+export const hasMultipleForms = (character: Character): boolean => {
+  return !!(character.forms && character.forms.length > 1)
 }
 
 /**
@@ -56,7 +64,7 @@ export const getDisplayName = (character: Character): string => {
 
 /**
  * キャラクターの画像URLを取得
- * reversible_forms使用時はreversible_forms[formIndex].image_url、forms使用時はforms[0].image_urls[0]
+ * reversible_forms使用時はreversible_forms[formIndex].image_url、forms使用時はforms[formIndex].image_url
  */
 export const getImageUrl = (
   character: Character,
@@ -67,22 +75,27 @@ export const getImageUrl = (
     return character.reversible_forms[index].image_url || ''
   }
   if (character.forms && character.forms.length > 0) {
-    return character.forms[0].image_url || ''
+    const index = Math.min(formIndex, character.forms.length - 1)
+    return character.forms[index].image_url || ''
   }
   return ''
 }
 
 /**
  * キャラクターのステータスを取得
- * reversible_forms使用時はcharacter.stats、forms使用時はforms[0].stats
+ * reversible_forms使用時はcharacter.stats、forms使用時はforms[formIndex].stats
  */
-export const getCharacterStats = (character: Character) => {
+export const getCharacterStats = (
+  character: Character,
+  formIndex: number = 0
+) => {
   if (character.reversible_forms && character.reversible_forms.length > 0) {
     // reversible_formsの場合、statsはキャラクターレベルに存在
     return character.stats || null
   }
   if (character.forms && character.forms.length > 0) {
-    return character.forms[0].stats
+    const index = Math.min(formIndex, character.forms.length - 1)
+    return character.forms[index].stats
   }
   return null
 }
