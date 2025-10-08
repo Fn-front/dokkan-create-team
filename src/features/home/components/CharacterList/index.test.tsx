@@ -121,10 +121,12 @@ describe('CharacterList', () => {
 
   it('詳細ボタンをクリックするとダイアログが開く', async () => {
     const mockSetOpen = jest.fn()
-    jest.spyOn(require('@/functions/hooks/useDialog'), 'useDialog').mockReturnValue({
-      open: false,
-      setOpen: mockSetOpen,
-    })
+    jest
+      .spyOn(require('@/functions/hooks/useDialog'), 'useDialog')
+      .mockReturnValue({
+        open: false,
+        setOpen: mockSetOpen,
+      })
 
     const user = userEvent.setup()
     render(<CharacterList {...mockProps} />)

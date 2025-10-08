@@ -9,7 +9,7 @@ test('JavaScriptドラッグ&ドロップテスト', async ({ page }) => {
   })
 
   // ローカル開発サーバーにアクセス
-  await page.goto('http://localhost:3002')
+  await page.goto('http://localhost:3000')
 
   // ページの読み込み完了を待つ
   await page.waitForLoadState('networkidle')

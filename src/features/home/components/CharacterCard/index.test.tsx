@@ -530,7 +530,9 @@ describe('CharacterCard', () => {
         />
       )
 
-      expect(screen.queryByLabelText('フォーム切り替え')).not.toBeInTheDocument()
+      expect(
+        screen.queryByLabelText('フォーム切り替え')
+      ).not.toBeInTheDocument()
     })
   })
 

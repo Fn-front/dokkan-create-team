@@ -449,8 +449,12 @@ describe('CharacterDetailDialog', () => {
       )
 
       expect(screen.getByRole('tab', { name: '超極限' })).toBeInTheDocument()
-      expect(screen.queryByRole('tab', { name: '極限' })).not.toBeInTheDocument()
-      expect(screen.queryByRole('tab', { name: '通常' })).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('tab', { name: '極限' })
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('tab', { name: '通常' })
+      ).not.toBeInTheDocument()
     })
   })
 })

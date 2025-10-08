@@ -106,7 +106,10 @@ describe('matchesLeaderSkillCondition', () => {
     })
 
     it('「または」条件で最初の名前のみに一致する', () => {
-      const condition = { type: 'character', target: ['孫悟空または超サイヤ人'] }
+      const condition = {
+        type: 'character',
+        target: ['孫悟空または超サイヤ人'],
+      }
 
       const gokuChar = createMockCharacter('超力', '孫悟空')
       const ssChar = createMockCharacter('超力', '超サイヤ人孫悟飯')

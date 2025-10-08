@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test('キャラクター重複制限機能テスト', async ({ page }) => {
   // テスト用サーバーにアクセス
-  await page.goto('http://localhost:3001')
+  await page.goto('http://localhost:3000')
 
   // ページの読み込み完了を待つ
   await page.waitForLoadState('networkidle')

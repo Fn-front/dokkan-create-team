@@ -97,9 +97,7 @@ describe('TeamSlotComponent', () => {
   })
 
   it('キャラクターが配置されていない場合、画像が表示されない', () => {
-    render(
-      <TeamSlotComponent slot={mockEmptySlot} index={1} {...mockProps} />
-    )
+    render(<TeamSlotComponent slot={mockEmptySlot} index={1} {...mockProps} />)
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 
@@ -147,9 +145,7 @@ describe('TeamSlotComponent', () => {
       position: 1,
     }
 
-    render(
-      <TeamSlotComponent slot={reversibleSlot} index={1} {...mockProps} />
-    )
+    render(<TeamSlotComponent slot={reversibleSlot} index={1} {...mockProps} />)
     expect(screen.getByLabelText('フォーム切り替え')).toBeInTheDocument()
   })
 
@@ -167,9 +163,7 @@ describe('TeamSlotComponent', () => {
       position: 1,
     }
 
-    render(
-      <TeamSlotComponent slot={reversibleSlot} index={1} {...mockProps} />
-    )
+    render(<TeamSlotComponent slot={reversibleSlot} index={1} {...mockProps} />)
 
     const switchButton = screen.getByLabelText('フォーム切り替え')
     await user.click(switchButton)
@@ -399,7 +393,9 @@ describe('TeamSlotComponent', () => {
         position: 1,
       }
 
-      render(<TeamSlotComponent slot={transformSlot} index={1} {...mockProps} />)
+      render(
+        <TeamSlotComponent slot={transformSlot} index={1} {...mockProps} />
+      )
 
       const transformButton = screen.getByLabelText('変身')
       await user.click(transformButton)
@@ -424,7 +420,9 @@ describe('TeamSlotComponent', () => {
         <TeamSlotComponent slot={reversibleSlot} index={1} {...mockProps} />
       )
 
-      const switchButton = container.querySelector('[data-switch-button="true"]')
+      const switchButton = container.querySelector(
+        '[data-switch-button="true"]'
+      )
       expect(switchButton).toBeInTheDocument()
     })
 
@@ -525,7 +523,9 @@ describe('TeamSlotComponent', () => {
         position: 1,
       }
 
-      render(<TeamSlotComponent slot={transformSlot} index={1} {...mockProps} />)
+      render(
+        <TeamSlotComponent slot={transformSlot} index={1} {...mockProps} />
+      )
 
       expect(mockProps.getFormIndex).toHaveBeenCalledWith(1)
     })

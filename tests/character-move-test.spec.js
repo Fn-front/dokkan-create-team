@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test('チーム内キャラクター移動・入れ替え機能テスト', async ({ page }) => {
   // テスト用サーバーにアクセス
-  await page.goto('http://localhost:3001')
+  await page.goto('http://localhost:3000')
 
   // ページの読み込み完了を待つ
   await page.waitForLoadState('networkidle')
@@ -89,8 +89,8 @@ test('チーム内キャラクター移動・入れ替え機能テスト', async
   expect(changedLeaderSkill).not.toBe(initialLeaderSkill)
   console.log('✓ リーダースキルが変更されました')
 
-  // 5. 最初のキャラクター（ブロリー）を直接リーダースロットに戻す
-  console.log('ブロリーを直接リーダースロットに戻す...')
+  // 5. 最初のキャラクターを直接リーダースロットに戻す
+  console.log('最初のキャラクターを直接リーダースロットに戻す...')
 
   // emptyMemberSlotにいるキャラクターをリーダースロットに戻す
   const finalLeaderSlotBox = await leaderSlot.boundingBox()
@@ -107,7 +107,7 @@ test('チーム内キャラクター移動・入れ替え機能テスト', async
   // 最終確認
   const finalLeaderSlotImage = await leaderSlot.locator('img').count()
   expect(finalLeaderSlotImage).toBe(1)
-  console.log('✓ ブロリーがリーダースロットに戻りました')
+  console.log('✓ 最初のキャラクターがリーダースロットに戻りました')
 
   // 6. 最終リーダースキル確認
   await page.waitForTimeout(1000) // UI更新を待つ
@@ -116,9 +116,9 @@ test('チーム内キャラクター移動・入れ替え機能テスト', async
     .textContent()
   console.log('最終リーダースキル:', finalLeaderSkill)
 
-  // ブロリーが戻ったのでスキルも復活するはず
-  expect(finalLeaderSkill).toBe('力属性の気力+4、HPとATKとDEF120%UP')
-  console.log('✓ ブロリーのリーダースキルが正しく表示されています')
+  // 最初のキャラクターが戻ったのでスキルも復活するはず
+  expect(finalLeaderSkill).toBe(initialLeaderSkill)
+  console.log('✓ リーダースキルが正しく表示されています')
 
   console.log('=== チーム内キャラクター移動テスト完了 ===')
 })

@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test')
 
 test('チームスロットドラッグ時の枠線色テスト', async ({ page }) => {
   // ローカル開発サーバーにアクセス
-  await page.goto('http://localhost:3001')
+  await page.goto('http://localhost:3000')
   await page.waitForLoadState('networkidle')
 
   console.log('=== チームスロット枠線色テスト開始 ===')

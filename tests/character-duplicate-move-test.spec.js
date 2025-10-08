@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test('キャラクター重複制限（移動後）テスト', async ({ page }) => {
   // テスト用サーバーにアクセス
-  await page.goto('http://localhost:3001')
+  await page.goto('http://localhost:3000')
 
   // ページの読み込み完了を待つ
   await page.waitForLoadState('networkidle')
@@ -126,6 +126,21 @@ test('キャラクター重複制限（移動後）テスト', async ({ page }) 
   console.log(
     '✓ キャラクター一覧からフレンドスロットへの重複配置が正しく制限されました'
   )
+
+  // 5. リーダースロットのブロリーを削除
+  console.log('リーダースロットのブロリーを削除中...')
+
+  await leaderSlot.hover()
+  await page.mouse.down()
+  // キャラクター一覧外にドロップして削除
+  await page.mouse.move(50, 50)
+  await page.mouse.up()
+  await page.waitForTimeout(500)
+
+  // リーダースロットが空になったことを確認
+  const leaderSlotAfterRemoval = await leaderSlot.locator('img').count()
+  expect(leaderSlotAfterRemoval).toBe(0)
+  console.log('✓ リーダースロットのブロリーが削除されました')
 
   // 6. フレンドスロットのブロリーを空のリーダースロットに移動（許可されるはず）
   console.log('フレンドのブロリーをリーダースロットに移動中...')

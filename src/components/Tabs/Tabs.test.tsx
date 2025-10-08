@@ -88,11 +88,17 @@ describe('Tabs', () => {
   describe('1つだけのタブ', () => {
     it('タブが1つだけの場合も正常に動作する', () => {
       const singleTab = [
-        { value: 'only', label: '唯一のタブ', content: <div>唯一のコンテンツ</div> },
+        {
+          value: 'only',
+          label: '唯一のタブ',
+          content: <div>唯一のコンテンツ</div>,
+        },
       ]
 
       render(<Tabs tabs={singleTab} />)
-      expect(screen.getByRole('tab', { name: '唯一のタブ' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('tab', { name: '唯一のタブ' })
+      ).toBeInTheDocument()
       expect(screen.getByText('唯一のコンテンツ')).toBeVisible()
     })
   })

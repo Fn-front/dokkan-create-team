@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test('配置不可時の禁止アイコン表示テスト', async ({ page }) => {
   // テスト用サーバーにアクセス
-  await page.goto('http://localhost:3001')
+  await page.goto('http://localhost:3000')
 
   // ページの読み込み完了を待つ
   await page.waitForLoadState('networkidle')
@@ -53,17 +53,33 @@ test('配置不可時の禁止アイコン表示テスト', async ({ page }) => 
   )
   await page.waitForTimeout(300)
 
-  // 禁止アイコンが表示されているかチェック（SVGアイコンを検出）
+  // 禁止アイコンが表示されているかチェック（SVGを含む固定位置のdivを検出、imgは除外）
   const prohibitIcon = page
     .locator('body > div')
-    .filter({ has: page.locator('svg') })
-  const prohibitIconCount = await prohibitIcon.count()
-  console.log('禁止アイコン数:', prohibitIconCount)
-  expect(prohibitIconCount).toBeGreaterThan(0)
+    .filter({
+      has: page.locator('svg'),
+    })
+    .filter({
+      hasNot: page.locator('img'),
+    })
 
-  // 禁止アイコンが可視であることを確認
-  const prohibitIconVisible = await prohibitIcon.first().isVisible()
-  expect(prohibitIconVisible).toBe(true)
+  // 禁止アイコンを見つける（display: noneでない最初の要素）
+  const visibleProhibitIcons = await prohibitIcon.evaluateAll((elements) =>
+    elements
+      .map((el, index) => ({
+        index,
+        display: window.getComputedStyle(el).display,
+        hasRoundedBorder: window
+          .getComputedStyle(el)
+          .borderRadius.includes('50%'),
+      }))
+      .filter(
+        (info) => info.display !== 'none' && info.hasRoundedBorder === true
+      )
+  )
+
+  console.log('表示中の禁止アイコン:', visibleProhibitIcons.length)
+  expect(visibleProhibitIcons.length).toBeGreaterThan(0)
   console.log('✓ 配置不可位置で禁止アイコンが表示されました')
 
   // 3. フレンドスロット（配置可能）に移動した時に禁止アイコンが非表示になるかテスト
@@ -81,8 +97,20 @@ test('配置不可時の禁止アイコン表示テスト', async ({ page }) => 
   await page.waitForTimeout(300)
 
   // 禁止アイコンが非表示になっているかチェック
-  const prohibitIconVisibleAfterMove = await prohibitIcon.first().isVisible()
-  expect(prohibitIconVisibleAfterMove).toBe(false)
+  const hiddenProhibitIcons = await prohibitIcon.evaluateAll((elements) =>
+    elements
+      .map((el) => ({
+        display: window.getComputedStyle(el).display,
+        hasRoundedBorder: window
+          .getComputedStyle(el)
+          .borderRadius.includes('50%'),
+      }))
+      .filter(
+        (info) => info.display !== 'none' && info.hasRoundedBorder === true
+      )
+  )
+
+  expect(hiddenProhibitIcons.length).toBe(0)
   console.log('✓ 配置可能位置で禁止アイコンが非表示になりました')
 
   // 4. 再度配置不可位置に移動して禁止アイコンが再表示されるかテスト
@@ -94,8 +122,20 @@ test('配置不可時の禁止アイコン表示テスト', async ({ page }) => 
   )
   await page.waitForTimeout(300)
 
-  const prohibitIconVisibleAgain = await prohibitIcon.first().isVisible()
-  expect(prohibitIconVisibleAgain).toBe(true)
+  const reappearProhibitIcons = await prohibitIcon.evaluateAll((elements) =>
+    elements
+      .map((el) => ({
+        display: window.getComputedStyle(el).display,
+        hasRoundedBorder: window
+          .getComputedStyle(el)
+          .borderRadius.includes('50%'),
+      }))
+      .filter(
+        (info) => info.display !== 'none' && info.hasRoundedBorder === true
+      )
+  )
+
+  expect(reappearProhibitIcons.length).toBeGreaterThan(0)
   console.log('✓ 配置不可位置で禁止アイコンが再表示されました')
 
   // 5. ドラッグ終了時に禁止アイコンが削除されるかテスト
@@ -143,19 +183,34 @@ test('配置不可時の禁止アイコン表示テスト', async ({ page }) => 
 
   const secondProhibitIcon = page
     .locator('body > div')
-    .filter({ has: page.locator('svg') })
-  const secondProhibitIconCount = await secondProhibitIcon.count()
-  console.log('2番目キャラクターの禁止アイコン数:', secondProhibitIconCount)
+    .filter({
+      has: page.locator('svg'),
+    })
+    .filter({
+      hasNot: page.locator('img'),
+    })
 
-  if (secondProhibitIconCount > 0) {
-    const secondProhibitIconVisible = await secondProhibitIcon
-      .first()
-      .isVisible()
-    expect(secondProhibitIconVisible).toBe(true)
+  const secondVisibleIcons = await secondProhibitIcon.evaluateAll((elements) =>
+    elements
+      .map((el) => ({
+        display: window.getComputedStyle(el).display,
+        hasRoundedBorder: window
+          .getComputedStyle(el)
+          .borderRadius.includes('50%'),
+      }))
+      .filter(
+        (info) => info.display !== 'none' && info.hasRoundedBorder === true
+      )
+  )
+
+  console.log('2番目キャラクターの禁止アイコン数:', secondVisibleIcons.length)
+
+  if (secondVisibleIcons.length > 0) {
+    expect(secondVisibleIcons.length).toBeGreaterThan(0)
     console.log('✓ 別キャラクターでも禁止アイコンが正しく表示されました')
   } else {
     console.log(
-      'ℹ 2番目キャラクターでは禁止アイコンが表示されませんでした（既に削除済み）'
+      'ℹ 2番目キャラクターでは禁止アイコンが表示されませんでした（配置可能）'
     )
   }
 

@@ -2,7 +2,7 @@ const { test } = require('@playwright/test')
 
 test('ドラッグ位置の安定性テスト', async ({ page }) => {
   // ローカル開発サーバーにアクセス
-  await page.goto('http://localhost:3001')
+  await page.goto('http://localhost:3000')
   await page.waitForLoadState('networkidle')
 
   console.log('=== ドラッグ安定性テスト開始 ===')

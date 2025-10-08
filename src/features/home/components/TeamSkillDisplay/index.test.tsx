@@ -324,7 +324,9 @@ describe('TeamSkillDisplay', () => {
       ]
 
       const { container } = render(<TeamSkillDisplay teamSlots={teamSlots} />)
-      const leaderSkillSection = container.querySelector('[class*="leaderSkill"]')
+      const leaderSkillSection = container.querySelector(
+        '[class*="leaderSkill"]'
+      )
       expect(leaderSkillSection).toBeInTheDocument()
     })
 
@@ -340,7 +342,9 @@ describe('TeamSkillDisplay', () => {
       ]
 
       const { container } = render(<TeamSkillDisplay teamSlots={teamSlots} />)
-      const friendSkillSection = container.querySelector('[class*="friendSkill"]')
+      const friendSkillSection = container.querySelector(
+        '[class*="friendSkill"]'
+      )
       expect(friendSkillSection).toBeInTheDocument()
     })
 
