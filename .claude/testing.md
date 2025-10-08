@@ -51,8 +51,9 @@ npx playwright test --headed
 
 ## 環境設定
 
-- **開発環境**: http://localhost:3000
-- **テスト環境**: http://localhost:3001（E2Eテスト用）
+- **開発サーバー**: http://localhost:3000
+- **E2Eテスト**: http://localhost:3000（`playwright.config.js`で自動起動）
+- **重要**: 全てのE2Eテストファイルは**必ずポート3000**を使用する（`playwright.config.js`の`webServer`設定に準拠）
 
 ## テストファイル一覧
 
@@ -177,7 +178,7 @@ import { test, expect } from '@playwright/test'
 
 test.describe('機能名', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3001')
+    await page.goto('http://localhost:3000') // 必ずポート3000を使用
     // 共通の初期化処理
   })
 
@@ -187,6 +188,62 @@ test.describe('機能名', () => {
   })
 })
 ```
+
+### E2Eテスト作成時の重要な注意点
+
+1. **URL統一**
+   - 全てのテストで`http://localhost:3000`を使用する
+   - 他のポート（3001, 3002等）は使用しない
+   - `playwright.config.js`の`webServer`設定がポート3000でサーバーを起動する
+
+2. **期待値のハードコード回避**
+   - テストデータ（キャラクターのスキル文言等）が変更される可能性があるため、特定の値をハードコードしない
+   - 動的な検証を優先：初期状態と変更後の状態を比較する
+
+   ```javascript
+   // ❌ 悪い例：ハードコードされた期待値
+   expect(leaderSkill).toBe('力属性の気力+4、HPとATKとDEF120%UP')
+
+   // ✅ 良い例：動的な検証
+   const initialSkill = await page.textContent('.leaderSkill')
+   // キャラクター配置
+   const updatedSkill = await page.textContent('.leaderSkill')
+   expect(updatedSkill).not.toBe(initialSkill)
+   expect(updatedSkill).not.toBe('')
+   ```
+
+3. **要素の表示/非表示の確認**
+   - `isVisible()`は便利だが、`display: none`の検出が不確実な場合がある
+   - 確実性が必要な場合は`getComputedStyle()`を使用
+
+   ```javascript
+   // より確実な方法
+   const display = await element.evaluate(
+     (el) => window.getComputedStyle(el).display
+   )
+   expect(display).toBe('none')
+   ```
+
+4. **複数の類似要素の識別**
+   - SVGアイコンなど、複数の類似要素がページに存在する場合
+   - 特徴的なスタイル（`borderRadius`, `backgroundColor`等）でフィルタリング
+
+   ```javascript
+   // 禁止アイコンの検出例
+   const prohibitIcons = await page
+     .locator('body > div')
+     .filter({ has: page.locator('svg') })
+     .evaluateAll((elements) =>
+       elements
+         .map((el) => ({
+           display: window.getComputedStyle(el).display,
+           hasRoundedBorder: window
+             .getComputedStyle(el)
+             .borderRadius.includes('50%'),
+         }))
+         .filter((info) => info.display !== 'none' && info.hasRoundedBorder)
+     )
+   ```
 
 ### 重要なセレクタ
 
