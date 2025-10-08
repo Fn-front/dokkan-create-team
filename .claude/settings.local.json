@@ -55,7 +55,9 @@
       "Bash(node:*)",
       "Bash(cat:*)",
       "Bash(npm test)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(open:*)"
     ],
     "deny": [],
     "ask": []

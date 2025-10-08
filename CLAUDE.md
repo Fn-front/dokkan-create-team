@@ -50,6 +50,15 @@ npx playwright test tests/drag-stability-test.spec.js
 
 # ヘッド付きテスト実行（ブラウザ表示）
 npx playwright test --headed
+
+# ユニットテスト実行
+npm test
+
+# ユニットテスト（Watch モード）
+npm run test:watch
+
+# カバレッジレポート生成
+npm run test:coverage
 ```
 
 ## コード品質管理

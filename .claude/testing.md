@@ -1,9 +1,50 @@
 # テスト環境・戦略
 
+## テストの種類
+
+### 1. ユニットテスト（Jest + React Testing Library）
+
+- **対象**: コンポーネント、hooks、ユーティリティ関数
+- **ファイル配置**: `__tests__/`ディレクトリまたは`.test.{ts,tsx}`ファイル
+- **カバレッジ対象**: `src/**/*.{js,jsx,ts,tsx}`（`src/app/**`を除く）
+
+**コマンド**:
+```bash
+# テスト実行
+npm test
+
+# Watch モード
+npm run test:watch
+
+# カバレッジレポート生成
+npm run test:coverage
+```
+
+**カバレッジ確認**:
+- `npm run test:coverage`実行後、`coverage/lcov-report/index.html`をブラウザで開く
+- または`open coverage/lcov-report/index.html`
+
+### 2. E2Eテスト（Playwright）
+
+- **対象**: ブラウザ操作、統合テスト
+- **ファイル配置**: `tests/`ディレクトリ
+
+**コマンド**:
+```bash
+# 全E2Eテスト実行
+npx playwright test
+
+# 単一テスト実行
+npx playwright test tests/[test-name].spec.js
+
+# ヘッド付き実行（ブラウザ表示）
+npx playwright test --headed
+```
+
 ## 環境設定
 
 - **開発環境**: http://localhost:3000
-- **テスト環境**: http://localhost:3001
+- **テスト環境**: http://localhost:3001（E2Eテスト用）
 
 ## テストファイル一覧
 
@@ -54,16 +95,24 @@
    - ESLint
    - TypeScript型チェック
 
-2. **テスト実行**: `npx playwright test`
+2. **ユニットテスト実行**: `npm test`または`npm run test:coverage`
+   - コンポーネント・関数のテスト
+   - カバレッジ確認
+
+3. **E2Eテスト実行**: `npx playwright test`
    - 全テストケース実行
    - 既存機能の回帰テスト
 
-3. **個別テスト**: 変更箇所に関連するテストを個別実行
+4. **個別テスト**: 変更箇所に関連するテストを個別実行
    ```bash
+   # ユニットテスト
+   npm test -- [test-file-path]
+
+   # E2Eテスト
    npx playwright test tests/[test-name].spec.js
    ```
 
-4. **ヘッド付きテスト**: 視覚的確認が必要な場合
+5. **ヘッド付きテスト**: 視覚的確認が必要な場合
    ```bash
    npx playwright test --headed
    ```
@@ -77,7 +126,32 @@
 
 ## テスト作成ガイドライン
 
-### テストケースの構成
+### テスト作成方針
+
+**ユニットテスト対象**:
+- 共通コンポーネント（`src/components/`）
+- ユーティリティ関数（`src/functions/utils/`、`src/lib/`）
+- 重要なビジネスロジックを含むhooks
+
+**E2Eテスト対象**:
+- ユーザー操作フロー（ドラッグ&ドロップ、フォーム切り替え等）
+- ブラウザ統合動作
+
+### ユニットテストの構成
+
+```typescript
+import { render, screen } from '@testing-library/react'
+import Component from './Component'
+
+describe('Component', () => {
+  it('renders correctly', () => {
+    render(<Component />)
+    expect(screen.getByText('text')).toBeInTheDocument()
+  })
+})
+```
+
+### E2Eテストの構成
 
 ```javascript
 import { test, expect } from '@playwright/test'
