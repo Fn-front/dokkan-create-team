@@ -482,7 +482,7 @@
             "super_attack": {
               "name": "必殺技",
               "effect": "1ターンATKとDEFが大幅上昇し、相手に極大ダメージを与える",
-              "super_attack_count": 2,
+              "super_attack_count": 3,
               "multiplier": 3.95,
               "stat_boost": {
                 "atk": 1.5,
@@ -501,9 +501,13 @@
               "name": "パッシブスキル",
               "stat_boosts": {
                 "basic": {
-                  "atk": 1.22,
-                  "def": 1.22,
-                  "ki": 5
+                  "atk": 2.5,
+                  "def": 2.5
+                },
+                "per_attack": {
+                  "ki": 5,
+                  "atk": 2.88,
+                  "def": 2.88
                 },
                 "evasion": 70
               },
