@@ -94,6 +94,7 @@ npm run test:coverage
 - **[skills.md](.claude/skills.md)**: スキル表示、リーダースキル条件判定
 - **[forms.md](.claude/forms.md)**: フォーム切り替え（リバーシブル・変身）
 - **[testing.md](.claude/testing.md)**: テスト環境、テスト戦略、開発フロー
+- **[ci-cd.md](.claude/ci-cd.md)**: CI/CD設定、GitHub Actionsワークフロー
 
 ## 基本原則
 
