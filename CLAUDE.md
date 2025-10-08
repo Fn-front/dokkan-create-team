@@ -721,9 +721,9 @@ if (leaderSkill?.conditions) {
 
 **注意**: TeamLayoutとuseCharacterStatsの両方に同じ条件判定ロジックがあります。将来的には共通化を検討してください。
 
-## リバーシブルフォーム切り替えシステム
+## フォーム切り替えシステム
 
-### 概要
+### リバーシブルフォーム切り替え
 
 一部のキャラクターは`reversible_forms`プロパティを持ち、2つのフォーム間で切り替え可能です（例: ベジータ&孫悟空 ⇔ 孫悟空&ベジータ）。
 
@@ -848,6 +848,117 @@ const formIndex = isReversible ? getReversibleFormIndex(character.id) : 0
 3. **型安全性**:
    - `reversible_forms`の存在チェック必須
    - formsとreversible_formsは相互排他
+
+### 変身フォーム切り替え（forms配列）
+
+一部のキャラクターは`forms`配列に複数のフォームを持ち、フォーム間で切り替え可能です（例: ゴジータ ⇔ 超サイヤ人ゴッドSSゴジータ）。
+
+#### データ構造
+
+- **forms配列**: 2つ以上のフォームデータを持つ（変身可能なキャラクター）
+- **reversible_formsとの違い**: `forms`は極限前/極限後などの階層を持つ、`reversible_forms`は2つのフォーム間の切り替えのみ
+- **各フォーム**: `form_id`, `form_name`, `display_name`, `form_order`, `is_base_form`, `stats`, `skills`
+
+#### TransformIconコンポーネント
+
+- **場所**: `@/components/icons/TransformIcon.tsx`
+- **アイコン**: Material Design `MdAutorenew`
+- **用途**: 変身ボタンのアイコン（上部中央配置）
+
+#### 判定関数
+
+```typescript
+// characterUtils.ts
+export const hasMultipleForms = (character: Character): boolean => {
+  return !!(character.forms && character.forms.length > 1)
+}
+
+export const getCharacterSkills = (
+  character: Character,
+  formIndex: number = 0
+): CharacterSkills | null => {
+  if (character.reversible_forms && character.reversible_forms.length > 0) {
+    const index = Math.min(formIndex, character.reversible_forms.length - 1)
+    return character.reversible_forms[index].skills
+  }
+  if (character.forms && character.forms.length > 0) {
+    const index = Math.min(formIndex, character.forms.length - 1)
+    return character.forms[index].skills
+  }
+  return null
+}
+```
+
+#### 状態管理（useTeam）
+
+```typescript
+// formsフォームの現在のインデックスを管理 (characterId -> formIndex)
+const [formIndexes, setFormIndexes] = useState<Record<string, number>>({})
+
+// フォーム切り替え（循環）
+const toggleForm = useCallback(
+  (characterId: string, maxFormIndex: number) => {
+    setFormIndexes((prev) => {
+      const currentIndex = prev[characterId] || 0
+      const nextIndex = (currentIndex + 1) % (maxFormIndex + 1)
+      return {
+        ...prev,
+        [characterId]: nextIndex,
+      }
+    })
+  },
+  []
+)
+
+// インデックス取得
+const getFormIndex = useCallback(
+  (characterId: string) => {
+    return formIndexes[characterId] || 0
+  },
+  [formIndexes]
+)
+```
+
+#### UI実装とスタイリング
+
+- **アイコン位置**: `top: 0`, `left: 50%`, `transform: translateX(-50%)`で上部中央配置
+- **switchButton（reversible）と同じ位置**: 両方のアイコンが上部中央に配置される
+- **オレンジ色ホバーエフェクト**: `&:hover::before { background-color: var(--color-orange-500) }`
+- **z-index: 100**: 他の要素より上位レイヤー
+
+#### 計算への反映
+
+**重要**: 変身切り替えは以下の全ての計算に反映される必要があります：
+
+1. **気力メーター計算**: `getCharacterSkills(character, formIndex)`でスキル取得
+2. **55%ステータス計算**: `getCharacterStats(character, formIndex)`でステータス取得
+3. **100%ステータス計算**: 同上
+4. **行動後ステータス計算**: 同上、必殺回数表示も含む
+5. **リーダースキル表示**: formIndexに基づくスキル取得
+
+#### formIndex取得パターン
+
+TeamLayoutの各計算セクションで以下のパターンを使用：
+
+```typescript
+const isReversible = isReversibleCharacter(slot.character)
+const hasMultiple = hasMultipleForms(slot.character)
+let formIndex = 0
+if (isReversible) {
+  formIndex = getReversibleFormIndex(slot.character.id)
+} else if (hasMultiple) {
+  formIndex = getFormIndex(slot.character.id)
+}
+// 取得したformIndexを使用してスキル・ステータスを取得
+const skills = getCharacterSkills(slot.character, formIndex)
+const stats = getCharacterStats(slot.character, formIndex)
+```
+
+#### 詳細ダイアログ表示
+
+- **変身キャラクターの詳細**: 極限前/極限後/超極限の表示（フォーム名ではない）
+- **タブラベル**: `EXTREME_LABELS[key]`（通常/極限/超極限）を使用
+- **スキル取得**: formIndexを渡して現在のフォームのスキルを表示
 
 ## 重要な技術的制約
 
