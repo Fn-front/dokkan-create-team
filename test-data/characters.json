@@ -1,5 +1,208 @@
 [
   {
+    "id": "char_8ce2a9e1",
+    "rarity": "LR",
+    "attribute": "超速",
+    "cost": "77",
+    "forms": [
+      {
+        "form_id": "form_68b9b170",
+        "display_name": "全身全霊をかけた決戦\n・超サイヤ人ゴッドSS孫悟空＆超サイヤ人ゴッドSSベジータ",
+        "form_order": 1,
+        "is_base_form": true,
+        "is_only_form": false,
+        "stats": {
+          "max_level": {
+            "HP": "14563",
+            "ATK": "15700",
+            "DEF": "10719"
+          },
+          "potential_55": {
+            "HP": "16563",
+            "ATK": "17700",
+            "DEF": "12719"
+          },
+          "potential_100": {
+            "HP": "19163",
+            "ATK": "20700",
+            "DEF": "16119"
+          }
+        },
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": ["超サイヤ人を超えた力"],
+                  "ki": 3,
+                  "hp": 2.7,
+                  "atk": 2.7,
+                  "def": 2.7
+                }
+              ],
+              "original_effect": "「命運をかけた闘い」または「未来編」または「超サイヤ人を超えた力」カテゴリの気力+3、HPとATKとDEF170%UP、「神次元」または「時空を超えし者」カテゴリを含む場合は更にHPとATKとDEF30%UP＆「命運をかけた闘い」または「未来編」または「超サイヤ人を超えた力」カテゴリを含まない超系の気力+3、HPとATKとDEF150%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "ATKが上昇し、相手に極大ダメージを与える",
+              "super_attack_count": 3,
+              "multiplier": 3.95
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "DEFが上昇し、相手に超極大ダメージを与える",
+              "multiplier": 3.95
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "def": 2.0,
+                  "atk": 2.0,
+                  "ki": 3
+                },
+                "evasion": 70
+              },
+              "original_effect": "・自身の登場時、チームに自身の他に「未来編」カテゴリの味方がいるとき1度だけ登場時演出が発動し、4ターンの間、自身のDEF100%UP、全ての攻撃をガード\n・自身の気力+3、ATKとDEF100%UP\n・属性気玉取得で気力が上がるたびに更に気力+2\n・\n「神次元」カテゴリの敵がいるとき\n更にATKとDEF50%UP、全属性に効果抜群で攻撃\n・\n1番目にいるとき更にDEF150%UP、高確率で敵の攻撃を回避\n・\n2番目か\n3番目にいるときは更にATK100%UP、DEF50%UP、必ず追加攻撃し高確率で必殺技が発動\n・気力メーターが20以上で必ず必殺技が追加発動"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：登場から5ターン目以降、HP70%以下のとき発動可能、または登場から7ターン目以降、敵か自身を除く攻撃参加中の味方に「未来編」カテゴリのキャラがいるとき発動可能(1回のみ)効果：ポタラで合体する"
+            }
+          },
+          "post_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          },
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          }
+        },
+        "image_url": "/images/character/zenshin-zenrei-wo-kaketa-kessen-super-saiyan-god-ss-goku-super-saiyan-god-ss-vegeta.png"
+      },
+      {
+        "form_id": "form_08d94907",
+        "display_name": "全身全霊をかけた決戦\n・超サイヤ人ゴッドSSベジット",
+        "form_order": 2,
+        "is_base_form": false,
+        "is_only_form": false,
+        "stats": {
+          "max_level": {
+            "HP": "14563",
+            "ATK": "15700",
+            "DEF": "10719"
+          },
+          "potential_55": {
+            "HP": "16563",
+            "ATK": "17700",
+            "DEF": "12719"
+          },
+          "potential_100": {
+            "HP": "19163",
+            "ATK": "20700",
+            "DEF": "16119"
+          }
+        },
+        "skills": {
+          "pre_extreme": {
+            "leader_skill": {
+              "name": "リーダースキル",
+              "conditions": [
+                {
+                  "type": "category",
+                  "target": ["超サイヤ人を超えた力"],
+                  "ki": 3,
+                  "hp": 2.7,
+                  "atk": 2.7,
+                  "def": 2.7
+                }
+              ],
+              "original_effect": "「命運をかけた闘い」または「未来編」または「超サイヤ人を超えた力」カテゴリの気力+3、HPとATKとDEF170%UP、「神次元」または「時空を超えし者」カテゴリを含む場合は更にHPとATKとDEF30%UP＆「命運をかけた闘い」または「未来編」または「超サイヤ人を超えた力」カテゴリを含まない超系の気力+3、HPとATKとDEF150%UP"
+            },
+            "super_attack": {
+              "name": "必殺技",
+              "effect": "1ターンATKとDEFが大幅上昇し、相手に極大ダメージを与え、ATKとDEFを低下させる",
+              "super_attack_count": 3,
+              "multiplier": 3.95
+            },
+            "ultra_super_attack": {
+              "name": "超必殺技",
+              "effect": "1ターンATKとDEFが大幅上昇し、相手に超極大ダメージを与える＆1ターン超系の仲間DEF50%UP",
+              "multiplier": 3.95
+            },
+            "passive_skill": {
+              "name": "パッシブスキル",
+              "stat_boosts": {
+                "basic": {
+                  "atk": 3.5,
+                  "def": 3.5,
+                  "ki": 5
+                },
+                "evasion": 70,
+                "damage_reduction": 20
+              },
+              "original_effect": "・自身の気力+5、ATKとDEF250%UP\n・気玉取得で気力が上がるたびに更に気力+2\n・全属性に効果抜群で攻撃\n・自身が攻撃するまで受けるダメージを30%軽減\n・\n1番目にいるときダメージ軽減率20%UP、高確率で敵の攻撃を回避、必ず追加攻撃し高確率で必殺技が発動\n・\n2番目か\n3番目に攻撃すると必ず必殺技が追加発動し、中確率で更に必殺技が追加発動\n・アクティブスキル発動時または気力メータ20以上で必ず必殺技が追加発動"
+            },
+            "active_skill": {
+              "name": "アクティブスキル",
+              "effect": "条件：自身のHPが50%以下のとき発動可能、または敵が1体のとき敵のHPが50%以下で発動可能(1回のみ)効果：相手に究極ダメージを与え、発動したターン中敵の攻撃を回避する"
+            }
+          },
+          "post_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          },
+          "super_extreme": {
+            "leader_skill": null,
+            "super_attack": null,
+            "ultra_super_attack": null,
+            "passive_skill": null,
+            "active_skill": null
+          }
+        },
+        "image_url": "/images/character/zenshin-zenrei-wo-kaketa-kessen-super-saiyan-god-ss-vegito.png"
+      }
+    ],
+    "link_skills": [
+      "超サイヤ人",
+      "神戦士",
+      "神の次元",
+      "臨戦態勢",
+      "超激戦",
+      "かめはめ波",
+      "伝説の力"
+    ],
+    "categories": [
+      "命運をかけた闘い",
+      "未来編",
+      "超サイヤ人を超えた力",
+      "神次元",
+      "時空を超えし者",
+      "純粋サイヤ人",
+      "コンビネーション",
+      "体得した進化",
+      "親子の絆",
+      "超HERO",
+      "ポタラ",
+      "かめはめ波",
+      "最後の切り札",
+      "頭脳戦",
+      "時間制限"
+    ]
+  },
+  {
     "id": "char_be9d1473",
     "name": "怒涛の未来最終決戦\n・超サイヤ人ゴッドSS孫悟空＋超サイヤ人ゴッドSSベジータ",
     "rarity": "LR",
@@ -251,14 +454,12 @@
   },
   {
     "id": "char_05f0677b",
-    "base_name": "究極最強の融合",
     "rarity": "LR",
     "attribute": "超力",
     "cost": "77",
     "forms": [
       {
         "form_id": "form_1683b7be",
-        "form_name": "ゴジータ",
         "display_name": "究極最強の融合\n・ゴジータ",
         "form_order": 1,
         "is_base_form": true,
@@ -391,7 +592,6 @@
       },
       {
         "form_id": "form_c7752240",
-        "form_name": "超サイヤ人ゴッドSSゴジータ",
         "display_name": "究極最強の融合\n・超サイヤ人ゴッドSSゴジータ",
         "form_order": 2,
         "is_base_form": false,
@@ -555,14 +755,12 @@
   },
   {
     "id": "char_7a75fcb3",
-    "base_name": "不滅の最凶戦士",
     "rarity": "LR",
     "attribute": "極力",
     "cost": "77",
     "forms": [
       {
         "form_id": "form_77dd1057",
-        "form_name": "伝説の超サイヤ人ブロリー",
         "display_name": "不滅の最凶戦士\n・伝説の超サイヤ人ブロリー",
         "form_order": 1,
         "is_base_form": true,
@@ -790,14 +988,12 @@
   },
   {
     "id": "char_fc7fea23",
-    "base_name": "無敵を誇るサイヤ人の頂",
     "rarity": "LR",
     "attribute": "超力",
     "cost": "77",
     "forms": [
       {
         "form_id": "form_a2232f5e",
-        "form_name": "超サイヤ人4ベジータ",
         "display_name": "無敵を誇るサイヤ人の頂\n・超サイヤ人4ベジータ",
         "form_order": 1,
         "is_base_form": true,
@@ -979,14 +1175,12 @@
   },
   {
     "id": "char_a4f6aabb",
-    "base_name": "破壊による世界調和",
     "rarity": "LR",
     "attribute": "超力",
     "cost": "77",
     "forms": [
       {
         "form_id": "form_76543bd3",
-        "form_name": "ビルス＆ウイス",
         "display_name": "破壊による世界調和\n・ビルス＆ウイス",
         "form_order": 1,
         "is_base_form": true,

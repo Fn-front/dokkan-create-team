@@ -58,11 +58,14 @@
       "Bash(npm test:*)",
       "Bash(npm run test:coverage:*)",
       "Bash(open:*)",
-      "Bash(jq:*)"
+      "Bash(jq:*)",
+      "mcp__chrome-devtools__list_network_requests"
     ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["chrome-devtools"]
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
 }
